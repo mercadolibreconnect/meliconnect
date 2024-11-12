@@ -1,0 +1,442 @@
+<?php
+
+namespace StoreSync\Meliconnect\Core;
+
+use StoreSync\Meliconnect\Core\Helpers\Helper;
+use StoreSync\Meliconnect\Core\Helpers\HelperJSTranslations;
+use StoreSync\Meliconnect\Core\Services\ProductEdit;
+
+/**
+ * Class Initialize
+ * @package StoreSync\Meliconnect
+ */
+class Initialize
+{
+
+    /**
+     * @var AddonLoader[]
+     */
+    public static $addons = [];
+
+    /**
+     * @var ModuleInterface[]
+     */
+    public static $modules = [];
+    public static $css_pre = 'melicon-';
+    public static $js_pre  = 'melicon-';
+
+
+    public function __construct()
+    {
+        if (Helper::getOption('is_updating', null, false) !== null) {
+            add_action('admin_notices', function () {
+                echo '<div class="notice notice-warning"><p>' . __('Meliconnect is updating, please wait.', 'meliconnect') . '</p></div>';
+            });
+            return;
+        }
+
+        add_action('plugins_loaded', function () {
+            static::$addons = apply_filters('meliconnect_addons_load', []);
+        });
+
+        new AjaxManager();
+        new ApiManager();
+
+        add_action('init', [$this, 'initApp'], 10);
+        //add_action('init', [$this, 'testCode'], 10);
+
+
+        register_activation_hook(MC_PLUGIN_ROOT, array($this, 'activate'));
+        register_deactivation_hook(MC_PLUGIN_ROOT, array('Initialize', 'deactivate'));
+        register_uninstall_hook(MC_PLUGIN_ROOT, array('Initialize', 'uninstall'));
+    }
+
+    /* public function testCode()
+    {
+        error_log('variation test start');
+
+        // Check if the code has already been executed
+        $has_run = get_option('custom_code_has_run', false);
+
+        if ($has_run) {
+            error_log('Code has already been executed.');
+            return;
+        }
+
+        $attribute_name = 'New a';
+        $attribute_id = 'new_a';
+        $attribute_slug = wc_attribute_taxonomy_name($attribute_id);
+
+        if (!taxonomy_exists($attribute_slug)) {
+            $taxonomy_id = wc_create_attribute([
+                'id'   => $attribute_id,
+                'name' => $attribute_name,
+                'slug' => $attribute_slug,
+            ]);
+
+            // Flushing rewrite rules to ensure the taxonomy is registered.
+            flush_rewrite_rules();
+
+            // Manually registering the taxonomy after creation.
+            register_taxonomy($attribute_slug, 'product', [
+                'label' => $attribute_name,
+                'rewrite' => ['slug' => $attribute_slug],
+                'hierarchical' => false,
+            ]);
+        } else {
+            $taxonomy_id = wc_attribute_taxonomy_id_by_name($attribute_id);
+        }
+
+        $attribute = wc_get_attribute($taxonomy_id);
+
+        if (!$attribute || is_wp_error($attribute)) {
+            return;
+        }
+
+        $pa = new \WC_Product_Attribute();
+        $pa->set_id($taxonomy_id);
+        $pa->set_name($attribute_slug);
+        $pa->set_visible(false);
+        $pa->set_options(['Test 4', 'Test 5']);
+        $product = wc_get_product(56);
+        $product->set_attributes([$pa]);
+        $product->save();
+
+        // Set the option to indicate that the code has been executed
+        update_option('custom_code_has_run', true);
+
+        error_log('variation test end');
+    } */
+
+    public static function activate()
+    {
+        $db_manager = new DatabaseManager();
+        $db_manager->create_or_update_tables();
+
+        self::createDefaultOptions();
+
+        update_option('meliconnect_db_version', MC_DATABASE_VERSION);
+    }
+
+    public static function createDefaultOptions()
+    {
+        // Options with default values
+        $options = [
+            'melicon_general_image_attachment_ids' => [],
+            'melicon_general_description_template' => '',
+            'melicon_general_sync_type' => 'deactive',
+            'melicon_general_sync_items_batch' => 10,
+            'melicon_general_sync_frecuency_minutes' => 10,
+            'melicon_general_sync_method' => 'wordpress',
+
+            'melicon_export_is_disabled' => false,
+            'melicon_export_title' => 'always',
+            'melicon_export_stock' => 'always',
+            'melicon_export_price' => 'regular_price',
+            'melicon_export_images' => 'always',
+            'melicon_export_sku' => 'always',
+            'melicon_export_product_attributes' => 'always',
+            'melicon_export_ml_status' => 'always',
+            'melicon_export_variations' => 'always',
+            'melicon_export_description' => 'always',
+            'melicon_export_description_to' => 'description',
+            'melicon_export_type' => 'createAndUpdate',
+            'melicon_export_finalize_ml' => 'none',
+            'melicon_export_state_paused' => false,
+            'melicon_export_state_closed' => false,
+
+
+            'melicon_import_is_disabled' => false,
+            'melicon_import_title' => 'always',
+            'melicon_import_stock' => 'always',
+            'melicon_import_price' => 'always',
+            'melicon_import_images' => 'always',
+            'melicon_import_sku' => 'always',
+            'melicon_import_categories' => 'always',
+            'melicon_import_product_attributes' => 'always',
+            'melicon_import_ml_status' => 'always',
+            'melicon_import_variations' => 'always',
+            'melicon_import_variations_as' => 'always',
+            'melicon_import_description' => 'always',
+            'melicon_import_description_to' => 'description',
+            'melicon_import_type' => 'createAndUpdate',
+            'melicon_import_price_variation_operand' => 'sum',
+            'melicon_import_price_variation_amount' => 0,
+            'melicon_import_price_variation_type' => 'percent',
+            'melicon_import_stock_variation_operand' => 'sum',
+            'melicon_import_stock_variation_amount' => 0,
+            'melicon_import_stock_variation_type' => 'units',
+            'melicon_import_state_paused' => false,
+            'melicon_import_state_closed' => false,
+            'melicon_import_by_sku' => false,
+            'melicon_import_attrs' => false,
+
+            'melicon_sync_cron_status' => 'deactive',
+            'melicon_sync_cron_items_batch' => 10,
+            'melicon_sync_cron_frecuency_minutes' => 10,
+            'melicon_sync_cron_method' => 'wordpress',
+            'melicon_sync_stock_woo_to_meli' => false,
+            'melicon_sync_price_woo_to_meli' => false,
+            'melicon_sync_status_woo_to_meli' => false,
+            'melicon_sync_stock_meli_to_woo' => false,
+            'melicon_sync_price_meli_to_woo' => false,
+            'melicon_sync_variations_price_meli_to_woo' => false,
+        ];
+
+
+        foreach ($options as $key => $default_value) {
+            if (get_option($key) === false) {
+                add_option($key, $default_value);
+            }
+        }
+    }
+
+    public static function deactivate()
+    {
+        // Desregister cron jobs
+        CronManager::deactivate();
+    }
+
+    public static function uninstall()
+    {
+        //Delete tables 
+        //Delete options
+
+        delete_option('meliconnect_db_version');
+    }
+
+
+
+
+    public function initApp()
+    {
+        self::registerTextDomain();
+        add_action('plugins_loaded', 'mc_register_text_domain');
+
+        do_action('meliconnect_init');
+
+        // Registrar permisos personalizados
+        $this->registerWPUserRoles();
+        $this->registerStyles();
+        $this->registerScripts();
+        $this->registerMenus();
+        $this->loadHooks();
+
+        $this->loadModules();
+
+        $cron_manager = new CronManager();
+        $cron_manager->registerCrons();
+        $cron_manager->handleCronExecution();
+    }
+
+    private function loadHooks() {
+        new ProductEdit();
+        
+    }
+
+
+    private function loadModules()
+    {
+        // Ruta a los módulos
+        $modulesPath = __DIR__ . '/../Modules';
+
+        // Obtener módulos activados de la configuración, o un array vacío si no existe la opción
+        $activatedModules = get_option('meliconnect_modules', []);
+
+        // Buscar todos los archivos de módulos
+        foreach (glob($modulesPath . '/*/*.php') as $file) {
+            require_once $file;
+
+            $className = $this->getClassNameFromFile($file);
+            if (class_exists($className) && in_array('StoreSync\Meliconnect\Modules\ModuleInterface', class_implements($className))) {
+                $moduleName = (new \ReflectionClass($className))->getShortName();
+
+                // Cargar el módulo si está en la lista de módulos activados o si no hay módulos activados especificados
+                if (empty($activatedModules) || in_array($moduleName, $activatedModules)) {
+                    $module = new $className();
+                    $module->init();
+                    self::$modules[] = $module;
+                }
+            }
+        }
+    }
+
+    private function getClassNameFromFile($file)
+    {
+        // Convertir la ruta del archivo a un nombre de clase
+        $path = str_replace([__DIR__ . '/../', '.php'], ['', ''], $file);
+        return 'StoreSync\\Meliconnect\\' . str_replace('/', '\\', ucfirst($path));
+    }
+
+    public function registerWPUserRoles()
+    {
+        \add_role('meliconnect_manager', 'Meliconnect Manager', [
+            'read'         => false,
+            'edit_posts'   => false,
+            'upload_files' => false,
+            'meliconnect_manage_plugin' => true,
+        ]);
+
+        $admin = get_role('administrator');
+
+        if ($admin) {
+            $admin->add_cap('meliconnect_manage_plugin');
+        }
+    }
+
+
+    private function registerStyles()
+    {
+        if ($this->is_plugin_page()) {
+            wp_enqueue_style(self::$css_pre . 'font-awesome-5', MC_PLUGIN_URL . 'assets/css/font-awesome/css/all.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-brands', MC_PLUGIN_URL . 'assets/css/font-awesome/css/brands.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-solid', MC_PLUGIN_URL . 'assets/css/font-awesome/css/solid.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-duotone', MC_PLUGIN_URL . 'assets/css/font-awesome/css/duotone.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'bulma-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma.min.css', [], '1.0.1');
+            wp_enqueue_style(self::$css_pre . 'bulma-switch-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma-switch.min.css', [], '1.0.1');
+            wp_enqueue_style(self::$css_pre . 'bulma-divider-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma-divider.min.css', [], '1.0.1');
+            wp_enqueue_style(self::$css_pre . 'select2', MC_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.1.0');
+            wp_enqueue_style(self::$css_pre . 'main-style', MC_PLUGIN_URL . 'assets/css/main.css', [], '1.0.0');
+        }
+
+        if($this->is_wordpress_page_used_by_plugin()) {
+            wp_enqueue_style(self::$css_pre . 'font-awesome-5', MC_PLUGIN_URL . 'assets/css/font-awesome/css/all.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-brands', MC_PLUGIN_URL . 'assets/css/font-awesome/css/brands.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-solid', MC_PLUGIN_URL . 'assets/css/font-awesome/css/solid.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-duotone', MC_PLUGIN_URL . 'assets/css/font-awesome/css/duotone.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'select2', MC_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.1.0');
+            wp_enqueue_style(self::$css_pre . 'swal-css', MC_PLUGIN_URL . 'assets/css/sweetalert/sweetalert2.min.css', [], '11.14.0', false);
+            wp_enqueue_style(self::$css_pre . 'melicon-custom', MC_PLUGIN_URL . 'assets/css/melicon-custom.css', [], '1.0.0');
+        }
+    }
+
+    public function is_wordpress_page_used_by_plugin()
+    {
+        //Load on product edit page
+        if (isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit' && get_post_type($_GET['post']) === 'product') {
+
+            if(!$this->is_plugin_page()) {
+                return true;
+            }
+        } 
+
+        return false;
+    }
+
+    private function is_plugin_page()
+    {
+        return isset($_GET['page']) && strpos($_GET['page'], 'meliconnect') !== false;
+    }
+
+    private function registerScripts()
+    {
+        if ($this->is_plugin_page()) {
+            wp_register_script(self::$js_pre . 'main-script', MC_PLUGIN_URL . '/assets/js/main.js', ['jquery'], '1.0.0', true);
+            HelperJSTranslations::localizeScript(self::$js_pre . 'main-script');
+            wp_enqueue_script(self::$js_pre . 'main-script');
+
+            wp_enqueue_script(self::$js_pre . 'bulma-alert-script', MC_PLUGIN_URL . '/assets/js/bulma-alert.js', ['jquery'], '1.0.0', true);
+            wp_enqueue_script(self::$js_pre . 'select-2', MC_PLUGIN_URL . '/assets/js/select2/select2.min.js', ['jquery'], '1.0.0', true);
+        }
+
+        if($this->is_wordpress_page_used_by_plugin()){
+            wp_enqueue_script('melicon-swal-js', MC_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js', ['jquery'], '11.14.0', true);
+
+            wp_enqueue_script(self::$js_pre . 'select-2', MC_PLUGIN_URL . '/assets/js/select2/select2.min.js', ['jquery'], '1.0.0', true);
+
+            wp_register_script(self::$js_pre . 'wordpress-page-main-script', MC_PLUGIN_URL . '/assets/js/melicon-wp-main.js', ['jquery'], '1.0.0', true);
+            HelperJSTranslations::localizeScript(self::$js_pre . 'wordpress-page-main-script');
+            wp_enqueue_script(self::$js_pre . 'wordpress-page-main-script');
+        }
+    }
+
+    private function registerMenus()
+    {
+
+        add_menu_page(
+            __('MeliConnect', 'meliconnect'), // page_title
+            __('MeliConnect', 'meliconnect'), // menu_title
+            'meliconnect_manage_plugin', // capability
+            'meliconnect', // menu_slug
+            [$this, 'renderConnectionPage'], // callback
+            'dashicons-admin-generic', // icon_url
+            6 // position
+        );
+
+        add_submenu_page(
+            'meliconnect', //parent_slug
+            __('Connection', 'meliconnect'), // page_title
+            __('Connection', 'meliconnect'), // menu_title
+            'meliconnect_manage_plugin', // capability
+            'meliconnect-connection', // menu_slug
+            [$this, 'renderConnectionPage'], // callback,
+            1 // position
+        );
+
+
+        add_submenu_page(
+            'meliconnect',
+            __('Settings', 'meliconnect'),
+            __('Settings', 'meliconnect'),
+            'meliconnect_manage_plugin',
+            'meliconnect-settings',
+            [$this, 'renderSettingsPage'],
+            10
+        );
+
+        //Add a page not in submenu
+        /* add_submenu_page(
+            'meliconnect-no-page'
+            , __('Pagina interna', 'meliconnect'), 
+            null, 
+            'meliconnect_manage_plugin', 
+            'meliconnect-premium-query-gdt', 
+            [$this, 'meliconnect_premium_query_gdt']
+        ); */
+    }
+
+    public function renderMainPage()
+    {
+        include MC_PLUGIN_ROOT . 'includes/Core/Views/main.php';
+    }
+
+    public function renderSettingsPage()
+    {
+        include MC_PLUGIN_ROOT . 'includes/Core/Views/settings.php';
+    }
+
+    public function renderImporterPage()
+    {
+        include MC_PLUGIN_ROOT . 'includes/Core/Views/importer.php';
+    }
+
+    public function renderExporterPage()
+    {
+        /* if (is_textdomain_loaded('meliconnect')) {
+            error_log('El dominio de texto "meliconnect" está cargado dentro de exporter.');
+        } else {
+            error_log('El dominio de texto "meliconnect" NO está cargado en exporter.');
+        } */
+
+        include MC_PLUGIN_ROOT . 'includes/Core/Views/exporter.php';
+    }
+
+    public function renderConnectionPage()
+    {
+        include MC_PLUGIN_ROOT . 'includes/Core/Views/connection.php';
+    }
+
+
+    public static function registerTextDomain()
+    {
+        load_plugin_textdomain('meliconnect', false, 'meliconnect/languages');
+
+
+
+        /* if (is_textdomain_loaded('meliconnect')) {
+            error_log('El dominio de texto "meliconnect" está cargado 4.');
+        } else {
+            error_log('El dominio de texto "meliconnect" NO está cargado 4.');
+        } */
+    }
+}

@@ -1,0 +1,188 @@
+#meliconnect_meta_box.postbox .inside button {
+    width: 100%;
+}
+
+#meliconnect_meta_box.postbox .inside .field  {
+    margin-bottom: 3px;
+}
+#meliconnect_meta_box.postbox .inside div.meliconnect-box {
+    gap: 5px;
+    display: grid;
+}
+
+button#create-template {
+
+}
+
+.melicon-product-edit-general-tab {
+
+}
+
+.melicon-product-edit-general-tab p, div#mercadolibre_product_data p {
+    gap: 5px;
+    display: flex;
+}
+
+.melicon-product-edit-general-tab label, div#mercadolibre_product_data label {
+
+}
+
+.melicon-product-edit-general-tab span, div#mercadolibre_product_data span {
+
+}
+.melicon-product-edit-general-tab span.wrap, div#mercadolibre_product_data span.wrap {
+    gap: 6px;
+    display: flex;
+}
+
+.melicon-product-edit-general-tab select, div#mercadolibre_product_data select {
+
+}
+
+.melicon-product-edit-general-tab input, div#mercadolibre_product_data input {
+
+}
+
+
+.melicon-selected-category-span{
+    float: left;
+    width: 150px;
+    padding: 0;
+}
+
+/* Padding Helpers */
+.melicon-p-0 { padding: 0 !important; }
+.melicon-p-1 { padding: 0.25rem !important; }
+.melicon-p-2 { padding: 0.5rem !important; }
+.melicon-p-3 { padding: 1rem !important; }
+.melicon-p-4 { padding: 1.5rem !important; }
+.melicon-p-5 { padding: 2rem !important; }
+
+/* Padding - Specific Directions */
+.melicon-pt-1 { padding-top: 0.25rem !important; }
+.melicon-pr-1 { padding-right: 0.25rem !important; }
+.melicon-pb-1 { padding-bottom: 0.25rem !important; }
+.melicon-pl-1 { padding-left: 0.25rem !important; }
+
+.melicon-pt-2 { padding-top: 0.5rem !important; }
+.melicon-pr-2 { padding-right: 0.5rem !important; }
+.melicon-pb-2 { padding-bottom: 0.5rem !important; }
+.melicon-pl-2 { padding-left: 0.5rem !important; }
+
+.melicon-pt-3 { padding-top: 1rem !important; }
+.melicon-pr-3 { padding-right: 1rem !important; }
+.melicon-pb-3 { padding-bottom: 1rem !important; }
+.melicon-pl-3 { padding-left: 1rem !important; }
+
+/* Margin Helpers */
+.melicon-m-0 { margin: 0 !important; }
+.melicon-m-1 { margin: 0.25rem !important; }
+.melicon-m-2 { margin: 0.5rem !important; }
+.melicon-m-3 { margin: 1rem !important; }
+.melicon-m-4 { margin: 1.5rem !important; }
+.melicon-m-5 { margin: 2rem !important; }
+
+/* Margin - Specific Directions */
+.melicon-mt-1 { margin-top: 0.25rem !important; }
+.melicon-mr-1 { margin-right: 0.25rem !important; }
+.melicon-mb-1 { margin-bottom: 0.25rem !important; }
+.melicon-ml-1 { margin-left: 0.25rem !important; }
+
+.melicon-mt-2 { margin-top: 0.5rem !important; }
+.melicon-mr-2 { margin-right: 0.5rem !important; }
+.melicon-mb-2 { margin-bottom: 0.5rem !important; }
+.melicon-ml-2 { margin-left: 0.5rem !important; }
+
+.melicon-mt-3 { margin-top: 1rem !important; }    
+.melicon-mr-3 { margin-right: 1rem !important; }
+.melicon-mb-3 { margin-bottom: 1rem !important; }
+.melicon-ml-3 { margin-left: 1rem !important; }
+
+/* Text Color Helpers */
+.melicon-color-white { color: #fff !important; }
+.melicon-color-black { color: #000 !important; }
+.melicon-color-success { color: #3abb81 !important; }
+.melicon-color-warning { color: #ffdd57 !important; }
+.melicon-color-error { color: #ff3860 !important; }
+.melicon-color-info { color: #209cee !important; }
+
+/* Background Color Helpers */
+.melicon-bg-success { background-color: #3abb81 !important; }
+.melicon-bg-warning { background-color: #ffdd57 !important; }
+.melicon-bg-error { background-color: #ff3860 !important; }
+.melicon-bg-info { background-color: #209cee !important; }
+
+
+.melicon-tag {
+    border-radius: 4px;
+    padding: 4px 15px;
+    font-size: 12px;
+    color: #fff;
+}
+
+
+.melicon-flex-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.melicon-flex-row > div {flex: 1;}
+
+
+/* Sweetalert 2 wordpress admin styles */
+.melicon-swal-container {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.melicon-swal-popup {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.melicon-swal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.melicon-swal-confirm-button {
+    background-color: #0073aa;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.melicon-swal-confirm-button:hover {
+    background-color: #006799;
+}
+
+.melicon-swal-cancel-button {
+    background-color: #d4d4d4;
+    color: #000000;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+
+
+.melicon_custom_toast{
+    top: calc(1.5rem + 20px); 
+}
+
+
+.melicon_log_container.wc-metabox.postbox{
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+}
+

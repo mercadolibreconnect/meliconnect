@@ -1,0 +1,1682 @@
+# Copyright (C) 2024 StoreSync
+# This file is distributed under the GPLv3.
+msgid ""
+msgstr ""
+"Project-Id-Version: MeliConnect 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/meliconnect\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-09-16T13:43:56+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.7.1\n"
+"X-Domain: meliconnect\n"
+
+#. Plugin Name of the plugin
+#: includes/Core/Initialize.php:341
+#: includes/Core/Initialize.php:342
+msgid "MeliConnect"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://meliconnect.com/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Conecta WooCommerce con Mercadolibre - Gestiona preguntas, ventas, cobros, envíos y más."
+msgstr ""
+
+#. Author of the plugin
+msgid "StoreSync"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://meliconnect.com/"
+msgstr ""
+
+#: includes/Core/Controllers/ConnectionController.php:53
+msgid "Error connecting to MercadoLibre"
+msgstr ""
+
+#: includes/Core/Controllers/ConnectionController.php:86
+msgid "There are no users connected in HUB"
+msgstr ""
+
+#: includes/Core/Controllers/ConnectionController.php:92
+msgid "Error connecting to HUB. Please try again"
+msgstr ""
+
+#: includes/Core/Controllers/SettingController.php:89
+#: includes/Core/Controllers/SettingController.php:126
+#: includes/Modules/Exporter/Controllers/ExportController.php:64
+#: includes/Modules/Exporter/Controllers/ExportController.php:93
+#: includes/Modules/Exporter/Controllers/ExportController.php:221
+#: includes/Modules/Exporter/Controllers/ExportController.php:245
+#: includes/Modules/Importer/Controllers/ImportController.php:68
+#: includes/Modules/Importer/Controllers/ImportController.php:98
+#: includes/Modules/Importer/Controllers/ImportController.php:128
+#: includes/Modules/Importer/Controllers/ImportController.php:184
+#: includes/Modules/Importer/Controllers/ImportController.php:217
+#: includes/Modules/Importer/Controllers/ImportController.php:265
+#: includes/Modules/Importer/Controllers/ImportController.php:283
+#: includes/Modules/Importer/Controllers/ImportController.php:302
+#: includes/Modules/Importer/Controllers/ImportController.php:320
+#: includes/Modules/Importer/Controllers/ImportController.php:349
+#: includes/Modules/Importer/Controllers/ImportController.php:376
+#: includes/Modules/Importer/Controllers/ImportController.php:458
+#: includes/Modules/Importer/Controllers/ImportController.php:482
+msgid "You do not have permission to perform this action"
+msgstr ""
+
+#: includes/Core/Controllers/SettingController.php:98
+#: includes/Core/Controllers/SettingController.php:135
+#: includes/Modules/Importer/Controllers/ImportController.php:226
+msgid "Invalid request data"
+msgstr ""
+
+#: includes/Core/Controllers/SettingController.php:159
+msgid "Settings saved successfully"
+msgstr ""
+
+#: includes/Core/Controllers/SettingController.php:173
+#: includes/Core/Views/Partials/Settings/export.php:29
+#: includes/Core/Views/Partials/Settings/export.php:31
+#: includes/Core/Views/Partials/Settings/export.php:33
+#: includes/Core/Views/Partials/Settings/import.php:29
+#: includes/Core/Views/Partials/Settings/import.php:31
+#: includes/Core/Views/Partials/Settings/import.php:33
+msgid "Always"
+msgstr ""
+
+#: includes/Core/Controllers/SettingController.php:174
+msgid "On Update"
+msgstr ""
+
+#: includes/Core/Controllers/SettingController.php:175
+#: includes/Core/Views/Partials/Settings/export.php:29
+#: includes/Core/Views/Partials/Settings/export.php:31
+#: includes/Core/Views/Partials/Settings/export.php:33
+#: includes/Core/Views/Partials/Settings/import.php:29
+#: includes/Core/Views/Partials/Settings/import.php:31
+#: includes/Core/Views/Partials/Settings/import.php:33
+msgid "On Create"
+msgstr ""
+
+#: includes/Core/Helpers/Helper.php:148
+msgid "Please connect a user to your account."
+msgstr ""
+
+#: includes/Core/Helpers/Helper.php:159
+msgid "All Sellers"
+msgstr ""
+
+#: includes/Core/Helpers/Helper.php:458
+msgid "View not found."
+msgstr ""
+
+#: includes/Core/Helpers/Helper.php:503
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:28
+msgid "Select a category"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:10
+msgid "Are you sure?"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:11
+msgid "Action cancelled"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:12
+msgid "Action successful"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:13
+msgid "Reset User Listings"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:14
+msgid "You are going to reset all user listings pre-imported. Are you sure?"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:15
+msgid "Yes, confirm"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:16
+#: includes/Modules/Exporter/Views/exporter.php:40
+#: includes/Modules/Importer/Views/importer.php:68
+#: includes/Modules/Importer/Views/importer.php:97
+msgid "Cancel"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:18
+msgid "Error"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:19
+msgid "All items imported successfully"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:20
+msgid "You are going to start the import process"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:21
+msgid "Are you sure you want to create or update woocommerce products as can be seen in the table below?"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:25
+msgid "You are going to disable the import functionality"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:26
+msgid "All pending import processes (custom and automatic) will be terminated, and you will not be able to execute any new imports until it is reactivated. Are you sure you want to proceed?"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:27
+msgid "You are going to disable the export functionality"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:28
+msgid "All pending export processes (custom and automatic) will be terminated, and you will not be able to execute any new imports until it is reactivated. Are you sure you want to proceed?"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:29
+msgid "You are going to cancel the import process"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:30
+#: includes/Core/Helpers/HelperJSTranslations.php:51
+msgid "Pending items will be removed from the processing queue. Are you sure you want to proceed?"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:33
+msgid "Process finished"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:34
+msgid "Confirm Bulk Action"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:35
+msgid "Are you sure you want to apply this bulk action?"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:36
+msgid "No items selected"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:37
+msgid "Please select items before proceeding"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:39
+msgid "Invalid Action"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:40
+msgid "Please select a valid bulk action"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:41
+msgid "Are you sure you want to unlink this product?"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:42
+msgid "Woocommerce products will be desvinculated from Mercadolibre listing"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:46
+msgid "Please select a product and a listing"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:50
+msgid "You are going to cancel the export process"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:55
+msgid "Last JSON sent to HUB"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:56
+msgid "Return"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:57
+msgid "Copy to clipboard"
+msgstr ""
+
+#: includes/Core/Helpers/HelperJSTranslations.php:58
+msgid "Successfully copied to clipboard"
+msgstr ""
+
+#: includes/Core/Initialize.php:33
+msgid "Meliconnect is updating, please wait."
+msgstr ""
+
+#: includes/Core/Initialize.php:352
+#: includes/Core/Initialize.php:353
+#: includes/Core/Views/connection.php:13
+msgid "Connection"
+msgstr ""
+
+#: includes/Core/Initialize.php:363
+#: includes/Core/Initialize.php:364
+#: includes/Core/Views/settings.php:13
+#: includes/Core/Views/template.php:13
+msgid "Settings"
+msgstr ""
+
+#: includes/Core/Models/Template.php:66
+msgid "Template autogenerated from meli listing"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:166
+msgid "Attribute MATCH by name with meli Attr"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:168
+msgid "Meli possible values: "
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:172
+msgid "Attribute NOT MATCH by name with meli Attr"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:188
+msgid "Following Attributes are REQUIRED and are missing in your product to update or create in Mercadolibre: "
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:196
+msgid "Mercadolibre Attributes: "
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:197
+msgid "You can create following attributes to update or create in Mercadolibre."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:202
+msgid "Name"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:203
+msgid "Possible Values"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:204
+msgid "Required"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:205
+msgid "Catalog Required"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:206
+msgid "Can be used for variations"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:231
+#: includes/Core/Services/ProductEdit.php:239
+#: includes/Core/Services/ProductEdit.php:247
+msgid "YES"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:233
+#: includes/Core/Services/ProductEdit.php:241
+#: includes/Core/Services/ProductEdit.php:249
+msgid "NO"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:290
+msgid "Any text"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:293
+#: includes/Core/Services/ProductEdit.php:300
+msgid "Any number"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:298
+msgid "Any number with units in: "
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:313
+msgid "Any boolean"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:328
+msgid "Variations are allowed for this attribute."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:333
+msgid "It's required to identify the product the item represents."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:338
+msgid "This attribute is required when certain conditions are met."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:343
+msgid "This attribute defines the variation picture."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:348
+msgid "The value is fixed for this category. This value can't be changed."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:353
+msgid "This attribute can be used as a filter when searching on category existing grids."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:358
+msgid "This attribute is required for technical specifications in the grid defined for the category."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:363
+msgid "This attribute is hidden for this category."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:368
+msgid "The value is inferred for this category."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:373
+msgid "More than one value may be assigned to this attribute."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:378
+msgid "This attribute is required when the item's condition is new."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:383
+msgid "This attribute is fixed or restricted but not inferred for all the category's sisters."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:388
+msgid "This attribute is part of the primary key of the product and can identify a unique product in the catalog."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:393
+msgid "This attribute is read-only and is used for internal purposes only."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:398
+msgid "The value is required for this attribute."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:403
+msgid "The values are restricted for this category."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:408
+msgid "This attribute is an attribute of a variation."
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:438
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:128
+#: includes/Modules/Importer/Views/importer.php:244
+msgid "Mercadolibre"
+msgstr ""
+
+#: includes/Core/Services/ProductEdit.php:508
+msgid "Meliconnect"
+msgstr ""
+
+#: includes/Core/Views/connection.php:24
+msgid "Accounts connected to Mercadolibre"
+msgstr ""
+
+#: includes/Core/Views/connection.php:25
+msgid "DOMAIN"
+msgstr ""
+
+#: includes/Core/Views/connection.php:28
+msgid "ADD USER"
+msgstr ""
+
+#: includes/Core/Views/connection.php:36
+msgid "Sinchronizing profiles"
+msgstr ""
+
+#: includes/Core/Views/Partials/header.php:24
+msgid "Check the available <strong>documentation</strong>. You can quickly clear up any questions"
+msgstr ""
+
+#: includes/Core/Views/Partials/header.php:28
+msgid "Check now"
+msgstr ""
+
+#: includes/Core/Views/Partials/header.php:113
+msgid "New notifications"
+msgstr ""
+
+#: includes/Core/Views/Partials/header.php:190
+msgid "There are no new notifications"
+msgstr ""
+
+#: includes/Core/Views/Partials/header.php:209
+msgid "Dismiss All"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:8
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:23
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:62
+msgid "Export"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:12
+msgid "Disable Export"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:17
+msgid "Exporting is disabled for automatic jobs in the general plugin settings. The current settings will only be applied to bulk or individual custom exports."
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:24
+#: includes/Core/Views/Partials/Settings/import.php:24
+msgid "Product Information"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:29
+#: includes/Core/Views/Partials/Settings/general.php:82
+#: includes/Core/Views/Partials/Settings/import.php:29
+msgid "Title"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:31
+#: includes/Core/Views/Partials/Settings/import.php:31
+msgid "Stock"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:33
+#: includes/Core/Views/Partials/Settings/import.php:33
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:153
+#: includes/Modules/Importer/UserListingsTable.php:267
+msgid "Price"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:35
+#: includes/Core/Views/Partials/Settings/import.php:35
+msgid "Images"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:37
+#: includes/Core/Views/Partials/Settings/import.php:37
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:146
+#: includes/Modules/Importer/UserListingsTable.php:258
+msgid "SKU"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:39
+#: includes/Core/Views/Partials/Settings/import.php:41
+msgid "Product Attributes"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:41
+msgid "Woo Status"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:43
+#: includes/Core/Views/Partials/Settings/general.php:85
+#: includes/Core/Views/Partials/Settings/import.php:45
+msgid "Variations"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:45
+#: includes/Core/Views/Partials/Settings/import.php:49
+msgid "Description"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:47
+msgid "Use description:"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:47
+#: includes/Core/Views/Partials/Settings/import.php:51
+msgid "Long Description"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:47
+#: includes/Core/Views/Partials/Settings/general.php:84
+#: includes/Core/Views/Partials/Settings/import.php:51
+msgid "Short Description"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:53
+#: includes/Core/Views/Partials/Settings/import.php:57
+msgid "Actions"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:59
+msgid "Exporter Actions"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:64
+#: includes/Core/Views/Partials/Settings/import.php:68
+msgid "Update Products Only"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:65
+#: includes/Core/Views/Partials/Settings/import.php:69
+msgid "Create and Update Products"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:73
+msgid "When deleting the product"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:78
+msgid "Do nothing"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:79
+msgid "Pause publication"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:80
+msgid "Delete publication"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:88
+#: includes/Core/Views/Partials/Settings/import.php:166
+msgid "Create product from paused publications"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:90
+#: includes/Core/Views/Partials/Settings/import.php:168
+msgid "If the publication ends, move to trash"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/export.php:103
+msgid "Save export settings"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:35
+msgid "Additional Images"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:36
+msgid "Here you configure the general parameters that will apply to all publications, such as photos and description template."
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:56
+msgid "Upload Image…"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:62
+msgid "No file selected"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:76
+#: includes/Core/Views/Partials/Settings/general.php:79
+msgid "Description Template"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:83
+msgid "Product Description"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:99
+msgid "Automatic Import or Export"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:100
+msgid "This will be used to execute background processes for either export or import."
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:107
+#: includes/Core/Views/Partials/Settings/sync.php:15
+msgid "Apply on"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:111
+#: includes/Core/Views/Partials/Settings/sync.php:19
+msgid "Deactivate"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:112
+msgid "Import (From Meli to Woo)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:113
+msgid "Export (From Woo to Meli)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:123
+#: includes/Core/Views/Partials/Settings/sync.php:30
+msgid "Items per batch"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:131
+#: includes/Core/Views/Partials/Settings/sync.php:38
+msgid "Frequency (minutes)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:139
+#: includes/Core/Views/Partials/Settings/sync.php:46
+msgid "Method"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:143
+#: includes/Core/Views/Partials/Settings/sync.php:50
+msgid "WordPress"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:144
+#: includes/Core/Views/Partials/Settings/sync.php:51
+msgid "Custom"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:165
+#: includes/Core/Views/Partials/Settings/sync.php:72
+msgid "External automatic synchronization URL (custom):"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:186
+msgid "Save General Settings"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:201
+#: includes/Core/Views/Partials/Settings/general.php:206
+msgid "Select or Upload Media"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/general.php:241
+msgid "No image selected"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:9
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:20
+msgid "Import"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:11
+msgid "Disable Import"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:15
+msgid "Importing is disabled for automatic jobs in the general plugin settings. The current settings will only be applied to bulk or individual custom imports."
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:39
+msgid "Categories"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:43
+msgid "MercadoLibre Status"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:47
+msgid "Import variations as:"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:47
+msgid "One Product with Variations"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:47
+msgid "Multiple Products"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:51
+msgid "Apply description to:"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:63
+msgid "Importer Actions"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:77
+msgid "Variations on Import"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:82
+msgid "Each imported publication will have the following price or stock difference applied. If the product has an associated export template with a price or stock modification, it will be ignored."
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:88
+msgid "Price variation"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:116
+msgid "Percentage Value (%)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:117
+#: includes/Core/Views/Partials/meliconnect_product_edit_general_tab.php:19
+msgid "Fixed Value ($)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:127
+msgid "Stock variation"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:155
+#: includes/Core/Views/Partials/meliconnect_product_edit_stock_tab.php:18
+msgid "Units"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:170
+msgid "If the publication is not linked, match the product by SKU or GTIN"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:172
+msgid "Create attributes in WooCommerce and assign them to the imported product"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/import.php:186
+msgid "Save Import Settings"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:9
+msgid "Automatic Synchronization"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:20
+#: includes/Modules/Importer/Views/importer.php:329
+msgid "Active"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:85
+msgid "From Woo to Meli"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:94
+#: includes/Core/Views/Partials/Settings/sync.php:134
+msgid "Stock Synchronization"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:97
+msgid "When changing the STOCK in WooCommerce, WooCommerce hooks are used to capture the new stock and update it in MercadoLibre. <br>(Do not enable this feature if you have different stocks in both channels.)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:102
+#: includes/Core/Views/Partials/Settings/sync.php:142
+msgid "Price Synchronization"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:105
+msgid "When changing the PRICE in WooCommerce, WooCommerce hooks are used to capture the new price and update it in MercadoLibre. <br>(Do not enable this feature if you have different prices in both channels.)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:110
+msgid "Status Synchronization"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:113
+msgid "When changing the STATUS in WooCommerce, update it in MercadoLibre. <br>(Do not enable this feature if you manage different product statuses in both channels.)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:124
+msgid "From Meli to Woo"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:137
+msgid "When changing the STOCK in MercadoLibre, update the same in WooCommerce. <br>(Do not enable this feature if you have different stocks in both channels.)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:145
+msgid "When changing the PRICE in MercadoLibre, update the same in WooCommerce. <br>(Do not enable this feature if you have different prices in both channels.)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:150
+msgid "Variation Price Synchronization"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:153
+msgid "When changing the PRICE in MercadoLibre, update it across all product variations in WooCommerce. <br>(Do not enable this feature if you have different prices in both channels.)"
+msgstr ""
+
+#: includes/Core/Views/Partials/Settings/sync.php:171
+msgid "Save Sync Settings"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:11
+msgid "User:"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:12
+msgid "User ID:"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:13
+msgid "Access Token:"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:14
+msgid "Hub Connection:"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:20
+msgid "Email"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:23
+msgid "Site ID"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:26
+msgid "Country"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:29
+msgid "Seller Experience"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:32
+msgid "Registration Level"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:35
+msgid "Registration Date"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:38
+msgid "Has MercadoShops"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:40
+msgid "Does Not Have MercadoShops"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:44
+msgid "Can Publish"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:46
+msgid "Cannot Publish"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:51
+msgid "Tags"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:57
+msgid "The token has expired."
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:57
+msgid "You need to reauthorize the domain in the"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:57
+msgid "MeliConnect App"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:59
+msgid "Could Not Find User Data on MercadoLibre"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:62
+msgid "It seems there is a permission issue trying to connect to the MercadoLibre API."
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:63
+msgid "The received HTTP code is 403. Contact your hosting provider. For more information, you can consult the following link."
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_hub_users_cards.php:64
+msgid "Unlock MercadoLibre Server IPs"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:5
+msgid "To Update"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:9
+msgid "View on Meli"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:14
+msgid "Listing ID"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:15
+msgid "Seller ID"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:16
+msgid "Meli Status"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:31
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:230
+#: includes/Modules/Importer/UserListingsTable.php:204
+#: includes/Modules/Importer/UserListingsTable.php:289
+msgid "Desvinculate"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:32
+msgid "Desvinculate and Pause on Meli"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:33
+msgid "Desvinculate and Delete on Meli"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:45
+msgid "To Create"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:48
+msgid "Meli Listing ID:"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:50
+msgid "Enter Meli Listing ID"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:54
+msgid "Save Meli Listing ID"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_meta_box.php:58
+msgid "Create Product Template"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_general_tab.php:4
+msgid "Mercadolibre Price Variation"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_general_tab.php:18
+msgid "Percentage (%)"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_general_tab.php:22
+msgid "Price variation settings for Mercadolibre."
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:8
+msgid "Seller"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:25
+msgid "Category"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:40
+msgid "Some data are related to selected category.If you want to change it, please save before proceed."
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:51
+msgid "Title Structure"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:57
+msgid "Description Structure"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:65
+msgid "How is the price formed? (*)"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:67
+msgid "Sale price"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:68
+msgid "Only regular price"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:78
+msgid "Has Sync"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:80
+msgid "Yes"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:81
+msgid "No"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:94
+msgid "Condition"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:96
+msgid "New"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:97
+msgid "Used"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:105
+msgid "Manufacturing Time"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:111
+msgid "Warranty"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:117
+msgid "Listing Type ID"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:126
+msgid "Channels"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:129
+msgid "Mercadoshop"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_mercadolibre_tab.php:130
+msgid "Mercadolibre y Mercadoshop"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_stock_tab.php:4
+msgid "Mercadolibre stock Variation"
+msgstr ""
+
+#: includes/Core/Views/Partials/meliconnect_product_edit_stock_tab.php:21
+msgid "stock variation settings for Mercadolibre."
+msgstr ""
+
+#: includes/Core/Views/settings.php:24
+msgid "Here you can control the general behavior of export jobs, import jobs, automatic synchronization tasks, and addons configurations."
+msgstr ""
+
+#: includes/Core/Views/settings.php:29
+msgid "Help"
+msgstr ""
+
+#: includes/Core/Views/template.php:33
+msgid "Loading settings"
+msgstr ""
+
+#: includes/Modules/Exporter/Controllers/ExportController.php:58
+#: includes/Modules/Exporter/Controllers/ExportController.php:86
+#: includes/Modules/Exporter/Controllers/ExportController.php:215
+#: includes/Modules/Exporter/Controllers/ExportController.php:239
+#: includes/Modules/Importer/Controllers/ImportController.php:63
+#: includes/Modules/Importer/Controllers/ImportController.php:93
+#: includes/Modules/Importer/Controllers/ImportController.php:123
+#: includes/Modules/Importer/Controllers/ImportController.php:179
+#: includes/Modules/Importer/Controllers/ImportController.php:259
+#: includes/Modules/Importer/Controllers/ImportController.php:277
+#: includes/Modules/Importer/Controllers/ImportController.php:296
+#: includes/Modules/Importer/Controllers/ImportController.php:314
+#: includes/Modules/Importer/Controllers/ImportController.php:343
+#: includes/Modules/Importer/Controllers/ImportController.php:369
+#: includes/Modules/Importer/Controllers/ImportController.php:452
+msgid "Invalid nonce"
+msgstr ""
+
+#: includes/Modules/Exporter/Controllers/ExportController.php:102
+#: includes/Modules/Exporter/Controllers/ExportController.php:228
+#: includes/Modules/Exporter/Controllers/ExportController.php:252
+#: includes/Modules/Importer/Controllers/ImportController.php:77
+#: includes/Modules/Importer/Controllers/ImportController.php:106
+#: includes/Modules/Importer/Controllers/ImportController.php:385
+#: includes/Modules/Importer/Controllers/ImportController.php:466
+msgid "Invalid data"
+msgstr ""
+
+#: includes/Modules/Exporter/Controllers/ExportController.php:233
+#: includes/Modules/Importer/Controllers/ImportController.php:475
+msgid "Product desvinculated successfully."
+msgstr ""
+
+#: includes/Modules/Exporter/Exporter.php:20
+#: includes/Modules/Exporter/Exporter.php:21
+#: includes/Modules/Exporter/Views/exporter.php:12
+msgid "Exporter"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:17
+msgid "Exported Product"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:18
+msgid "Exported Products"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:31
+msgid "Product Name"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:32
+msgid "Woo Product Data"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:33
+msgid "Template"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:34
+msgid "Meli Listing"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:35
+msgid "Export Status"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:125
+msgid "No se encontró un producto con el ID: "
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:145
+#: includes/Modules/Importer/UserListingsTable.php:255
+msgid "ID"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:146
+msgid "No SKU"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:147
+msgid "GTIN"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:147
+msgid "No GTIN"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:148
+#: includes/Modules/Importer/UserListingsTable.php:261
+msgid "Product Type"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:154
+#: includes/Modules/Importer/UserListingsTable.php:268
+msgid "Sold Quantity"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:155
+#: includes/Modules/Importer/UserListingsTable.php:269
+msgid "Available Quantity"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:167
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:229
+#: includes/Modules/Importer/UserListingsTable.php:202
+msgid "View"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:168
+#: includes/Modules/Importer/UserListingsTable.php:203
+msgid "Edit"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:180
+msgid "Using Template"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:181
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:223
+#: includes/Modules/Importer/UserListingsTable.php:169
+#: includes/Modules/Importer/UserListingsTable.php:278
+msgid "To create"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:186
+msgid "Custom match"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:189
+#: includes/Modules/Importer/UserListingsTable.php:195
+msgid "Clear Match"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:206
+#: includes/Modules/Importer/UserListingsTable.php:218
+msgid "Find match"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:222
+#: includes/Modules/Importer/UserListingsTable.php:168
+msgid "To update"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:237
+msgid "Vinculate"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:252
+msgid "Last Json Sent"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:257
+#: includes/Modules/Importer/UserListingsTable.php:309
+msgid "Processing"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:260
+#: includes/Modules/Importer/UserListingsTable.php:312
+msgid "Paused"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:263
+#: includes/Modules/Importer/UserListingsTable.php:315
+msgid "Failed"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:271
+msgid "Show error"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:278
+msgid "Exported"
+msgstr ""
+
+#: includes/Modules/Exporter/Services/ExportProductsTable.php:282
+#: includes/Modules/Importer/UserListingsTable.php:321
+msgid "Pending"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:30
+msgid "Exporting is in progress"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:32
+#: includes/Modules/Importer/Views/importer.php:83
+msgid "Progress:"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:56
+#: includes/Modules/Importer/Views/importer.php:113
+msgid "Executed:"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:57
+#: includes/Modules/Importer/Views/importer.php:114
+msgid "Total:"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:62
+#: includes/Modules/Exporter/Views/exporter.php:109
+#: includes/Modules/Importer/Views/importer.php:119
+#: includes/Modules/Importer/Views/importer.php:166
+msgid "Success:"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:63
+#: includes/Modules/Exporter/Views/exporter.php:110
+#: includes/Modules/Importer/Views/importer.php:120
+#: includes/Modules/Importer/Views/importer.php:167
+msgid "Fails:"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:69
+#: includes/Modules/Importer/Views/importer.php:126
+msgid "Execution Time:"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:81
+msgid "Exporting finished"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:88
+#: includes/Modules/Importer/Views/importer.php:145
+msgid "View log details"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:94
+msgid "Start new export"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:128
+msgid "Woocommerce Products"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:145
+msgid "Search By Name, SKU, Meli listing id ..."
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:151
+#: includes/Modules/Importer/Views/importer.php:316
+msgid "All Vinculations"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:152
+#: includes/Modules/Importer/Views/importer.php:317
+msgid "With Vinculated Product"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:153
+#: includes/Modules/Importer/Views/importer.php:318
+msgid "Without Vinculated Product"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:154
+#: includes/Modules/Importer/Views/importer.php:319
+msgid "With Vinculated Template"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:155
+#: includes/Modules/Importer/Views/importer.php:320
+msgid "Without Vinculated Template"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:164
+#: includes/Modules/Importer/Views/importer.php:338
+msgid "All Types"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:165
+msgid "Simple Products"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:166
+msgid "Variable Products"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:178
+#: includes/Modules/Importer/Views/importer.php:191
+msgid "All"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:186
+#: includes/Modules/Importer/Views/importer.php:353
+msgid "Filter"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:212
+#: includes/Modules/Importer/Views/importer.php:379
+msgid "Bulk Actions"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:213
+msgid "Export Selected"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:214
+msgid "Match selected with listings by name"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:215
+msgid "Match selected with listings by sku"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:216
+msgid "Unmatch selected"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:217
+msgid "Match selected with listings by gtin"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:218
+msgid "Desvinculate selected with listings"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:219
+msgid "Desvinculate selected and pause in meli"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:220
+msgid "Desvinculate selected and clouse in meli"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:226
+#: includes/Modules/Importer/Views/importer.php:390
+msgid "Apply"
+msgstr ""
+
+#: includes/Modules/Exporter/Views/exporter.php:230
+#: includes/Modules/Importer/Views/importer.php:394
+msgid "Items selected"
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:86
+msgid "Something went wrong"
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:115
+msgid "Error applying match"
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:145
+msgid "No listings to import with pending vinculation"
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:173
+msgid "Listings matched with products"
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:191
+msgid "Problem clearing matches"
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:195
+msgid "Matches cleared"
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:205
+msgid "Process not found"
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:233
+msgid "User not found"
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:240
+msgid "There was an error getting the user listings. Check connections page."
+msgstr ""
+
+#: includes/Modules/Importer/Controllers/ImportController.php:557
+msgid "No products found"
+msgstr ""
+
+#: includes/Modules/Importer/Importer.php:17
+#: includes/Modules/Importer/Importer.php:18
+#: includes/Modules/Importer/Views/importer.php:12
+msgid "Importer"
+msgstr ""
+
+#: includes/Modules/Importer/Models/UserListingToImport.php:124
+msgid "User listings reset successfully"
+msgstr ""
+
+#: includes/Modules/Importer/Models/UserListingToImport.php:128
+msgid "There was an error resetting the user listings"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:18
+msgid "User Listing"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:19
+msgid "User Listings"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:139
+msgid "No user listings available."
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:175
+msgid "Match by same Name"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:176
+msgid "Match by same SKU"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:177
+msgid "Custom Match"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:256
+msgid "User ID"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:260
+msgid "Status"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:262
+msgid "Listing Type"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:278
+msgid "Using template"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:318
+msgid "Imported"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:338
+msgid "Listing"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:339
+msgid "Listing Data"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:343
+msgid "Woo Product"
+msgstr ""
+
+#: includes/Modules/Importer/UserListingsTable.php:345
+msgid "Import Status"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:26
+msgid "Find Match"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:27
+msgid "close"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:33
+msgid "Meli listing:"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:36
+msgid "Woo product:"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:67
+msgid "Apply match"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:81
+msgid "Importing is in progress"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:91
+msgid "Pause"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:138
+msgid "Importing finished"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:151
+msgid "Strat new import"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:181
+msgid "Select seller"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:185
+msgid "Select publication status"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:189
+msgid "Only Active"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:190
+msgid "Active and Paused"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:198
+msgid "Get Listings"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:202
+msgid "Clean Listings"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:222
+msgid "Match Listings with Products by SKU"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:225
+msgid "Match Listings with Products by Name"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:228
+msgid "Match Items with Templates"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:231
+msgid "Clear Matches"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:245
+msgid "Total active items"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:250
+msgid "Not active items"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:256
+msgid "Woocommerce"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:258
+msgid "Vinculated Products"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:264
+msgid "Not Vinculated Products"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:272
+msgid "Process Import"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:290
+msgid "Mercadolibre Listings"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:310
+msgid "Search By Title, SKU, Meli listing id ..."
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:328
+msgid "All Status"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:330
+msgid "Not Active"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:339
+msgid "Simple Listings"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:340
+msgid "Variable Listings"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:380
+msgid "Import Selected"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:381
+msgid "Match selected with products by name"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:382
+msgid "Match selected with products by sku"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:383
+msgid "Desvinculate selected with products"
+msgstr ""
+
+#: includes/Modules/Importer/Views/importer.php:384
+msgid "Desvinculate selected and delete in woocommerce"
+msgstr ""

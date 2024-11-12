@@ -1,0 +1,55 @@
+<?php
+
+namespace StoreSync\Meliconnect\Core\Helpers;
+
+class HubApi
+{
+    private static $_apiUrl = "https://www.meliconnect.app/api/";
+
+    public static function connectHubApi($urlPath, $args, $method = 'GET', $timeOut = 30)
+    {
+        $url = self::$_apiUrl . $urlPath;
+
+        $wp_args = [
+            'method'  => $method,
+            'timeout' => $timeOut,
+        ];
+
+        if (strtoupper($method) === 'POST' || strtoupper($method) === 'PUT') {
+            $wp_args['body'] = json_encode($args);
+            $wp_args['headers'] = [
+                'Content-Type' => 'application/json'
+            ];
+        } else {
+            $wp_args['body'] = $args;
+        }
+
+        // Make the call and store the response in $res
+        $res = wp_remote_request($url, $wp_args);
+
+        if (is_wp_error($res)) {
+            return [
+                'success' => false,
+                'response' => $res->get_error_messages(),
+                'errorCodes' => $res->get_error_codes(),
+                'errorData' => $res->get_error_data()
+            ];
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($res);
+        $responseBody = json_decode(wp_remote_retrieve_body($res));
+
+        if (($responseCode == 200 || $responseCode == 201) && !isset($responseBody->error)) {
+            update_option('meliconnect_api_hub_errors', []);
+            return ['success' => true, 'response' => $responseBody];
+        } else {
+            $errorBody = $responseBody->error ?? 'Unknown error';
+            update_option('meliconnect_api_hub_errors', [$errorBody]);
+            return [
+                'success' => false,
+                'response' => $responseBody,
+                'errorCodes' => ["errorUserId"]
+            ];
+        }
+    }
+}
