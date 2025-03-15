@@ -21,7 +21,7 @@ class WooCommerceProductCreationService
         foreach ($productsData as $product_data) {
             Helper::logData('-------------- START Processing product: ' . $product_data['title'] . '---------------- ', 'custom-import');
 
-            //Helper::logData('Received data: ' . var_export($product_data, true), 'custom-import');
+            //Helper::logData('Received data: ' . wp_json_encode($product_data), 'custom-import');
 
             if (isset($product_data['woo_product_id']) && $product_data['action'] === 'update') {
                 $woo_product = wc_get_product($product_data['woo_product_id']);
@@ -80,7 +80,7 @@ class WooCommerceProductCreationService
             if (isset($product_data['extra_data']['attributes']) && $product_data['extra_data']['attributes'] !== false) {
                 $productAttributes = $this->createOrUpdateProductAttributes($woo_product, $product_data['extra_data']['attributes']);
 
-                //Helper::logData('Attributes created:' . var_export($productAttributes, true), 'custom-import');
+                //Helper::logData('Attributes created:' . wp_json_encode($productAttributes), 'custom-import');
                 Helper::logData('Attributes created and assigned to product', 'custom-import');
                 //$woo_product->set_attributes($productAttributes);
             } else {
@@ -116,7 +116,7 @@ class WooCommerceProductCreationService
     {
         Helper::logData('Woo Product id: ' . $woo_product->get_id(), 'custom-import');
 
-        //Helper::logData('Product data: ' . var_export($product_data, true), 'custom-import');
+        Helper::logData('Product data: ' . wp_json_encode($product_data), 'custom-import');
 
         // Asignar el título del producto
         if (isset($product_data['title']) && $product_data['title'] !== false) {
@@ -127,7 +127,7 @@ class WooCommerceProductCreationService
 
         if (isset($product_data['sku']) && $product_data['sku'] !== false) {
             // Verificar si el SKU ya existe
-            $existing_product_id = wc_get_product_id_by_sku($product_data['sku']);
+            $existing_product_id = Helper::get_active_product_id_by_sku($product_data['sku']);
 
             if ($existing_product_id) {
                 // Si el SKU ya existe, puedes optar por omitir la asignación o manejarlo de otra manera
@@ -139,6 +139,13 @@ class WooCommerceProductCreationService
             }
         } else {
             Helper::logData('SKU ignored by settings', 'custom-import');
+        }
+
+        if (isset($product_data['gtin']) && $product_data['gtin'] !== false) {
+            $woo_product->set_global_unique_id($product_data['gtin']);
+            Helper::logData('GTIN: ' . $product_data['gtin'], 'custom-import');
+        } else {
+            Helper::logData('GTIN ignored by settings', 'custom-import');
         }
 
         // Descripciones
@@ -247,7 +254,7 @@ class WooCommerceProductCreationService
 
         foreach ($variations as $variation) {
             foreach ($variation['variable_attrs'] as $attr) {
-                //Helper::logData('Variable attribute: ' . var_export($attr, true), 'custom-import');
+                //Helper::logData('Variable attribute: ' . wp_json_encode($attr), 'custom-import');
 
                 $variable_attrs_fromated[$attr['name']][] = $attr['value_name'];
             }
@@ -317,7 +324,7 @@ class WooCommerceProductCreationService
 
                 $term = get_term_by('name', $attr['value_name'], $taxonomy_name);
 
-                //Helper::logData('Term: ' . var_export($term, true), 'custom-import');
+                //Helper::logData('Term: ' . wp_json_encode($term), 'custom-import');
 
                 if ($term) {
                     $attributes[$taxonomy_name] = $term->slug;
@@ -326,7 +333,7 @@ class WooCommerceProductCreationService
                 }
             }
 
-            Helper::logData('Attributes to set in variation: ' . var_export($attributes, true), 'custom-import');
+            Helper::logData('Attributes to set in variation: ' . wp_json_encode($attributes), 'custom-import');
             $variation->set_attributes($attributes);
 
             // Guardar variación
@@ -346,7 +353,7 @@ class WooCommerceProductCreationService
         $custom_attributes = [];
 
         // Registrar los atributos no variables recibidos
-        //Helper::logData('Non-variable attributes received: ' . var_export($non_variable_attrs, true), 'custom-import');
+        //Helper::logData('Non-variable attributes received: ' . wp_json_encode($non_variable_attrs), 'custom-import');
 
         foreach ($non_variable_attrs as $attr) {
             if ($attr['id'] === 'SELLER_SKU') {
@@ -516,19 +523,19 @@ class WooCommerceProductCreationService
             $attr->set_visible($attributeData['visible']);
             $attr->set_variation($attributeData['variation']);
 
-            $log_text .= "Final attribute object created or updated: " . var_export($attr, true) . "\n";
+            $log_text .= "Final attribute object created or updated: " . wp_json_encode($attr) . "\n";
 
             // Añadir o actualizar el atributo en el array existente
             $productAttributes[$taxonomyName] = $attr;
         }
 
         $log_text .= "\n\n\n";
-        $log_text .= "Final product attributes array: " . var_export($productAttributes, true) . "\n";
+        $log_text .= "Final product attributes array: " . wp_json_encode($productAttributes) . "\n";
 
         $product->set_attributes($productAttributes); // Guardar todos los atributos combinados
         $product->save();
 
-        $log_text .= "Product saved with attributes: " . var_export($productAttributes, true) . "\n";
+        $log_text .= "Product saved with attributes: " . wp_json_encode($productAttributes) . "\n";
         $log_text .= "---- End createOrUpdateProductAttributes for product ID: " . $product->get_id() . "----";
         $log_text .= "\n\n\n";
 
@@ -667,36 +674,54 @@ class WooCommerceProductCreationService
 
     private function upload_image_to_media_library($image_url)
     {
-        // Función para subir la imagen a la galería de medios
-        $upload_dir = wp_upload_dir();
-        $image_data = file_get_contents($image_url);
+        global $wp_filesystem;
 
-        if (!$image_data) {
-            Helper::logData('Error fetching image data', 'custom-import');
+        // Inicializar el sistema de archivos
+        if (!function_exists('WP_Filesystem')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
+        if (!WP_Filesystem()) {
+            Helper::logData('Error initializing WP_Filesystem', 'custom-import');
             return false;
         }
 
+        // Obtener datos de la imagen usando wp_remote_get()
+        $response = wp_remote_get($image_url);
+
+        if (is_wp_error($response)) {
+            Helper::logData('Error fetching image data: ' . $response->get_error_message(), 'custom-import');
+            return false;
+        }
+
+        $image_data = wp_remote_retrieve_body($response);
+
+        if (!$image_data) {
+            Helper::logData('Error retrieving image body', 'custom-import');
+            return false;
+        }
+
+        // Obtener directorio de uploads
+        $upload_dir = wp_upload_dir();
         $filename = basename($image_url);
+        $file_path = trailingslashit($upload_dir['path']) . $filename;
 
-        // Guardar la imagen en el directorio de uploads
-        $file_path = $upload_dir['path'] . '/' . $filename;
-        file_put_contents($file_path, $image_data);
-
-        if (!file_put_contents($file_path, $image_data)) {
+        // Guardar la imagen usando WP_Filesystem
+        if (!$wp_filesystem->put_contents($file_path, $image_data, FS_CHMOD_FILE)) {
             Helper::logData('Failed to save image to upload directory', 'custom-import');
             return false;
         }
 
-        // Preparar la imagen para subirla a la biblioteca de medios
+        // Preparar los datos para insertar en la biblioteca de medios
         $wp_filetype = wp_check_filetype($filename, null);
         $attachment = array(
             'post_mime_type' => $wp_filetype['type'],
-            'post_title' => sanitize_file_name($filename),
-            'post_content' => '',
-            'post_status' => 'inherit'
+            'post_title'     => sanitize_file_name($filename),
+            'post_content'   => '',
+            'post_status'    => 'inherit'
         );
 
-        // Insertar la imagen en la biblioteca de medios
+        // Insertar el archivo en la biblioteca de medios
         $attach_id = wp_insert_attachment($attachment, $file_path);
 
         if (!$attach_id || is_wp_error($attach_id)) {
@@ -704,15 +729,14 @@ class WooCommerceProductCreationService
             return false;
         }
 
-        // Generar los metadatos de la imagen
-        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        // Generar metadatos para la imagen
+        require_once ABSPATH . 'wp-admin/includes/image.php';
         $attach_data = wp_generate_attachment_metadata($attach_id, $file_path);
-
-
         wp_update_attachment_metadata($attach_id, $attach_data);
 
         return $attach_id;
     }
+
 
     private function create_or_update_gallery_images($post_id, $gallery_images_data)
     {
@@ -825,13 +849,13 @@ class WooCommerceProductCreationService
 
     private function processCategory($category, $parentId = 0)
     {
-        //Helper::logData('processCategory: ' . json_encode($category), 'custom-import');
+        //Helper::logData('processCategory: ' . wp_json_encode($category), 'custom-import');
 
         if (!isset($category['name'])) {
             return null;
         }
 
-        //Helper::logData('processCategoryName: ' . json_encode($category['name']), 'custom-import');
+        //Helper::logData('processCategoryName: ' . wp_json_encode($category['name']), 'custom-import');
         // Verificar si la categoría ya existe por nombre y padre
         $existingCategory = get_term_by('name', $category['name'], 'product_cat');
 

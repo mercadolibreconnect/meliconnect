@@ -156,7 +156,7 @@ class MeliconMeli
         $opts = [
             CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode($body)
+            CURLOPT_POSTFIELDS => wp_json_encode($body)
         ];
 
         return $this->execute($path, $opts, $params);
@@ -175,7 +175,7 @@ class MeliconMeli
         $opts = [
             CURLOPT_HTTPHEADER => ['Content-Type: application/json; Accept: application/json; charset=UTF-8;'],
             CURLOPT_CUSTOMREQUEST => "PUT",
-            CURLOPT_POSTFIELDS => json_encode($body)
+            CURLOPT_POSTFIELDS => wp_json_encode($body)
         ];
 
         return $this->execute($path, $opts, $params);
@@ -224,25 +224,46 @@ class MeliconMeli
      */
     private function execute($path, $opts = [], $params = [], $assoc = false)
     {
+        // Construye la URI completa con parámetros
         $uri = $this->make_path($path, $params);
 
-        $ch = curl_init($uri);
-        curl_setopt_array($ch, self::CURL_OPTS);
-        if (!empty($opts)) {
-            curl_setopt_array($ch, $opts);
+        // Configura los argumentos para la solicitud
+        $args = [
+            'method'  => $opts['method'] ?? 'GET', // Usa 'GET' por defecto si no se especifica
+            'headers' => $opts['headers'] ?? [],
+            'body'    => $opts['body'] ?? null,
+            'timeout' => $opts['timeout'] ?? 15, // Timeout por defecto
+        ];
+
+        // Ejecuta la solicitud
+        $response = wp_remote_request($uri, $args);
+
+        // Maneja posibles errores en la solicitud
+        if (is_wp_error($response)) {
+            return [
+                'body'     => null,
+                'httpCode' => 500,
+                'error'    => $response->get_error_message(),
+            ];
         }
 
-        $return["body"] = json_decode(curl_exec($ch), $assoc);
-        $return["httpCode"] = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // Procesa la respuesta
+        $return = [
+            'body'     => json_decode(wp_remote_retrieve_body($response), $assoc),
+            'httpCode' => wp_remote_retrieve_response_code($response),
+        ];
 
-        /* if (isset($return["body"]->message) && $return["body"]->message == 'Invalid token') {
+        // Lógica opcional si el token es inválido
+        /*
+        if (isset($return['body']->message) && $return['body']->message === 'Invalid token') {
             $meliconnect_connection = new MeliconnectConnection();
             $meliconnect_connection->syncHubUsersData();
-        } */
+        }
+        */
 
         return $return;
     }
+
 
     /**
      * Construct a URL to make a request
@@ -291,7 +312,7 @@ class MeliconMeli
 
         // Manejo de errores
         if (is_wp_error($response)) {
-            error_log('Error HTTP: ' . $response->get_error_message());  // Guardar el error en el log
+            Helper::logData('Error HTTP: ' . $response->get_error_message());  // Guardar el error en el log
             return null;  // Retornar null en caso de error
         }
 
@@ -300,7 +321,7 @@ class MeliconMeli
 
         // Verificar si el código HTTP no es 200
         if ($httpCode !== 200) {
-            error_log("Error HTTP: " . $httpCode);
+            Helper::logData("Error HTTP: " . $httpCode);
         }
 
         // Decodificar el cuerpo de la respuesta
@@ -310,7 +331,7 @@ class MeliconMeli
 
         // Verificar si hubo errores al decodificar el JSON
         if (json_last_error() !== JSON_ERROR_NONE) {
-            error_log('Error JSON: ' . json_last_error_msg());  // Guardar el error de JSON en error_log
+            Helper::logData('Error JSON: ' . json_last_error_msg());  // Guardar el error de JSON en error_log
         }
 
         return $return;
@@ -356,7 +377,7 @@ class MeliconMeli
         // Verificar si se devolvió un error
         if (is_wp_error($image_data)) {
             // Manejar el error (puedes registrar el error, devolver null, etc.)
-            error_log('Error al obtener datos de la imagen de MercadoLibre: ' . $image_data->get_error_message());
+            Helper::logData('Error al obtener datos de la imagen de MercadoLibre: ' . $image_data->get_error_message());
             return null;
         }
 

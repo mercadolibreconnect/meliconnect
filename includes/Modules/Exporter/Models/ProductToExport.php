@@ -3,6 +3,7 @@
 namespace StoreSync\Meliconnect\Modules\Exporter\Models;
 
 use Error;
+use StoreSync\Meliconnect\Core\Helpers\Helper;
 
 class ProductToExport
 {
@@ -34,18 +35,18 @@ class ProductToExport
         if (empty($products) || !is_array($products)) {
             return;
         }
-
+    
         global $wpdb;
-
+    
         self::init();
-
+    
         $table_name = self::$table_name;
         $process_id = hash('sha256', time() . bin2hex(random_bytes(8)));
-
+    
         foreach ($products as $product) {
-
-            // Preparar los datos para la inserción o actualización
-            $data = [
+    
+            // Preparar los valores de la consulta directamente
+            $columns = [
                 'woo_product_id' => $product['product_id'],
                 'woo_product_name' => $product['product_name'],
                 'woo_sku' => $product['sku'],
@@ -64,30 +65,42 @@ class ProductToExport
                 'created_at' => current_time('mysql'),
                 'updated_at' => current_time('mysql'),
             ];
-
-            // Preparar los valores para la actualización en caso de duplicados
-            $update_fields = array_map(function ($key) {
-                // Excluir los campos que no queremos actualizar en caso de duplicados
-                if (in_array($key, ['export_status', 'export_error', 'process_id', 'created_at'])) {
-                    return "$key = $key";
-                }
-                return "$key = VALUES($key)";
-            }, array_keys($data));
-
+    
+            // Construir la consulta con placeholders
+            $columns_placeholders = implode(', ', array_keys($columns));
+            $values_placeholders = implode(', ', array_fill(0, count($columns), '%s'));
+    
             // Ejecutar la consulta SQL con ON DUPLICATE KEY UPDATE
-            $query = "
-            INSERT INTO $table_name (" . implode(', ', array_keys($data)) . ")
-            VALUES (" . implode(', ', array_fill(0, count($data), '%s')) . ")
-            ON DUPLICATE KEY UPDATE " . implode(', ', $update_fields);
-
-            $wpdb->query(
+            // No actualizamos 'export_status', 'export_error', 'process_id', 'created_at' para mantener sus valores viejos
+            $result = $wpdb->query(
                 $wpdb->prepare(
-                    $query,
-                    array_values($data)
+                    "INSERT INTO $table_name ($columns_placeholders) VALUES ($values_placeholders) 
+                    ON DUPLICATE KEY UPDATE 
+                        woo_product_name = VALUES(woo_product_name), 
+                        woo_sku = VALUES(woo_sku), 
+                        woo_gtin = VALUES(woo_gtin), 
+                        woo_product_type = VALUES(woo_product_type), 
+                        woo_status = VALUES(woo_status), 
+                        vinculated_template_id = VALUES(vinculated_template_id), 
+                        vinculated_listing_id = VALUES(vinculated_listing_id), 
+                        listing_match_by = VALUES(listing_match_by), 
+                        template_match_by = VALUES(template_match_by), 
+                        meli_permalink = VALUES(meli_permalink), 
+                        meli_seller_id = VALUES(meli_seller_id), 
+                        updated_at = VALUES(updated_at)
+                    ",
+                    array_values($columns)
                 )
             );
+    
+            // Verificar errores
+            if ($result === false) {
+                Helper::logData('Error filling export products table: ' . $wpdb->last_error);
+            }
         }
     }
+    
+
 
     public static function get_products_to_export($products_ids)
     {
@@ -95,23 +108,23 @@ class ProductToExport
         self::init();
 
         $table_name = self::$table_name;
-        $sql = "SELECT * FROM {$table_name}";
 
+        // Si hay productos, construir y preparar la consulta directamente
         if (!empty($products_ids) && is_array($products_ids)) {
             // Construir los placeholders manualmente
             $placeholders = implode(',', array_fill(0, count($products_ids), '%s'));
 
-            // Añadir la cláusula WHERE para filtrar por IDs
-            $sql .= " WHERE woo_product_id IN ($placeholders)";
-
-            // Preparar la consulta con los valores
-            $sql = $wpdb->prepare($sql, ...$products_ids);
+            // Preparar y ejecutar la consulta con los valores
+            return $wpdb->get_results($wpdb->prepare(
+                "SELECT * FROM {$table_name} WHERE woo_product_id IN ($placeholders)",
+                ...$products_ids
+            ));
         }
 
-        $results = $wpdb->get_results($sql);
-
-        return $results;
+        // Si no se pasan productos, ejecutar la consulta sin filtro
+        return $wpdb->get_results("SELECT * FROM {$table_name}");
     }
+
 
     public static function update_product_to_export_status($woo_products_ids, $export_status, $export_error = null)
     {
@@ -131,20 +144,20 @@ class ProductToExport
 
         // Si $export_error no es null, también actualiza el campo export_error
         if ($export_error !== null) {
-            
+
             // Serializar el array de errores antes de guardarlo
             $serialized_errors = maybe_serialize($export_error);
-    
+
             $fields_to_update .= ", export_error = %s";
             $params[] = $serialized_errors;
         }
 
         if ($woo_products_ids === 'all') {
             // Actualizar todos los registros si $woo_products_ids es 'all'
-            $sql = $wpdb->prepare(
+            return $wpdb->query($wpdb->prepare(
                 "UPDATE {$table_name} SET {$fields_to_update}",
                 $params
-            );
+            ));
         } else {
             // Actualizar solo los registros con woo_product_id en la lista
             if (!is_array($woo_products_ids)) {
@@ -153,13 +166,12 @@ class ProductToExport
 
             $placeholders = implode(',', array_fill(0, count($woo_products_ids), '%d'));
 
-            $sql = $wpdb->prepare(
+
+            return $wpdb->query($wpdb->prepare(
                 "UPDATE {$table_name} SET {$fields_to_update} WHERE woo_product_id IN ($placeholders)",
                 array_merge($params, $woo_products_ids)
-            );
+            ));
         }
-
-        return $wpdb->query($sql);
     }
 
     public static function unlink_woo_product($woo_product_id)
@@ -174,21 +186,20 @@ class ProductToExport
 
         $table_name = self::$table_name; // Asegúrate de que esta propiedad tenga un valor válido
 
-        // Aseguramos que meli_listing_id es tratado como un string seguro
-        $sql = $wpdb->prepare(
-            "UPDATE {$table_name} SET vinculated_listing_id = 0 WHERE woo_product_id = '%d'",
-            $woo_product_id
-        );
 
         // Ejecutamos la consulta
-        $result = $wpdb->query($sql);
+        $result = $wpdb->query($wpdb->prepare(
+            "UPDATE {$table_name} SET vinculated_listing_id = 0 WHERE woo_product_id = %d",
+            $woo_product_id
+        ));
 
         // Verificamos si hubo algún error
         if ($result === false) {
-            error_log('Error unlinking product from user listing: ' . $wpdb->last_error);
+
+            Helper::logData('Error unlinking product from user listing: ' . $wpdb->last_error);
 
             /* $last_query = $wpdb->last_query;
-            error_log('Última consulta SQL ejecutada: ' . $last_query); */
+            Helper::logData('Última consulta SQL ejecutada: ' . $last_query); */
             return false;
         }
 

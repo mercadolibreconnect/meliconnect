@@ -30,10 +30,28 @@ class Helper
         return '<span class="melicon-tag tag ' . $class . '"> ' . $name . '</span>';
     }
 
-    public static function meliconnectPrintColorText($name, $class = 'has-text-info')
-    {
-        return '<span class="melicon-color-text ' . $class . '"> ' . $name . '</span>';
+    public static function get_active_product_id_by_sku($sku){
+
+        if(empty($sku)){
+            return null;
+        }
+        
+        global $wpdb;
+
+        $product_id = $wpdb->get_var($wpdb->prepare("
+            SELECT p.ID 
+            FROM {$wpdb->posts} p
+            INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+            WHERE pm.meta_key = '_sku'
+            AND pm.meta_value = %s
+            AND p.post_status = 'publish'
+            LIMIT 1
+        ", $sku));
+    
+        return $product_id ? (int) $product_id : null;
     }
+
+
 
     /**
      * Method printMessageBox
@@ -58,13 +76,25 @@ class Helper
         $deleteButton = $canDelete ? '<button class="delete"></button>' : '';
 
         $messageBox = sprintf(
-            '<div class="notification %s">%s%s</div>',
+            '<div class="melicon-notification %s">%s%s</div>',
             $alertClass,
             $deleteButton,
             $escapedText
         );
 
         return $messageBox;
+    }
+
+    public static function getDomainName()
+    {
+        // Verificar si HTTPS está habilitado
+        $scheme = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on') ? 'https' : 'http';
+
+        // Obtener solo el dominio sin rutas adicionales
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+
+        // Construir y devolver la URL base
+        return "$scheme://$host";
     }
 
     public static function getMeliconnectOptions($type = 'all')
@@ -92,14 +122,21 @@ class Helper
         }
 
         if ($type === 'all') {
-            // Recuperar todas las opciones que comienzan con 'melicon_'
-            $query = "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'melicon_%'";
+            // Consulta sin datos dinámicos, manejada directamente
+            $results = $wpdb->get_results(
+                "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'melicon_%'",
+                ARRAY_A
+            );
         } else {
-            // Recuperar las opciones específicas según el prefijo
-            $query = $wpdb->prepare("SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like($prefix) . '%');
+            // Consulta preparada con datos dinámicos
+            $results = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s",
+                    $wpdb->esc_like($prefix) . '%'
+                ),
+                ARRAY_A
+            );
         }
-
-        $results = $wpdb->get_results($query, ARRAY_A);
 
         if ($results) {
             foreach ($results as $row) {
@@ -145,18 +182,18 @@ class Helper
         $output = '';
 
         if (empty($sellers)) {
-            $output .= '<p>' . __('Please connect a user to your account.', 'meliconnect') . '</p>';
+            $output .= '<p>' . esc_html__('Please connect a user to your account.', 'meliconnect') . '</p>';
         } elseif (count($sellers) === 1) {
             $seller = $sellers[0];
             $output .= '<p>' . esc_html($seller->nickname) . '</p>';
             $output .= '<input type="hidden" name="' . esc_attr($selectName) . '" value="' . esc_attr($seller->user_id) . '">';
         } else {
-            $output .= '<div class="melicon-control control">';
-            $output .= '<div class="melicon-select select">';
+            $output .= '<div class="melicon-control">';
+            $output .= '<div class="melicon-select">';
             $output .= '<select name="' . esc_attr($selectName) . '">';
 
             if ($addAll) {
-                $output .= '<option value="all"' . selected($default, 'all', false) . '>' . __('All Sellers', 'meliconnect') . '</option>';
+                $output .= '<option value="all"' . selected($default, 'all', false) . '>' . esc_html__('All Sellers', 'meliconnect') . '</option>';
             }
 
             foreach ($sellers as $seller) {
@@ -173,13 +210,13 @@ class Helper
         return $output;
     }
 
-    public static function logData($data, $log_name)
+    public static function logData($data, $log_name = 'errors')
     {
         $logger = new \WC_Logger();
         $context = array('source' => 'melicon-' . $log_name);
 
         if (is_array($data) || is_object($data)) {
-            $data = json_encode($data, JSON_PRETTY_PRINT);
+            $data = wp_json_encode($data, JSON_PRETTY_PRINT);
         }
 
         $logger->info($data, $context);
@@ -204,21 +241,23 @@ class Helper
     {
         global $wpdb;
 
-        // Preparar la consulta
-        $query = $wpdb->prepare(
-            "SELECT post_id, meta_value 
-             FROM {$wpdb->postmeta} 
-             WHERE meta_key = %s",
-            $meta_key
+        // Ejecutar directamente la consulta preparada
+        $results = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT post_id, meta_value 
+                FROM {$wpdb->postmeta} 
+                WHERE meta_key = %s",
+                $meta_key
+            ),
+            ARRAY_A
         );
 
-        // Ejecutar la consulta y obtener los resultados
-        $results = $wpdb->get_results($query, ARRAY_A);
-
-        // Procesar los resultados
-        $formatted_results = array();
-        foreach ($results as $row) {
-            $formatted_results[$row['meta_value']] = $row['post_id'];
+        // Formatear los resultados como un array asociativo meta_value => post_id
+        $formatted_results = [];
+        if ($results) {
+            foreach ($results as $row) {
+                $formatted_results[$row['meta_value']] = $row['post_id'];
+            }
         }
 
         return $formatted_results;
@@ -295,7 +334,7 @@ class Helper
         $result = wp_update_post($post_data, true);
 
         if (is_wp_error($result)) {
-            error_log('Error al cambiar el estado del producto ' . $product_id . ' a borrador: ' . $result->get_error_message());
+            self::logData('Error al cambiar el estado del producto ' . $product_id . ' a borrador: ' . $result->get_error_message());
             return false;
         }
 
@@ -337,27 +376,28 @@ class Helper
         global $wpdb;
 
         // Consulta para obtener los productos y sus metadatos
-        $products = $wpdb->get_results("
-        SELECT 
-            p.ID AS product_id,
-            p.post_title AS product_name,
-            pm_sku.meta_value AS sku,
-            pm_gtin.meta_value AS gtin,
-            pm_asoc_template.meta_value AS vinculated_template_id,
-            pm_asoc_listing.meta_value AS vinculated_listing_id,
-            pm_listing_permalink.meta_value AS meli_permalink,
-            pm_listing_seller_id.meta_value AS meli_seller_id,
-            p.post_status AS status
-        FROM {$wpdb->posts} p
-        LEFT JOIN {$wpdb->postmeta} pm_sku ON p.ID = pm_sku.post_id AND pm_sku.meta_key = '_sku'
-        LEFT JOIN {$wpdb->postmeta} pm_gtin ON p.ID = pm_gtin.post_id AND pm_gtin.meta_key = '_global_unique_id'
-        LEFT JOIN {$wpdb->postmeta} pm_asoc_template ON p.ID = pm_asoc_template.post_id AND pm_asoc_template.meta_key = 'melicon_asoc_template_id'
-        LEFT JOIN {$wpdb->postmeta} pm_asoc_listing ON p.ID = pm_asoc_listing.post_id AND pm_asoc_listing.meta_key = 'melicon_meli_listing_id'
-        LEFT JOIN {$wpdb->postmeta} pm_listing_permalink ON p.ID = pm_listing_permalink.post_id AND pm_listing_permalink.meta_key = 'melicon_meli_permalink'
-        LEFT JOIN {$wpdb->postmeta} pm_listing_seller_id ON p.ID = pm_listing_seller_id.post_id AND pm_listing_seller_id.meta_key = 'melicon_meli_seller_id'
-        WHERE p.post_type = 'product'
-        AND p.post_status = 'publish'
-    ", ARRAY_A);
+        $products = $wpdb->get_results(
+            "SELECT 
+                p.ID AS product_id,
+                p.post_title AS product_name,
+                pm_sku.meta_value AS sku,
+                pm_gtin.meta_value AS gtin,
+                pm_asoc_template.meta_value AS vinculated_template_id,
+                pm_asoc_listing.meta_value AS vinculated_listing_id,
+                pm_listing_permalink.meta_value AS meli_permalink,
+                pm_listing_seller_id.meta_value AS meli_seller_id,
+                p.post_status AS status
+            FROM {$wpdb->posts} p
+            LEFT JOIN {$wpdb->postmeta} pm_sku ON p.ID = pm_sku.post_id AND pm_sku.meta_key = '_sku'
+            LEFT JOIN {$wpdb->postmeta} pm_gtin ON p.ID = pm_gtin.post_id AND pm_gtin.meta_key = '_global_unique_id'
+            LEFT JOIN {$wpdb->postmeta} pm_asoc_template ON p.ID = pm_asoc_template.post_id AND pm_asoc_template.meta_key = 'melicon_asoc_template_id'
+            LEFT JOIN {$wpdb->postmeta} pm_asoc_listing ON p.ID = pm_asoc_listing.post_id AND pm_asoc_listing.meta_key = 'melicon_meli_listing_id'
+            LEFT JOIN {$wpdb->postmeta} pm_listing_permalink ON p.ID = pm_listing_permalink.post_id AND pm_listing_permalink.meta_key = 'melicon_meli_permalink'
+            LEFT JOIN {$wpdb->postmeta} pm_listing_seller_id ON p.ID = pm_listing_seller_id.post_id AND pm_listing_seller_id.meta_key = 'melicon_meli_seller_id'
+            WHERE p.post_type = 'product'
+            AND p.post_status = 'publish'",
+            ARRAY_A
+        );
 
         // Obtener IDs de todos los productos para comprobar variaciones
         $product_ids = array_column($products, 'product_id');
@@ -366,29 +406,33 @@ class Helper
             return $products;
         }
 
-        // Consulta para obtener los IDs de las variaciones
-        $variations = $wpdb->get_col("
-        SELECT DISTINCT post_parent 
-        FROM {$wpdb->posts}
-        WHERE post_type = 'product_variation'
-        AND post_parent IN (" . implode(',', array_map('absint', $product_ids)) . ")
-    ");
+        // Generar placeholders para la cláusula IN
+        $placeholders = implode(',', array_fill(0, count($product_ids), '%d'));
 
+        // Consulta para obtener los IDs de las variaciones
+        $variations = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT DISTINCT post_parent 
+                 FROM {$wpdb->posts}
+                 WHERE post_type = 'product_variation'
+                 AND post_parent IN ($placeholders)", 
+                ...$product_ids
+            )
+        );
+
+        // Convertir las variaciones a un array asociativo
         $variations = array_map('absint', $variations);
         $variations = array_flip($variations);
 
         // Añadir el tipo de producto (variable o simple)
         foreach ($products as &$product) {
             $product_id = $product['product_id'];
-            if (isset($variations[$product_id])) {
-                $product['product_type'] = 'variable';
-            } else {
-                $product['product_type'] = 'simple';
-            }
+            $product['product_type'] = isset($variations[$product_id]) ? 'variable' : 'simple';
         }
 
         return $products;
     }
+
 
     public static function normalizeString($string)
     {
@@ -431,14 +475,14 @@ class Helper
 
         // Validar si los datos requeridos están presentes
         if (!$asoc_listing || !$seller_id) {
-            error_log("Error changing product {$product_id} status: 'asoc_listing' or 'seller_id' not found.");
+            self::logData("Error changing product {$product_id} status: 'asoc_listing' or 'seller_id' not found.");
             return false;
         }
 
         // Obtener datos del vendedor
         $seller_data = UserConnection::getUser($seller_id);
         if (!$seller_data) {
-            error_log("Error changing product {$product_id} status: Seller data not found for seller_id {$seller_id}.");
+            self::logData("Error changing product {$product_id} status: Seller data not found for seller_id {$seller_id}.");
             return false;
         }
 
@@ -450,7 +494,7 @@ class Helper
 
         // Verificar el código de respuesta HTTP
         if ($response['httpCode'] !== 200) {
-            error_log("Error changing status of Listing {$asoc_listing} for product {$product_id}: {$response['body']}");
+            self::logData("Error changing status of Listing {$asoc_listing} for product {$product_id}: {$response['body']}");
             return false;
         }
 
@@ -459,24 +503,118 @@ class Helper
             return $response['body'];
         }
 
-        error_log("Unexpected error: Listing {$asoc_listing} status was not correctly updated for product {$product_id}.");
+        self::logData("Unexpected error: Listing {$asoc_listing} status was not correctly updated for product {$product_id}.");
         return false;
     }
 
-    public static function load_partial($template_path, $data = [])
+    public static function load_partial($template_path, $data = [],$once=true, $print=true)
     {
 
-        if (file_exists(MC_PLUGIN_ROOT . $template_path)) {
+        $full_path = MC_PLUGIN_ROOT . $template_path;
 
-            extract($data); // Extract variables for use in the template
-            include_once(MC_PLUGIN_ROOT . $template_path);
+        if (!file_exists($full_path)) {
+            esc_html_e('View: ' . $template_path . ' not found.', 'meliconnect');
+            return;
+        }
+    
+        extract($data); // Extract variables for use in the template
+    
+        if ($print) {
+            if ($once) {
+                include_once($full_path);
+            } else {
+                include($full_path);
+            }
         } else {
-            echo __('View not found.', 'meliconnect');
+            ob_start(); // Start output buffering
+            if ($once) {
+                include_once($full_path);
+            } else {
+                include($full_path);
+            }
+            return ob_get_clean(); // Capture and return the buffered output
         }
     }
 
+    public static function handleLoadMeliCategories_NEW()
+    {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_load_meli_categories_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
+            return;
+        }
+
+        $category_id = isset($_POST['category_id']) ? sanitize_text_field($_POST['category_id']) : null;
+        $seller_id = isset($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null;
+
+        if (empty($seller_id)) {
+            wp_send_json_error(['message' => 'Seller ID is required']);
+            wp_die();
+        }
+
+        $seller_data = UserConnection::getUser($seller_id);
+
+        if (!$seller_data) {
+            wp_send_json_error(['message' => 'Seller data not found']);
+            wp_die();
+        }
+
+        $meli = new MeliconMeli($seller_data->app_id, $seller_data->secret_key, $seller_data->access_token);
+        $categories = [];
+        $path_from_root = [];
+        $category_name = '';
+
+        if (empty($category_id)) {
+            $response = $meli->get('/sites/' . $seller_data->site_id . '/categories', ['access_token' => $seller_data->access_token]);
+            $categories = $response['body'];
+        } else {
+            $response = $meli->get('/categories/' . $category_id, ['access_token' => $seller_data->access_token]);
+            if (isset($response['body']->children_categories) && !empty($response['body']->children_categories)) {
+                $categories = $response['body']->children_categories;
+            }
+            if (isset($response['body']->path_from_root) && !empty($response['body']->path_from_root)) {
+                $path_from_root = $response['body']->path_from_root;
+            }
+
+            $category_name = $response['body']->name;
+        }
+
+        if ($response['httpCode'] !== 200 || empty($response['body'])) {
+            wp_send_json_error(['message' => 'Error fetching categories', 'response' => $response]);
+            wp_die();
+        }
+
+        // Datos para la vista
+        $data = [
+            'categories' => $categories,
+            'path_from_root' => $path_from_root,
+            'category_name' => $category_name
+        ];
+
+        // Load category options from the partial view
+        $options = Helper::load_partial('includes/Core/Views/Partials/meliconnect_product_edit_category_options.php', ['categories' => $categories], true, false);
+
+        // Cargar la vista y obtener el HTML generado
+        $path_from_route_html = Helper::load_partial('includes/Core/Views/Partials/meliconnect_product_edit_category_path.php', $data, true,false);
+
+        // Responder con JSON
+        wp_send_json_success([
+            'options' => $options,
+            'path_from_route_html' => $path_from_route_html,
+            'path_from_route_json' => $path_from_root,
+            'category_name' => $category_name
+        ]);
+
+        wp_die();
+    }
+
+
     public static function handleLoadMeliCategories()
     {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_load_meli_categories_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
+            return;
+        }
+
         $category_id = isset($_POST['category_id']) ? sanitize_text_field($_POST['category_id']) : null;
         $seller_id = isset($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null;
 
@@ -519,7 +657,7 @@ class Helper
 
         // Generar opciones para el select
         if (!empty($categories)) {
-            $options = '<option value="">' . __('Select a category', 'meliconnect') . '</option>';
+            $options = '<option value="">' . esc_html__('Select a category', 'meliconnect') . '</option>';
             foreach ($categories as $category) {
                 $options .= '<option value="' . esc_attr($category->id) . '">' . esc_html($category->name) . '</option>';
             }
@@ -527,25 +665,21 @@ class Helper
             $options = NULL;
         }
 
+        $path_from_route_html = '<div class="options_group"><p class="form-field"><label class="melicon-selected-category-span">' . esc_html__('Category Root', 'meliconnect') . ': </label>';
 
         // Generar HTML para path_from_root
-        $path_from_route_html = '<p class="melicon-category-path">';
+        $path_from_route_html .= '<nav class="description melicon-is-inline-block melicon-category-path melicon-breadcrumb melicon-has-succeeds-separator melicon-ml-4" aria-label="breadcrumbs"><ul>';
 
 
-        $path_from_route_html .= '<span class="melicon-selected-category-span">' . __('Category Root') . ': </span>';
-
-        foreach ($path_from_root as $key => $parent) {
-            if ($key > 0) {
-                $path_from_route_html .= ' > ';
-            }
-            $path_from_route_html .= '<a href="" class="melicon-category-link" data-category-id="' . esc_attr($parent->id) . '">' . esc_html($parent->name) . '</a>';
+        foreach ($path_from_root as $parent) {
+            $path_from_route_html .= '<li><a href="/" class="melicon-category-link" data-category-id="' . esc_attr($parent->id) . '">' . esc_html($parent->name) . '</a></li>';
         }
 
         if (!empty($path_from_root)) {
-            $path_from_route_html .= '<a href="" class="melicon-category-link" data-category-id="0"><i class="fa fa-times melicon-ml-2" aria-hidden="true"></i></a>';
+            $path_from_route_html .= '<li><a href="" class="melicon-category-link" data-category-id="0"><i class="fa fa-times melicon-ml-2" aria-hidden="true"></i></a></li>';
         }
 
-        $path_from_route_html .= '</p>';
+        $path_from_route_html .= '</ul></nav></p></div>';
 
         // Devolver ambos valores como JSON
         wp_send_json_success([
@@ -560,6 +694,11 @@ class Helper
 
     public static function handleUpdateMeliCategory()
     {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_update_meli_category_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
+            return;
+        }
+
         $category_id = isset($_POST['category_id']) ? sanitize_text_field($_POST['category_id']) : null;
         $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field($_POST['woo_product_id']) : null;
         $product_title = isset($_POST['product_title']) ? sanitize_text_field($_POST['product_title']) : null;

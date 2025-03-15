@@ -7,27 +7,21 @@ class FormHelper
 {
     public static function print_checkbox($key, $label, $value = '', $check_compare_value = true, $helpText = '')
     {
-        // Iniciar captura de salida para `checked()`
-        ob_start();
-        checked($value, $check_compare_value);
-        $checked_attribute = ob_get_clean(); // Finaliza captura y limpia el búfer
+        // Ruta del archivo parcial
+        $partial_path = MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/Form/checkbox.php';
 
-        $html = '<div class="field">
-                    <input id="' . $key . '" type="checkbox" name="' . $key . '" class="switch is-rounded is-info" ' . $checked_attribute . ' value="' . $check_compare_value . '" >
-                    <label for="' . $key . '" class="label">' . $label . '</label>
-                </div>';
+        // Verificar si el archivo existe
+        if (file_exists($partial_path)) {
+            // Extraer variables para usarlas en el scope del archivo
+            $key = esc_attr($key);
+            $label = esc_html($label);
+            $value = esc_attr($value);
+            $check_compare_value = esc_attr($check_compare_value);
+            $helpText = esc_html($helpText);
 
-
-        if ($helpText !== '') {
-            $html .= '<div class="columns">
-                        <div class="column is-1">
-                         </div>
-                        <div class="column is-11 pl-5">
-                            <p class="help" style="min-height: 120px">' . $helpText . '</p>
-                        </div>
-                    </div>';
+            include $partial_path;
+        } else {
+            echo '<p>Error: Checkbox partial not found.</p>';
         }
-
-        echo $html;
     }
 }

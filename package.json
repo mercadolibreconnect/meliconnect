@@ -1,0 +1,20 @@
+{
+  "name": "meliconnect",
+  "version": "1.0.0",
+  "description": "**Tags:** WooCommerce, MercadoLibre, synchronization, e-commerce   **Requires PHP:** 7.4   **Requires at least:** 5.8   **Tested up to:** 6.7   **Stable tag:** 1.0.0   **License:** GPLv3   **License URI:** https://www.gnu.org/licenses/gpl-3.0.html",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-bulma": "sass --load-path=node_modules assets/scss/melicon-custom.scss assets/css/melicon-custom.css",
+    "build-bulma-watch": "sass --load-path=node_modules --watch assets/scss/melicon-custom.scss assets/css/melicon-custom.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bulma": "^1.0.3"
+  }
+}

@@ -18,7 +18,7 @@
 
 // If this file is called directly, abort.
 if (!defined('ABSPATH')) {
-	die(__('We\'re sorry, but you can not directly access this file.'));
+	die(esc_html__('We\'re sorry, but you can not directly access this file.', 'meliconnect'));
 }
 
 

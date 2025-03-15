@@ -2,83 +2,83 @@ jQuery(document).ready(function ($) {
 
     $('#melicon-export-bulk-actions-form').on('submit', function (e) {
         e.preventDefault();
-
+    
         // Obtener los IDs seleccionados desde localStorage
         let selectedIds = localStorage.getItem('selected-export-listing-ids');
-
-
+    
         // Asegurarse de que haya IDs seleccionados
         if (selectedIds) {
-
+    
             let selectedAction = $('#action-to-do').val();
-
+    
             if (selectedAction === '-1') {
-                Bulma().alert({
-                    type: 'danger',
+                // Alerta de SweetAlert para acción inválida
+                MeliconSwal.fire({
+                    icon: 'error',
                     title: mcTranslations.invalid_action,
-                    body: mcTranslations.please_select_a_valid_bulk_action
+                    text: mcTranslations.please_select_a_valid_bulk_action
                 });
             } else {
-                // Mostrar el cuadro de confirmación de Bulma
-                Bulma().alert({
-                    type: 'warning',
+                // Alerta de SweetAlert para confirmar la acción
+                MeliconSwal.fire({
+                    icon: 'warning',
                     title: mcTranslations.alert_title_apply_bulk_action,
-                    body: mcTranslations.alert_body_apply_bulk_action,
-                    confirm: {
-                        label: mcTranslations.confirm,
-                        classes: ['button', 'button-meliconnect'],
-                        onClick: function () {
-                            // Enviar la solicitud AJAX
-                            $.ajax({
-                                url: ajaxurl,
-                                type: 'POST',
-                                data: {
-                                    action: 'melicon_bulk_export_action',
-                                    action_to_do: selectedAction,
-                                    products_ids: selectedIds,
-                                    nonce: mcTranslations.export_bulk_action_nonce
-                                },
-                                //data: $(this).serialize() , // Serializar el formulario
-                                success: function (response) {
-                                    // Manejar la respuesta
-                                    if (response.success) {
-                                        location.reload();
-                                    } else {
-                                        // Manejar el error si es necesario
-                                        Bulma().alert({
-                                            type: 'danger',
-                                            title: 'Error',
-                                            body: response.data.message || 'An error occurred.'
-                                        });
-                                    }
-                                },
-                                error: function (xhr, status, error) {
-                                    // Manejar error de la solicitud AJAX
-                                    Bulma().alert({
-                                        type: 'danger',
+                    text: mcTranslations.alert_body_apply_bulk_action,
+                    showCancelButton: true,
+                    confirmButtonText: mcTranslations.confirm,
+                    cancelButtonText: mcTranslations.cancel,
+                    customClass: {
+                        confirmButton: 'melicon-swal-confirm-button',  // Clase personalizada para el botón de confirmación
+                        cancelButton: 'melicon-swal-cancel-button'  // Clase personalizada para el botón de cancelación
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Enviar la solicitud AJAX
+                        $.ajax({
+                            url: ajaxurl,
+                            type: 'POST',
+                            data: {
+                                action: 'melicon_bulk_export_action',
+                                action_to_do: selectedAction,
+                                products_ids: selectedIds,
+                                nonce: mcTranslations.export_bulk_action_nonce
+                            },
+                            success: function (response) {
+                                // Manejar la respuesta
+                                if (response.success) {
+                                    location.reload();
+                                } else {
+                                    // Manejar el error si es necesario
+                                    MeliconSwal.fire({
+                                        icon: 'error',
                                         title: 'Error',
-                                        body: error
+                                        text: response.data.message || 'An error occurred.'
                                     });
                                 }
-                            });
-                        },
-                    },
-                    cancel: {
-                        label: mcTranslations.cancel,
-                        classes: ['button', 'button-meliconnect'],
-                    },
+                            },
+                            error: function (xhr, status, error) {
+                                // Manejar error de la solicitud AJAX
+                                MeliconSwal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: error
+                                });
+                            }
+                        });
+                    }
                 });
             }
-
+    
         } else {
             // Mostrar una alerta si no hay IDs seleccionados
-            Bulma().alert({
-                type: 'warning',
+            MeliconSwal.fire({
+                icon: 'warning',
                 title: mcTranslations.no_items_selected,
-                body: mcTranslations.select_items_to_apply_action
+                text: mcTranslations.select_items_to_apply_action
             });
         }
     });
+    
     /* START functions to select items table */
     const storageKey = 'selected-export-listing-ids'; // Clave para localStorage
 
@@ -173,6 +173,7 @@ jQuery(document).ready(function ($) {
             method: 'POST',
             data: {
                 action: 'melicon_get_process_progress',
+                nonce: mcTranslations.get_process_progress_nonce,
                 process_id: processId
             },
             success: function (response) {
@@ -239,10 +240,16 @@ jQuery(document).ready(function ($) {
             errorContent = `<p>${error}</p>`; // Si el error es una cadena simple
         }
 
-        Bulma().alert({
-            type: 'danger',
+        MeliconSwal.fire({
+            icon: 'error',
             title: mcTranslations.error,
-            body: errorContent
+            html: errorContent,
+            customClass: {
+                popup: 'melicon-swal-popup', // Clase personalizada para el popup
+                title: 'melicon-swal-title', // Clase personalizada para el título
+                content: 'melicon-swal-content' // Clase personalizada para el contenido
+            },
+            confirmButtonText: mcTranslations.close
         });
 
     });
@@ -268,35 +275,43 @@ jQuery(document).ready(function ($) {
             jsonContent = `<p>${json_sent}</p>`;
         }
 
-        Bulma().alert({
-            type: 'info',
+        MeliconSwal.fire({
+            icon: 'info',
             title: mcTranslations.alert_last_json_sent_title,
-            body: jsonContent,
-            confirm: {
-                label: mcTranslations.copy_to_clipboard,
-                classes: ['button', 'button-meliconnect'],
-                onClick: function () {
-                    var jsonContent = $('.melicon-copy-json-sent-unformated').html();
-
-                    var $temp = $("<div>");
-                    $("body").append($temp);
-                    $temp.attr("contenteditable", true)
-                        .html(jsonContent).select()
-                        .on("focus", function () { document.execCommand('selectAll', false, null); })
-                        .focus();
-                    document.execCommand("copy");
-                    $temp.remove();
-
-                    Bulma().alert({
-                        type: 'success',
-                        title: mcTranslations.copy_to_clipboard_success,
-                    });
-                },
+            html: jsonContent, // Mostrar el JSON formateado en formato HTML
+            customClass: {
+                popup: 'melicon-swal-popup', // Clase personalizada para el popup
+                title: 'melicon-swal-title', // Clase personalizada para el título
+                content: 'melicon-swal-content' // Clase personalizada para el contenido
             },
-            cancel: {
-                label: mcTranslations.back,
-                classes: ['button', 'button-meliconnect'],
+            showCancelButton: true,
+            confirmButtonText: mcTranslations.copy_to_clipboard,
+            cancelButtonText: mcTranslations.back,
+            customClass: {
+                confirmButton: 'melicon-swal-confirm-button',  // Clase personalizada para el botón de confirmación
+                cancelButton: 'melicon-swal-cancel-button'  // Clase personalizada para el botón de cancelación
             },
+            preConfirm: function () {
+                // Función para copiar el JSON al portapapeles
+                var jsonContent = $('.melicon-copy-json-sent-unformated').html();
+    
+                var $temp = $("<div>");
+                $("body").append($temp);
+                $temp.attr("contenteditable", true)
+                    .html(jsonContent).select()
+                    .on("focus", function () { document.execCommand('selectAll', false, null); })
+                    .focus();
+                document.execCommand("copy");
+                $temp.remove();
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Alerta de éxito después de copiar al portapapeles
+                MeliconSwal.fire({
+                    icon: 'success',
+                    title: mcTranslations.copy_to_clipboard_success
+                });
+            }
         });
 
     });
@@ -311,41 +326,37 @@ jQuery(document).ready(function ($) {
 
         var processId = $(this).data('process-id');
 
-        Bulma().alert({
-            type: 'warning',
+        MeliconSwal.fire({
+            icon: 'warning',
             title: mcTranslations.alert_title_cancel_custom_export,
-            body: mcTranslations.alert_body_cancel_custom_export,
-            confirm: {
-                label: mcTranslations.confirm,
-                classes: ['button', 'button-meliconnect'],
-                onClick: function () {
-                    $.ajax({
-                        url: ajaxurl,
-                        type: 'POST',
-                        data: {
-                            action: 'melicon_cancel_custom_export',
-                            nonce: mcTranslations.cancel_custom_export_nonce,
-                            process_id: processId
-                        },
-                        success: function (response) {
-                            location.reload();
-                        },
-                        error: function (xhr, status, error) {
-                            // Handle error
-                            Bulma().alert({
-                                type: 'danger',
-                                title: mcTranslations.error,
-                                body: error
-                            });
-                        }
+            text: mcTranslations.alert_body_cancel_custom_export,
+            showCancelButton: true,
+            confirmButtonText: mcTranslations.confirm,
+            cancelButtonText: mcTranslations.cancel,
+            customClass: {
+                confirmButton: 'melicon-swal-confirm-button', // Clase personalizada para el botón de confirmación
+                cancelButton: 'melicon-swal-cancel-button'    // Clase personalizada para el botón de cancelación
+            },
+            preConfirm: function () {
+                // Realizar la solicitud AJAX si el usuario confirma la acción
+                return $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'melicon_cancel_custom_export',
+                        nonce: mcTranslations.cancel_custom_export_nonce,
+                        process_id: processId
+                    }
+                }).then(function (response) {
+                    location.reload();
+                }).catch(function (xhr, status, error) {
+                    MeliconSwal.fire({
+                        icon: 'error',
+                        title: mcTranslations.error,
+                        text: error
                     });
-
-                },
-            },
-            cancel: {
-                label: mcTranslations.cancel,
-                classes: ['button', 'button-meliconnect'],
-            },
+                });
+            }
         });
     });
 
@@ -360,42 +371,41 @@ jQuery(document).ready(function ($) {
 
         var wooProductId = $(this).data('woo-product-id');
 
-        Bulma().alert({
-            type: 'warning',
+        MeliconSwal.fire({
+            icon: 'warning',
             title: mcTranslations.alert_title_desvinculate_product,
-            body: mcTranslations.alert_body_desvinculate_product,
-            confirm: {
-                label: mcTranslations.confirm,
-                classes: ['button', 'button-meliconnect'],
-                onClick: function () {
-                    $.ajax({
-                        url: ajaxurl,
-                        type: 'POST',
-                        data: {
-                            action: 'melicon_desvinculate_listing',
-                            nonce: mcTranslations.desvinculate_product_nonce,
-                            wooProductId: wooProductId,
-                        },
-                        success: function (response) {
-                            location.reload();
-                        },
-                        error: function (xhr, status, error) {
-                            // Handle error
-                            Bulma().alert({
-                                type: 'danger',
-                                title: mcTranslations.error,
-                                body: error
-                            });
-                        }
+            text: mcTranslations.alert_body_desvinculate_product,
+            showCancelButton: true,
+            confirmButtonText: mcTranslations.confirm,
+            cancelButtonText: mcTranslations.cancel,
+            customClass: {
+                confirmButton: 'melicon-swal-confirm-button', // Clase personalizada para el botón de confirmación
+                cancelButton: 'melicon-swal-cancel-button'    // Clase personalizada para el botón de cancelación
+            },
+            preConfirm: function () {
+                // Realizar la solicitud AJAX si el usuario confirma la desvinculación
+                return $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'melicon_desvinculate_listing',
+                        nonce: mcTranslations.desvinculate_product_nonce,
+                        wooProductId: wooProductId,
+                    }
+                }).then(function (response) {
+                    // Recargar la página al recibir la respuesta
+                    location.reload();
+                }).catch(function (xhr, status, error) {
+                    // Manejar el error si la solicitud AJAX falla
+                    MeliconSwal.fire({
+                        icon: 'error',
+                        title: mcTranslations.error,
+                        text: error
                     });
-
-                },
-            },
-            cancel: {
-                label: mcTranslations.cancel,
-                classes: ['button', 'button-meliconnect'],
-            },
+                });
+            }
         });
+        
     });
 
     $('#melicon-strat-new-export').on('click', function (e) {
@@ -414,10 +424,10 @@ jQuery(document).ready(function ($) {
                 location.reload();
             },
             error: function (xhr, status, error) {
-                Bulma().alert({
-                    type: 'danger',
+                MeliconSwal.fire({
+                    icon: 'error',
                     title: mcTranslations.error,
-                    body: error
+                    text: error
                 });
             }
         });

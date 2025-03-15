@@ -1,7 +1,7 @@
 <div class="melicon-product-edit-stock-tab">
     <p class="form-field melicon_general_stock_variation_field">
         <label for="melicon_general_stock_variation">
-            <?php _e('Mercadolibre stock Variation', 'meliconnect'); ?>
+            <?php esc_html_e('Mercadolibre stock Variation', 'meliconnect'); ?>
         </label>
         <span class="wrap">
             <!-- Operador de variación de precio -->
@@ -15,10 +15,10 @@
 
             <!-- Tipo de variación -->
             <select id="melicon_general_stock_variation_type" class="input-text wc_input_decimal last" name="template[meta][stock_type]">
-                <option value="units" <?php selected($stock_type, 'units'); ?>><?php _e('Units', 'meliconnect'); ?></option>
+                <option value="units" <?php selected($stock_type, 'units'); ?>><?php esc_html_e('Units', 'meliconnect'); ?></option>
             </select>
         </span>
-        <!-- <span class="woocommerce-help-tip" tabindex="0" aria-label="<?php _e('stock variation settings for Mercadolibre.', 'meliconnect'); ?>"></span> -->
+        <!-- <span class="woocommerce-help-tip" tabindex="0" aria-label="<?php esc_html_e('stock variation settings for Mercadolibre.', 'meliconnect'); ?>"></span> -->
     </p>
 
 </div>

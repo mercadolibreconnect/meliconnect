@@ -67,7 +67,7 @@ class UserListingToImport
         $vinculated_products = Helper::getPostsWithMetaArray('melicon_meli_listing_id');
         $vinculated_templates = Helper::getPostsWithMetaArray('melicon_meli_template_id');
 
-        //error_log('vinculated_products: ' . print_r($vinculated_products, true));
+        //Helper::logData('vinculated_products: ' . wp_json_encode($vinculated_products));
 
         foreach ($meli_user_listings_data as $meli_listing_id => $listing_data) {
 
@@ -92,9 +92,9 @@ class UserListingToImport
             $wpdb->update(
                 $table_name,
                 [
-                    'meli_response' => json_encode($listing_data),
+                    'meli_response' => wp_json_encode($listing_data),
                     'meli_status' => (isset($listing_data['status']) ? $listing_data['status'] : ''),
-                    'meli_sub_status' => (isset($listing_data['sub_status']) ? json_encode($listing_data['sub_status']) : ''),
+                    'meli_sub_status' => (isset($listing_data['sub_status']) ? wp_json_encode($listing_data['sub_status']) : ''),
                     'meli_product_type' => (isset($listing_data['variations']) && !empty($listing_data['variations'])) ? 'variable' : 'simple',
                     'meli_listing_title' => (isset($listing_data['title']) ? $listing_data['title'] : ''),
                     'vinculated_product_id' =>  $listing_data['vinculated_product_id'],
@@ -116,16 +116,15 @@ class UserListingToImport
 
         $table_name = self::$table_name;
 
-        $sql = "DELETE FROM {$table_name}";
-        $result = $wpdb->query($sql);
+        $result = $wpdb->query("DELETE FROM {$table_name}");
 
         // Verificación del resultado
         if ($result) {
-            wp_send_json_success(__('User listings reset successfully', 'meliconnect'));
+            wp_send_json_success(esc_html__('User listings reset successfully', 'meliconnect'));
             return;
         }
 
-        wp_send_json_error(__('There was an error resetting the user listings', 'meliconnect'));
+        wp_send_json_error(esc_html__('There was an error resetting the user listings', 'meliconnect'));
         return;
     }
 
@@ -138,8 +137,7 @@ class UserListingToImport
 
         $table_name = self::$table_name;
 
-        $sql = "SELECT COUNT(*) FROM {$table_name}";
-        return $wpdb->get_var($sql);
+        return $wpdb->get_var("SELECT COUNT(*) FROM {$table_name}");
     }
 
     public static function get_user_listings_to_import($meli_listings_ids = [])
@@ -148,23 +146,24 @@ class UserListingToImport
         self::init();
 
         $table_name = self::$table_name;
-        $sql = "SELECT * FROM {$table_name}";
 
         if (!empty($meli_listings_ids) && is_array($meli_listings_ids)) {
             // Construir los placeholders manualmente
             $placeholders = implode(',', array_fill(0, count($meli_listings_ids), '%s'));
 
-            // Añadir la cláusula WHERE para filtrar por IDs
-            $sql .= " WHERE meli_listing_id IN ($placeholders)";
-
-            // Preparar la consulta con los valores
-            $sql = $wpdb->prepare($sql, ...$meli_listings_ids);
+            // Ejecutar la consulta preparada directamente
+            return $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM {$table_name} WHERE meli_listing_id IN ($placeholders)",
+                    ...$meli_listings_ids
+                )
+            );
         }
 
-        $results = $wpdb->get_results($sql);
-
-        return $results;
+        // Consulta sin parámetros si $meli_listings_ids está vacío
+        return $wpdb->get_results("SELECT * FROM {$table_name}");
     }
+
 
     public static function update_vinculated_product($user_listing_id, $product_id, $match_by)
     {
@@ -188,7 +187,7 @@ class UserListingToImport
             'updated_at' => current_time('mysql')
         ];
 
-        Helper::logData('Data to update:' . json_encode($data_to_update), 'import');
+        Helper::logData('Data to update:' . wp_json_encode($data_to_update), 'import');
 
         $result = $wpdb->update(
             $table_name,
@@ -260,16 +259,14 @@ class UserListingToImport
         // Aseguramos que los IDs estén formateados correctamente para la consulta SQL
         $placeholders = implode(',', array_fill(0, count($meliListingIds), '%s'));
 
-        // Consulta para obtener los postmetas cuyos valores coincidan con los IDs de MercadoLibre
-        $query = "
+
+        // Ejecutamos la consulta y obtenemos los resultados
+        $postmeta_results = $wpdb->get_results($wpdb->prepare("
             SELECT post_id, meta_value
             FROM {$wpdb->postmeta}
             WHERE meta_key = 'melicon_meli_listing_id'
             AND meta_value IN ($placeholders)
-        ";
-
-        // Ejecutamos la consulta y obtenemos los resultados
-        $postmeta_results = $wpdb->get_results($wpdb->prepare($query, ...$meliListingIds));
+        ", ...$meliListingIds));
 
         if (!empty($postmeta_results)) {
             foreach ($postmeta_results as $postmeta) {
@@ -292,53 +289,67 @@ class UserListingToImport
         // Definir la tabla
         $table_name = $wpdb->prefix . 'melicon_user_listings_to_import';
 
-        // Inicializar la consulta
-        $sql = "
-            UPDATE {$table_name}
-            SET vinculated_product_id = NULL,
-                is_product_match_by_sku = 0,
-                is_product_match_by_name = 0,
-                is_product_match_manually = 0,
-                updated_at = %s
-        ";
-
-        // Manejar un solo valor de user_listing_id convirtiéndolo en un array
+        // Manejar un solo valor de meli_listing_id convirtiéndolo en un array
         if (!is_array($meli_listing_ids) && $meli_listing_ids !== 'all') {
             $meli_listing_ids = [$meli_listing_ids];
         }
 
-        error_log('meli_listing_ids: ' . json_encode($meli_listing_ids));
+        Helper::logData('meli_listing_ids: ' . wp_json_encode($meli_listing_ids));
 
-        // Si se pasa un array de meli_listing_ids, agregar condición WHERE para limitar la actualización
+        // Construir consulta según el tipo de entrada
         if (is_array($meli_listing_ids) && !empty($meli_listing_ids)) {
             // Preparar placeholders para las IDs
             $placeholders = implode(',', array_fill(0, count($meli_listing_ids), '%s'));
-            $sql .= " WHERE meli_listing_id IN ($placeholders) AND (is_product_match_by_sku = 1 OR is_product_match_by_name = 1 OR is_product_match_manually = 1)";
+
+            // Ejecutar la consulta preparada directamente
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "
+                    UPDATE {$table_name}
+                    SET vinculated_product_id = NULL,
+                        is_product_match_by_sku = 0,
+                        is_product_match_by_name = 0,
+                        is_product_match_manually = 0,
+                        updated_at = %s
+                    WHERE meli_listing_id IN ($placeholders) 
+                    AND (is_product_match_by_sku = 1 
+                    OR is_product_match_by_name = 1 
+                    OR is_product_match_manually = 1)
+                    ",
+                    current_time('mysql'),
+                    ...$meli_listing_ids
+                )
+            );
         } else {
             // Si no se pasan IDs específicas, limpiar todas las coincidencias
-            $sql .= " WHERE is_product_match_by_sku = 1 OR is_product_match_by_name = 1 OR is_product_match_manually = 1";
+            $result = $wpdb->query(
+                $wpdb->prepare(
+                    "
+                    UPDATE {$table_name}
+                    SET vinculated_product_id = NULL,
+                        is_product_match_by_sku = 0,
+                        is_product_match_by_name = 0,
+                        is_product_match_manually = 0,
+                        updated_at = %s
+                    WHERE is_product_match_by_sku = 1 
+                    OR is_product_match_by_name = 1 
+                    OR is_product_match_manually = 1
+                    ",
+                    current_time('mysql')
+                )
+            );
         }
-
-        // Preparar los valores para la consulta
-        $values = [current_time('mysql')];
-
-        // Si se pasó un array de IDs, agregar los IDs a los valores
-        if (is_array($meli_listing_ids) && !empty($meli_listing_ids)) {
-            $values = array_merge($values, $meli_listing_ids);
-        }
-
-        // Ejecutar la consulta
-        $result = $wpdb->query($wpdb->prepare($sql, ...$values));
 
         // Manejo de errores
         if ($result === false) {
             $error_message = $wpdb->last_error;
-            error_log('Failed to clear the matches: ' . $error_message);
+            Helper::logData('Failed to clear the matches: ' . $error_message);
             return false;
         }
 
         return true;
     }
+
 
 
 
@@ -350,15 +361,14 @@ class UserListingToImport
 
         $table_name = self::$table_name;
 
-        $sql = $wpdb->prepare(
-            "SELECT * FROM {$table_name} 
-        WHERE vinculated_product_id IS NULL 
-        OR vinculated_product_id = '' 
-        OR vinculated_product_id = %d",
-            0
-        );
 
-        return $wpdb->get_results($sql);
+        return $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {$table_name} 
+            WHERE vinculated_product_id IS NULL 
+            OR vinculated_product_id = '' 
+            OR vinculated_product_id = %d",
+            0
+        ));
     }
 
 
@@ -379,12 +389,10 @@ class UserListingToImport
 
         $placeholders = implode(',', array_fill(0, count($meli_listing_ids), '%s'));
 
-        $sql = $wpdb->prepare(
+        return $wpdb->query($wpdb->prepare(
             "UPDATE {$table_name} SET import_status = %s WHERE meli_listing_id IN ($placeholders)",
             array_merge([$import_status], $meli_listing_ids)
-        );
-
-        return $wpdb->query($sql);
+        ));
     }
 
     public static function get_user_listings_count_by_status($status)
@@ -394,8 +402,7 @@ class UserListingToImport
 
         $table_name = self::$table_name;
 
-        $sql = "SELECT COUNT(*) FROM {$table_name} WHERE meli_status = '{$status}'";
-        return $wpdb->get_var($sql);
+        return $wpdb->get_var("SELECT COUNT(*) FROM {$table_name} WHERE meli_status = '{$status}'");
     }
 
     public static function get_user_listing_by_listing_id($meli_listing_id)
@@ -405,17 +412,16 @@ class UserListingToImport
 
         $table_name = self::$table_name;
 
-        $sql = $wpdb->prepare(
+
+        return $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM {$table_name} WHERE meli_listing_id = %s",
             $meli_listing_id
-        );
-
-        return $wpdb->get_row($sql);
+        ));
     }
 
 
 
-    
+
 
     public static function unlink_woo_product($meli_listing_id)
     {
@@ -429,25 +435,20 @@ class UserListingToImport
 
         $table_name = self::$table_name; // Asegúrate de que esta propiedad tenga un valor válido
 
-        // Aseguramos que meli_listing_id es tratado como un string seguro
-        $sql = $wpdb->prepare(
-            "UPDATE {$table_name} SET vinculated_product_id = 0 WHERE meli_listing_id = '%s'",
+        // Placeholder sin comillas
+        $result = $wpdb->query($wpdb->prepare(
+            "UPDATE {$table_name} SET vinculated_product_id = 0 WHERE meli_listing_id = %s",
             $meli_listing_id
-        );
-
-        // Ejecutamos la consulta
-        $result = $wpdb->query($sql);
+        ));
 
         // Verificamos si hubo algún error
         if ($result === false) {
-            error_log('Error unlinking product from user listing: ' . $wpdb->last_error);
-
-            /* $last_query = $wpdb->last_query;
-            error_log('Última consulta SQL ejecutada: ' . $last_query); */
+            Helper::logData('Error unlinking product from user listing: ' . $wpdb->last_error);
             return false;
         }
 
         // Si no hubo error, devolvemos el número de filas afectadas
         return $result;
     }
+
 }

@@ -55,13 +55,13 @@ class ExportController implements ControllerInterface
     public static function handleCancelCustomExport()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cancel_custom_export_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -83,14 +83,14 @@ class ExportController implements ControllerInterface
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'export_bulk_action_nonce')) {
             Helper::logData('Invalid nonce', 'bulk-actions-export');
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
             Helper::logData('Permission denied', 'bulk-actions-export');
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -99,7 +99,7 @@ class ExportController implements ControllerInterface
 
         if (!$selected_ids || !$action || $action == -1) {
             Helper::logData('Invalid data: missing selected_ids or action', 'bulk-actions-export');
-            wp_send_json_error(__('Invalid data', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
         }
 
         $selected_ids_arr = explode(',', $selected_ids);
@@ -162,7 +162,6 @@ class ExportController implements ControllerInterface
     {
         $updated_status = Helper::change_meli_listing_status($woo_product_id, $status);
 
-        //error_log('updated_status: ' . var_export($updated_status, true));
 
         if (!$updated_status) {
             Helper::logData("Error updating listing status: {$status} for product {$woo_product_id}", 'bulk-actions-export');
@@ -212,44 +211,44 @@ class ExportController implements ControllerInterface
 
     public static function handleDesvinculateListing(){
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'desvinculate_product_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
         $wooProductId = isset($_POST['wooProductId']) ? sanitize_text_field($_POST['wooProductId']) : '';
 
         if (!$wooProductId ) {
-            wp_send_json_error(__('Invalid data', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
         }
 
         Helper::unlinkProduct($wooProductId);
 
-        wp_send_json_success(array('message' => __('Product desvinculated successfully.', 'meliconnect')));
+        wp_send_json_success(array('message' => esc_html__('Product desvinculated successfully.', 'meliconnect')));
     }
 
     public static function handleCleanCustomExportProcess()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'clean_custom_export_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
         
         $process_id = isset($_POST['processId']) ? sanitize_text_field($_POST['processId']) : '';
 
         if (!$process_id) {
-            wp_send_json_error(__('Invalid data', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
         }
 
         ProcessItems::deleteItems($process_id);

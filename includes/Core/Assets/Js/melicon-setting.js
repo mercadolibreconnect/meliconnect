@@ -32,13 +32,14 @@ jQuery(document).ready(function ($) {
             url: ajaxurl,
             data: {
                 "action": selectAction,
+                "nonce": mcTranslations.ajax_settings_nonce
             },
             success: function (response) {
                 // Insert the obtained HTML content into the tab container
                 $('#tab-content').html(response);
 
-                $tabs.removeClass('is-active');
-                $targetTab.addClass('is-active');
+                $tabs.removeClass('melicon-is-active');
+                $targetTab.addClass('melicon-is-active');
             },
             error: function (xhr, status, error) {
                 // Handle errors (optional)
@@ -59,28 +60,6 @@ jQuery(document).ready(function ($) {
         setActiveTab(tabId);
     });
 
-    // Click handler for the download settings JSON button
-    $('#downlaod-settings-json').on('click', function (e) {
-        e.preventDefault();
-
-        $.ajax({
-            url: ajaxurl, // 'ajaxurl' is a global WordPress variable
-            type: 'POST',
-            data: {
-                action: 'meliconnect_download_settings', 
-            },
-            success: function(response) {
-                // Create a <a> element to download the file
-                var downloadLink = document.createElement("a");
-                downloadLink.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(response);
-                downloadLink.download = 'meliconnect-settings_' + new Date().toISOString() + '.txt';
-
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-            }
-        });
-    });
 
     // Check if there is a hash in the URL when the page loads and show the corresponding tab
     var currentTab = window.location.hash.replace('#', '') || 'general'; // 'general' as fallback

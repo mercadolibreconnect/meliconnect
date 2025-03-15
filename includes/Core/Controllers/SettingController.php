@@ -36,12 +36,14 @@ class SettingController implements ControllerInterface
     /* START HANDLE AJAX METHODS */
     public static function handleSettingsGetGeneralHtml()
     {
+
+        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'ajax_settings_nonce' ) ) {
+            wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
+            wp_die();
+        }
+
         $general_data = Helper::getMeliconnectOptions('general');
 
-        /* echo PHP_EOL . '-------------------- general_data --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($general_data , true) . '</pre>';
-        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
-wp_die(); */
         header('Content-Type:  text/html');
 
         include(MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/general.php');
@@ -51,6 +53,11 @@ wp_die(); */
 
     public static function handleSettingsGetExportHtml()
     {
+        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'ajax_settings_nonce' ) ) {
+            wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
+            wp_die();
+        }
+
         $export_data = Helper::getMeliconnectOptions('export');
 
         header('Content-Type:  text/html');
@@ -62,6 +69,11 @@ wp_die(); */
 
     public static function handleSettingsGetImportHtml()
     {
+        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'ajax_settings_nonce' ) ) {
+            wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
+            wp_die();
+        }
+
         $import_data = Helper::getMeliconnectOptions('import');
 
         header('Content-Type:  text/html');
@@ -73,6 +85,11 @@ wp_die(); */
 
     public static function handleSettingsGetSyncHtml()
     {
+        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'ajax_settings_nonce' ) ) {
+            wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
+            wp_die();
+        }
+
         $sync_data = Helper::getMeliconnectOptions('sync');
 
         header('Content-Type:  text/html');
@@ -84,9 +101,14 @@ wp_die(); */
 
     public static function handleSaveGeneralSettings()
     {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ajax_settings_nonce' ) ) {
+            wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
+            wp_die();
+        }
+
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -95,7 +117,7 @@ wp_die(); */
 
         // Verifica si la solicitud está vacía
         if (empty($data)) {
-            wp_send_json_error(__('Invalid request data', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid request data', 'meliconnect'));
             return;
         }
 
@@ -116,14 +138,19 @@ wp_die(); */
         update_option('melicon_general_sync_method', $general_sync_method);
 
         // Envía una respuesta de éxito
-        wp_send_json_success('__(Settings saved successfully , meliconnect)');
+        wp_send_json_success('esc_html__(Settings saved successfully , meliconnect)');
     }
 
     public static function handleSaveOthersSettings()
     {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ajax_settings_nonce' ) ) {
+            wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
+            wp_die();
+        }
+        
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -132,7 +159,7 @@ wp_die(); */
 
         // Verifica si la solicitud está vacía
         if (empty($form_data)) {
-            wp_send_json_error(__('Invalid request data', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid request data', 'meliconnect'));
             return;
         }
 
@@ -156,7 +183,7 @@ wp_die(); */
             }
         }
 
-        wp_send_json_success(__('Settings saved successfully', 'meliconnect'));
+        wp_send_json_success(esc_html__('Settings saved successfully', 'meliconnect'));
     }
 
     /* START CUSTOM METHODS */
@@ -170,18 +197,18 @@ wp_die(); */
         // Definir las opciones por defecto traducibles
         if ($options === null) {
             $options = [
-                'always' => __('Always', 'meliconnect'),
-                'on_update' => __('On Update', 'meliconnect'),
-                'on_create' => __('On Create', 'meliconnect')
+                'always' => esc_html__('Always', 'meliconnect'),
+                'on_update' => esc_html__('On Update', 'meliconnect'),
+                'on_create' => esc_html__('On Create', 'meliconnect')
             ];
         }
 
-        echo '<div class="columns">
-            <div class="column is-4">
-                <label for="' . esc_attr($key) . '" class="label">' . esc_html($label) . '</label>
+        echo '<div class="melicon-columns">
+            <div class="melicon-column melicon-$&">
+                <label for="' . esc_attr($key) . '" class="melicon-label">' . esc_html($label) . '</label>
             </div>
-            <div class="column is-8">
-                <div class="melicon-select select is-fullwidth">
+            <div class="melicon-column melicon-is-8">
+                <div class="melicon-select melicon-is-fullwidth">
                     <select name="' . esc_attr($key) . '" id="' . esc_attr($key) . '">';
 
         foreach ($options as $option_key => $option_value) {

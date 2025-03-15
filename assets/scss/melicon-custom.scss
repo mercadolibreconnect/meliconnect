@@ -1,0 +1,51 @@
+// Path to Bulma's sass folder
+@use "bulma/sass" with (
+  $class-prefix: "melicon-",
+  $family-primary:  "'Montserrat', 'Inter', 'SF Pro', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+  $family-secondary : "'Roboto', 'Inter', 'SF Pro', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+  $primary: #2d3276,
+  $link: #eddc7d,
+  $info: #eddc7d,
+  $success: #2d3276,
+  $warning: #ffe500,
+  $danger: #EE526D,
+  $text: #121108,
+
+  //$control-border-width: 2px,
+  //$input-shadow: none,
+);
+
+
+/* $text: #121108;
+$background: #fcfcf8;
+$primary: #2d3276;
+$secondary: #eddc7d;
+$accent: #ffe500; */
+
+
+/* $text: #47174c;
+$background: #fef5ff;
+$primary: #7B51AD;
+$secondary: #d4bcf0;
+$accent: #F1C92E; */
+
+
+
+
+// Import the components you need
+
+@forward "bulma/sass/base";
+@forward "bulma/sass/components/navbar";
+@forward "bulma/sass/components/card";
+@forward "bulma/sass/components/modal";
+@forward "bulma/sass/elements/button";
+@forward "bulma/sass/elements/icon";
+@forward "bulma/sass/elements/content";
+@forward "bulma/sass/elements/notification";
+@forward "bulma/sass/elements/progress";
+@forward "bulma/sass/elements/tag";
+
+// Import the Google Font
+//@import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
+
+

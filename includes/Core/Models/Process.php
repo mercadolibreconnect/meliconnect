@@ -30,11 +30,8 @@ class Process
         //Delete process items
         ProcessItems::deleteItems($process_id);
 
-        $sql = "DELETE FROM {$table_name} WHERE process_id = %s";
 
-        $query = $wpdb->prepare($sql, $process_id);
-
-        $result = $wpdb->query($query);
+        $result = $wpdb->query($wpdb->prepare("DELETE FROM {$table_name} WHERE process_id = %s", $process_id));
 
         return $result;
     }
@@ -70,14 +67,14 @@ class Process
 
 
         if ($result === false) {
-            return new \WP_Error('db_insert_error', __('Error inserting into database.'), $wpdb->last_error);
+            return new \WP_Error('db_insert_error', esc_html__('Error inserting into database.', 'meliconnect'), $wpdb->last_error);
         }
 
         return $process_id;
     }
 
 
-    public static function getCurrentProcessData($process_type, $status = 'processing', $process_id = null)
+    public static function getCurrentProcessData($process_type, $status = ['processing'])
     {
         global $wpdb;
 
@@ -85,36 +82,18 @@ class Process
 
         $table_name = self::$table_name;
 
+        // Convertir status a array si no es
+        $status = (array) $status;
 
-        $query = "SELECT * FROM $table_name WHERE process_type = %s";
+        // Crear la consulta directamente dentro del prepare()
+        $placeholders = implode(',', array_fill(0, count($status), '%s'));
+        $params = array_merge([$process_type], $status);
 
-        // Prepara los parámetros para la consulta
-        $params = [$process_type];
-
-        // Verifica si $status es un array o un solo estado
-        if (is_array($status)) {
-            // Si es un array, se convierte en una lista de valores para el IN
-            $placeholders = implode(',', array_fill(0, count($status), '%s'));
-            $query .= " AND status IN ($placeholders)";
-            $params = array_merge($params, $status);
-        } else {
-            // Si es un solo estado, simplemente lo añade a la consulta
-            $query .= " AND status = %s";
-            $params[] = $status;
-        }
-
-        // Agrega la condición de process_id si se proporciona
-        if ($process_id) {
-            $query .= " AND process_id = %s";
-            $params[] = $process_id;
-        } else {
-            $query .= " ORDER BY created_at DESC LIMIT 1";
-        }
-
-        // Prepara y ejecuta la consulta
-        $sql = $wpdb->prepare($query, ...$params);
-
-        return $wpdb->get_row($sql);
+        // Ejecutar la consulta con el SQL directo y preparar los parámetros
+        return $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $table_name WHERE process_type = %s AND status IN ($placeholders) ORDER BY created_at DESC LIMIT 1", 
+            ...$params
+        ));
     }
 
     public static function calculateExecutionTime($process)

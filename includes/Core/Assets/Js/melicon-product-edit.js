@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
 
     function showExportErrors() {
         var urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('show_export_error') === 'true') {
+        if (urlParams.get('show_sync_error') === 'true') {
             // Ejecutar el evento que simula el clic y realiza las acciones
             $('.meliconnect_logs_tab a').trigger('click');
 
@@ -62,11 +62,13 @@ jQuery(document).ready(function ($) {
                 action: 'melicon_load_meli_categories',
                 category_id: category_id,
                 seller_id: seller_id,
+                nonce: mcTranslations.melicon_load_meli_categories_nonce
             },
             success: function (response) {
                 if (response.success) {
 
                     if (response.data.options !== null) {
+                        console.log(response.data.options);
                         // Destruir la instancia anterior de Select2
                         $('#melicon_general_category_id').select2('destroy');
 
@@ -175,6 +177,7 @@ jQuery(document).ready(function ($) {
                             type: 'POST',
                             data: {
                                 action: 'melicon_update_meli_category',
+                                nonce: mcTranslations.melicon_update_meli_category_nonce,
                                 category_id: category_id,
                                 woo_product_id: woo_product_id,
                                 product_title: product_title,
@@ -222,7 +225,101 @@ jQuery(document).ready(function ($) {
 
 
 
-    $('body').on('click', '#melicon_import_meli', function (e) {
+    $('body').on('click', '#sync-button', function (e) {
+        e.preventDefault();
+
+        // Get the selected action (import or export)
+        var actionType = $('#meli_sync_action').val();
+        
+        // Get selected data to sync
+        var syncOptions = $('#meli_sync_options').val() || [];
+
+        // Example IDs (modify based on your data source)
+        var woo_product_id = $(this).data('woo-product-id');
+        var meli_listing_id = $(this).data('meli-listing-id');
+        var template_id = $(this).data('template-id');
+        var seller_id = $(this).data('seller-id');
+
+        // Disable button to prevent multiple clicks
+        $(this).prop('disabled', true);
+
+        // Define the correct action for AJAX
+        var ajaxAction = actionType === 'import' ? 'melicon_import_single_listing' : 'melicon_export_single_listing';
+        var ajaxNonce = actionType === 'import' ? mcTranslations.melicon_import_single_listing_nonce : mcTranslations.melicon_export_single_listing_nonce;
+
+        // Perform the AJAX request
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {
+                action: ajaxAction,
+                nonce: ajaxNonce,
+                woo_product_id: woo_product_id,
+                meli_listing_id: meli_listing_id,
+                template_id: template_id,
+                seller_id: seller_id,
+                sync_options: syncOptions // Send selected sync options
+            },
+            success: function (response) {
+                console.log(response);
+
+                // Enable the button again
+                $('#sync-button').prop('disabled', false);
+
+                if (response.success) {
+                    // Show success message
+                    MeliconSwal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.data.message, 
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // Reload the page if necessary
+                    location.reload();
+                } else {
+                    // Handle error response
+                    var received_message = response.data && response.data.message ? response.data.message : 'Unknown Error';
+
+                    MeliconSwal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        html: `<p>${received_message}</p><p>Please check the logs for details.</p>`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Reload Page',
+                        cancelButtonText: 'Maybe Later',
+                        customClass: {
+                            confirmButton: 'melicon-button melicon-is-primary',
+                            cancelButton: 'melicon-button melicon-is-secondary'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            var currentUrl = window.location.href;
+                            var newUrl = new URL(currentUrl);
+                            newUrl.searchParams.set('show_sync_error', 'true');
+                            //window.location.href = newUrl;
+                        }
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                // Enable the button in case of error
+                $('#sync-button').prop('disabled', false);
+
+                // Show error message
+                MeliconSwal.fire({
+                    icon: 'error',
+                    title: 'Request Error',
+                    html: `<strong>Status:</strong> ${status}<br><strong>Error:</strong> ${error}<br><strong>Response:</strong> ${xhr.responseText || 'No additional details available'}`,
+                    footer: 'There was a problem with the AJAX request'
+                });
+            }
+        });
+    });
+
+
+    /* $('body').on('click', '#melicon_import_meli', function (e) {
         e.preventDefault();
 
         var woo_product_id = $(this).data('woo-product-id');
@@ -235,6 +332,7 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: {
                 action: 'melicon_import_single_listing',
+                nonce: mcTranslations.melicon_import_single_listing_nonce,
                 woo_product_id: woo_product_id,
                 meli_listing_id: meli_listing_id,
                 template_id: template_id,
@@ -269,6 +367,7 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: {
                 action: 'melicon_export_single_listing',
+                nonce: mcTranslations.melicon_export_single_listing_nonce,
                 woo_product_id: woo_product_id,
                 meli_listing_id: meli_listing_id,
                 template_id: template_id,
@@ -328,7 +427,7 @@ jQuery(document).ready(function ($) {
                 });
             }
         });
-    });
+    }); */
 
 
 
@@ -361,6 +460,7 @@ jQuery(document).ready(function ($) {
             type: 'POST',
             data: {
                 action: 'melicon_save_template_data',
+                nonce: mcTranslations.melicon_save_template_data_nonce,
                 templateData: JSON.stringify(templateData),
                 woo_product_id: woo_product_id,
                 woo_product_title: $('#title').val(),
@@ -405,7 +505,11 @@ jQuery(document).ready(function ($) {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Desvincular',
-            cancelButtonText: 'Cancelar'
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                confirmButton: 'melicon-button melicon-is-primary',
+                cancelButton: 'melicon-button melicon-is-secondary'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 var woo_product_id = $(this).data('woo-product-id');
@@ -416,6 +520,7 @@ jQuery(document).ready(function ($) {
                     type: 'POST',
                     data: {
                         action: 'melicon_unlink_single_listing',
+                        nonce: mcTranslations.melicon_unlink_single_listing_nonce,
                         woo_product_id: woo_product_id,
                         unlink_type: unlink_type
                     },

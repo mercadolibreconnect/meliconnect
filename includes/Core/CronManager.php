@@ -58,7 +58,7 @@ class CronManager
             if (!isset($schedules[$this->interval])) {
                 $schedules[$this->interval] = [
                     'interval' => 60,
-                    'display'  => __('Every Minute')
+                    'display'  => esc_html__('Every Minute', 'meliconnect')
                 ];
             }
             return $schedules;
@@ -160,7 +160,7 @@ class CronManager
                     // 3- Update process and process items table 
                     $process = ProcessItems::updateProcessedItemStatus($item->id, 'processed', $item->process_id);
 
-                    Helper::logData('Process: ' . json_encode($process), 'custom-import');
+                    Helper::logData('Process: ' . wp_json_encode($process), 'custom-import');
 
                     $meli_listing_ids_arr = array_merge($meli_listing_ids_arr, [$item->meli_listing_id]);
 
@@ -241,7 +241,7 @@ class CronManager
 
                 try {
                     if(!isset($item->template_id) || empty($item->template_id) || !isset($item->woo_product_id) || empty($item->woo_product_id)){
-                        Helper::logData('No template id  or woo product id found for item: ' . json_encode($item), 'custom-export');
+                        Helper::logData('No template id  or woo product id found for item: ' . wp_json_encode($item), 'custom-export');
                         continue;
                     }
 
@@ -267,7 +267,7 @@ class CronManager
                     // 3- Update process and process items table 
                     $process = ProcessItems::updateProcessedItemStatus($item->id, 'processed', $item->process_id);
 
-                    Helper::logData('Process: ' . json_encode($process), 'custom-export');
+                    Helper::logData('Process: ' . wp_json_encode($process), 'custom-export');
 
 
                     // Commit the transaction if everything is successful for this item

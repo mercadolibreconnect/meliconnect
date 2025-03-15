@@ -1,7 +1,7 @@
 <div class="melicon-product-edit-general-tab">
     <p class="form-field melicon_general_price_variation_field">
         <label for="melicon_general_price_variation">
-            <?php _e('Mercadolibre Price Variation', 'meliconnect'); ?>
+            <?php esc_html_e('Mercadolibre Price Variation', 'meliconnect'); ?>
         </label>
         <span class="wrap">
             <!-- Operador de variación de precio -->
@@ -15,11 +15,12 @@
 
             <!-- Tipo de variación -->
             <select id="melicon_general_price_variation_type" class="input-text wc_input_decimal last" name="template[meta][price_type]">
-                <option value="percent" <?php selected($price_type, 'percent'); ?>><?php _e('Percentage (%)', 'meliconnect'); ?></option>
-                <option value="price" <?php selected($price_type, 'price'); ?>><?php _e('Fixed Value ($)', 'meliconnect'); ?></option>
+                <option value="percent" <?php selected($price_type, 'percent'); ?>><?php esc_html_e('Percentage (%)', 'meliconnect'); ?></option>
+                <option value="price" <?php selected($price_type, 'price'); ?>><?php esc_html_e('Fixed Value ($)', 'meliconnect'); ?></option>
             </select>
+
         </span>
-        <!-- <span class="woocommerce-help-tip" tabindex="0" aria-label="<?php _e('Price variation settings for Mercadolibre.', 'meliconnect'); ?>"></span> -->
+        <!-- <span class="woocommerce-help-tip" tabindex="0" aria-label="<?php esc_html_e('Price variation settings for Mercadolibre.', 'meliconnect'); ?>"></span> -->
     </p>
 
 </div>

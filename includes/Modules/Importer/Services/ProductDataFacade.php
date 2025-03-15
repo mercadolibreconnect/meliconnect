@@ -43,7 +43,7 @@ class ProductDataFacade
         if (!isset($transformedData['status']) || $transformedData['status'] !== 200 || !isset($transformedData['data']) || empty($transformedData['data'])) {
             // Manejo de errores si no se pudo obtener o transformar los datos
 
-            Helper::logData('Error processing product data: ' . json_encode($transformedData), 'custom-import');
+            Helper::logData('Error processing product data: ' . wp_json_encode($transformedData), 'custom-import');
             return false;
         }
 

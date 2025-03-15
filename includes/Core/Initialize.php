@@ -30,7 +30,7 @@ class Initialize
     {
         if (Helper::getOption('is_updating', null, false) !== null) {
             add_action('admin_notices', function () {
-                echo '<div class="notice notice-warning"><p>' . __('Meliconnect is updating, please wait.', 'meliconnect') . '</p></div>';
+                echo '<div class="notice notice-warning"><p>' . esc_html__('Meliconnect is updating, please wait.', 'meliconnect') . '</p></div>';
             });
             return;
         }
@@ -42,6 +42,7 @@ class Initialize
         new AjaxManager();
         new ApiManager();
 
+        add_action('admin_notices', [$this, 'showAdminNotices']);
         add_action('init', [$this, 'initApp'], 10);
         //add_action('init', [$this, 'testCode'], 10);
 
@@ -51,62 +52,26 @@ class Initialize
         register_uninstall_hook(MC_PLUGIN_ROOT, array('Initialize', 'uninstall'));
     }
 
-    /* public function testCode()
+    public function showAdminNotices()
     {
-        error_log('variation test start');
+        //update_option('melicon_pending_connection_notifications', 'It works!');
+        $pending_connections = get_option('melicon_pending_connection_notifications', []);
 
-        // Check if the code has already been executed
-        $has_run = get_option('custom_code_has_run', false);
 
-        if ($has_run) {
-            error_log('Code has already been executed.');
-            return;
+        if (!empty($pending_connections)) {
+
+
+            echo '<div class="melicon-notification melicon-is-link">
+                    <button class="delete"></button>
+                    ' . esc_html($pending_connections) . '
+                </div>';
+
+
+            // Limpiar las notificaciones después de mostrarlas
+            delete_option('melicon_pending_connection_notifications');
+
         }
-
-        $attribute_name = 'New a';
-        $attribute_id = 'new_a';
-        $attribute_slug = wc_attribute_taxonomy_name($attribute_id);
-
-        if (!taxonomy_exists($attribute_slug)) {
-            $taxonomy_id = wc_create_attribute([
-                'id'   => $attribute_id,
-                'name' => $attribute_name,
-                'slug' => $attribute_slug,
-            ]);
-
-            // Flushing rewrite rules to ensure the taxonomy is registered.
-            flush_rewrite_rules();
-
-            // Manually registering the taxonomy after creation.
-            register_taxonomy($attribute_slug, 'product', [
-                'label' => $attribute_name,
-                'rewrite' => ['slug' => $attribute_slug],
-                'hierarchical' => false,
-            ]);
-        } else {
-            $taxonomy_id = wc_attribute_taxonomy_id_by_name($attribute_id);
-        }
-
-        $attribute = wc_get_attribute($taxonomy_id);
-
-        if (!$attribute || is_wp_error($attribute)) {
-            return;
-        }
-
-        $pa = new \WC_Product_Attribute();
-        $pa->set_id($taxonomy_id);
-        $pa->set_name($attribute_slug);
-        $pa->set_visible(false);
-        $pa->set_options(['Test 4', 'Test 5']);
-        $product = wc_get_product(56);
-        $product->set_attributes([$pa]);
-        $product->save();
-
-        // Set the option to indicate that the code has been executed
-        update_option('custom_code_has_run', true);
-
-        error_log('variation test end');
-    } */
+    }
 
     public static function activate()
     {
@@ -229,9 +194,9 @@ class Initialize
         $cron_manager->handleCronExecution();
     }
 
-    private function loadHooks() {
+    private function loadHooks()
+    {
         new ProductEdit();
-        
     }
 
 
@@ -287,23 +252,23 @@ class Initialize
 
     private function registerStyles()
     {
+        wp_enqueue_style(self::$css_pre . 'all-pages', MC_PLUGIN_URL . 'assets/css/all-pages.css', [], '1.0.0');
+
         if ($this->is_plugin_page()) {
-            wp_enqueue_style(self::$css_pre . 'font-awesome-5', MC_PLUGIN_URL . 'assets/css/font-awesome/css/all.min.css', [], '5');
-            wp_enqueue_style(self::$css_pre . 'font-awesome-brands', MC_PLUGIN_URL . 'assets/css/font-awesome/css/brands.min.css', [], '5');
-            wp_enqueue_style(self::$css_pre . 'font-awesome-solid', MC_PLUGIN_URL . 'assets/css/font-awesome/css/solid.min.css', [], '5');
-            wp_enqueue_style(self::$css_pre . 'font-awesome-duotone', MC_PLUGIN_URL . 'assets/css/font-awesome/css/duotone.min.css', [], '5');
-            wp_enqueue_style(self::$css_pre . 'bulma-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma.min.css', [], '1.0.1');
-            wp_enqueue_style(self::$css_pre . 'bulma-switch-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma-switch.min.css', [], '1.0.1');
             wp_enqueue_style(self::$css_pre . 'bulma-divider-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma-divider.min.css', [], '1.0.1');
-            wp_enqueue_style(self::$css_pre . 'select2', MC_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.1.0');
-            wp_enqueue_style(self::$css_pre . 'main-style', MC_PLUGIN_URL . 'assets/css/main.css', [], '1.0.0');
+            wp_enqueue_style(self::$css_pre . 'plugin-pages', MC_PLUGIN_URL . 'assets/css/plugin-pages.css', [], '1.0.0');
         }
 
-        if($this->is_wordpress_page_used_by_plugin()) {
+        if ($this->is_wordpress_page_used_by_plugin()) {
+            wp_enqueue_style(self::$css_pre . 'wordpress-pages', MC_PLUGIN_URL . 'assets/css/wordpress-pages.css', [], '1.0.0');
+        }
+
+        if($this->is_plugin_page() || $this->is_wordpress_page_used_by_plugin()) {
             wp_enqueue_style(self::$css_pre . 'font-awesome-5', MC_PLUGIN_URL . 'assets/css/font-awesome/css/all.min.css', [], '5');
             wp_enqueue_style(self::$css_pre . 'font-awesome-brands', MC_PLUGIN_URL . 'assets/css/font-awesome/css/brands.min.css', [], '5');
             wp_enqueue_style(self::$css_pre . 'font-awesome-solid', MC_PLUGIN_URL . 'assets/css/font-awesome/css/solid.min.css', [], '5');
             wp_enqueue_style(self::$css_pre . 'font-awesome-duotone', MC_PLUGIN_URL . 'assets/css/font-awesome/css/duotone.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'bulma-switch-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma-switch.min.css', [], '1.0.1');
             wp_enqueue_style(self::$css_pre . 'select2', MC_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.1.0');
             wp_enqueue_style(self::$css_pre . 'swal-css', MC_PLUGIN_URL . 'assets/css/sweetalert/sweetalert2.min.css', [], '11.14.0', false);
             wp_enqueue_style(self::$css_pre . 'melicon-custom', MC_PLUGIN_URL . 'assets/css/melicon-custom.css', [], '1.0.0');
@@ -315,10 +280,10 @@ class Initialize
         //Load on product edit page
         if (isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit' && get_post_type($_GET['post']) === 'product') {
 
-            if(!$this->is_plugin_page()) {
+            if (!$this->is_plugin_page()) {
                 return true;
             }
-        } 
+        }
 
         return false;
     }
@@ -330,23 +295,26 @@ class Initialize
 
     private function registerScripts()
     {
-        if ($this->is_plugin_page()) {
-            wp_register_script(self::$js_pre . 'main-script', MC_PLUGIN_URL . '/assets/js/main.js', ['jquery'], '1.0.0', true);
-            HelperJSTranslations::localizeScript(self::$js_pre . 'main-script');
-            wp_enqueue_script(self::$js_pre . 'main-script');
 
-            wp_enqueue_script(self::$js_pre . 'bulma-alert-script', MC_PLUGIN_URL . '/assets/js/bulma-alert.js', ['jquery'], '1.0.0', true);
-            wp_enqueue_script(self::$js_pre . 'select-2', MC_PLUGIN_URL . '/assets/js/select2/select2.min.js', ['jquery'], '1.0.0', true);
+        if ($this->is_plugin_page() || $this->is_wordpress_page_used_by_plugin()) {
+
+            wp_enqueue_script('melicon-swal-js', MC_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js', ['jquery'], '11.14.0', true);
+            wp_enqueue_script(self::$js_pre . 'select-2', MC_PLUGIN_URL . 'assets/js/select2/select2.min.js', ['jquery'], '1.0.0', true);
+
+            wp_register_script(self::$js_pre . 'general-script', MC_PLUGIN_URL . 'assets/js/melicon-general.js', ['jquery'], '1.0.0', true);
+
+
+            HelperJSTranslations::localizeScript(self::$js_pre . 'general-script');
+            wp_enqueue_script(self::$js_pre . 'general-script');
+        }
+        
+        if ($this->is_plugin_page()) {
+            
+
         }
 
-        if($this->is_wordpress_page_used_by_plugin()){
-            wp_enqueue_script('melicon-swal-js', MC_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js', ['jquery'], '11.14.0', true);
-
-            wp_enqueue_script(self::$js_pre . 'select-2', MC_PLUGIN_URL . '/assets/js/select2/select2.min.js', ['jquery'], '1.0.0', true);
-
-            wp_register_script(self::$js_pre . 'wordpress-page-main-script', MC_PLUGIN_URL . '/assets/js/melicon-wp-main.js', ['jquery'], '1.0.0', true);
-            HelperJSTranslations::localizeScript(self::$js_pre . 'wordpress-page-main-script');
-            wp_enqueue_script(self::$js_pre . 'wordpress-page-main-script');
+        if ($this->is_wordpress_page_used_by_plugin()) {
+            //
         }
     }
 
@@ -354,8 +322,8 @@ class Initialize
     {
 
         add_menu_page(
-            __('MeliConnect', 'meliconnect'), // page_title
-            __('MeliConnect', 'meliconnect'), // menu_title
+            esc_html__('MeliConnect', 'meliconnect'), // page_title
+            esc_html__('MeliConnect', 'meliconnect'), // menu_title
             'meliconnect_manage_plugin', // capability
             'meliconnect', // menu_slug
             [$this, 'renderConnectionPage'], // callback
@@ -365,8 +333,8 @@ class Initialize
 
         add_submenu_page(
             'meliconnect', //parent_slug
-            __('Connection', 'meliconnect'), // page_title
-            __('Connection', 'meliconnect'), // menu_title
+            esc_html__('Connection', 'meliconnect'), // page_title
+            esc_html__('Connection', 'meliconnect'), // menu_title
             'meliconnect_manage_plugin', // capability
             'meliconnect-connection', // menu_slug
             [$this, 'renderConnectionPage'], // callback,
@@ -376,8 +344,8 @@ class Initialize
 
         add_submenu_page(
             'meliconnect',
-            __('Settings', 'meliconnect'),
-            __('Settings', 'meliconnect'),
+            esc_html__('Settings', 'meliconnect'),
+            esc_html__('Settings', 'meliconnect'),
             'meliconnect_manage_plugin',
             'meliconnect-settings',
             [$this, 'renderSettingsPage'],
@@ -387,7 +355,7 @@ class Initialize
         //Add a page not in submenu
         /* add_submenu_page(
             'meliconnect-no-page'
-            , __('Pagina interna', 'meliconnect'), 
+            , esc_html__('Pagina interna', 'meliconnect'), 
             null, 
             'meliconnect_manage_plugin', 
             'meliconnect-premium-query-gdt', 
@@ -412,11 +380,7 @@ class Initialize
 
     public function renderExporterPage()
     {
-        /* if (is_textdomain_loaded('meliconnect')) {
-            error_log('El dominio de texto "meliconnect" está cargado dentro de exporter.');
-        } else {
-            error_log('El dominio de texto "meliconnect" NO está cargado en exporter.');
-        } */
+
 
         include MC_PLUGIN_ROOT . 'includes/Core/Views/exporter.php';
     }
@@ -433,10 +397,6 @@ class Initialize
 
 
 
-        /* if (is_textdomain_loaded('meliconnect')) {
-            error_log('El dominio de texto "meliconnect" está cargado 4.');
-        } else {
-            error_log('El dominio de texto "meliconnect" NO está cargado 4.');
-        } */
+
     }
 }

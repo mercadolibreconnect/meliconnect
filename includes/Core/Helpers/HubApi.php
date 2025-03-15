@@ -4,7 +4,7 @@ namespace StoreSync\Meliconnect\Core\Helpers;
 
 class HubApi
 {
-    private static $_apiUrl = "https://www.meliconnect.app/api/";
+    private static $_apiUrl = "https://www.meliconnect.com/apicore/";
 
     public static function connectHubApi($urlPath, $args, $method = 'GET', $timeOut = 30)
     {
@@ -16,7 +16,7 @@ class HubApi
         ];
 
         if (strtoupper($method) === 'POST' || strtoupper($method) === 'PUT') {
-            $wp_args['body'] = json_encode($args);
+            $wp_args['body'] = wp_json_encode($args);
             $wp_args['headers'] = [
                 'Content-Type' => 'application/json'
             ];

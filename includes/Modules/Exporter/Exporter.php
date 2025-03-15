@@ -17,8 +17,8 @@ class Exporter implements ModuleInterface
     {
         add_submenu_page(
             'meliconnect',
-            __('Exporter', 'meliconnect'),
-            __('Exporter', 'meliconnect'),
+            esc_html__('Exporter', 'meliconnect'),
+            esc_html__('Exporter', 'meliconnect'),
             'meliconnect_manage_plugin',
             'meliconnect-exporter',
             [$this, 'renderExporterPage'],

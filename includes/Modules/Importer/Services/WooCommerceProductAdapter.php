@@ -16,11 +16,9 @@ class WooCommerceProductAdapter
 
     public function __construct() {
         // Detectar entorno y seleccionar la URL correspondiente
-        if (defined('IS_LOCAL') && IS_LOCAL === true) {
-            $this->apiEndpoint = 'https://meliconnect-hub.local/api/v1/process-product-data-to-import';
-        } else {
-            $this->apiEndpoint = 'https://meliconnect.app/api/v1/process-product-data-to-import';
-        }
+
+        $this->apiEndpoint = 'https://meliconnect.com/api/v1/process-product-data-to-import';
+        
     }
 
     public function getTransformedProductData($meli_listing_data, $meli_user_id, $template_id = NULL, $woo_product_id = NULL)
@@ -31,7 +29,8 @@ class WooCommerceProductAdapter
             'extra_data' => [
                 'meli_user_id' => $meli_user_id,
                 'woo_product_id' => $woo_product_id,
-                'template_id' => $template_id
+                'template_id' => $template_id,
+                'domain' => Helper::getDomainName(),
             ],
 
             'meli_listing' => $meli_listing_data,
@@ -42,7 +41,7 @@ class WooCommerceProductAdapter
             
         ];
 
-        //Helper::logData('Raw data sent to hub: ' . json_encode($rawData), 'custom-import');
+        //Helper::logData('Raw data sent to hub: ' . wp_json_encode($rawData), 'custom-import');
 
         // Enviar datos sin procesar al servidor y recibir datos transformados
         $server_response = $this->sendDataToServer($rawData);
@@ -128,7 +127,7 @@ class WooCommerceProductAdapter
     {
         $response = wp_remote_post($this->apiEndpoint, [
             'method'  => 'POST',
-            'body'    => json_encode($productData),
+            'body'    => wp_json_encode($productData),
             'headers' => [
                 'Content-Type' => 'application/json',
             ],

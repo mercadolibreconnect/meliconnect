@@ -17,11 +17,9 @@ class MercadoLibreListingAdapter
 
     public function __construct()
     {
-        if (defined('IS_LOCAL') && IS_LOCAL === true) {
-            $this->apiEndpoint = 'https://meliconnect-hub.local/api/v1/process-listing-data-to-export';
-        } else {
-            $this->apiEndpoint = 'https://meliconnect.app/api/v1/process-listing-data-to-export';
-        }
+
+            $this->apiEndpoint = 'https://meliconnect.com/api/v1/process-listing-data-to-export';
+        
     }
 
     public function getTransformedListingData($meli_user_data, $woo_product_id, $template_id, $meliListingId = NULL)
@@ -32,7 +30,8 @@ class MercadoLibreListingAdapter
                 'meli_user_id' => $meli_user_data->user_id,
                 'woo_product_id' => $woo_product_id,
                 'template_id' => $template_id,
-                'meliListingId' => $meliListingId
+                'meliListingId' => $meliListingId,
+                'domain' => Helper::getDomainName(),
             ],
             'meli_user' => $meli_user_data,
             'export_settings' => Helper::getMeliconnectOptions('export'),
@@ -41,7 +40,7 @@ class MercadoLibreListingAdapter
             'template' => $this->getMeliconTemplateData($template_id),
         ];
 
-        //Helper::logData('Raw data sent to hub: ' . json_encode($rawData), 'custom-export');
+        //Helper::logData('Raw data sent to hub: ' . wp_json_encode($rawData), 'custom-export');
 
         update_post_meta($woo_product_id, 'melicon_last_export_json_sent', $rawData);
 
@@ -205,7 +204,7 @@ class MercadoLibreListingAdapter
     {
         $response = wp_remote_post($this->apiEndpoint, [
             'method'  => 'POST',
-            'body'    => json_encode($productData),
+            'body'    => wp_json_encode($productData),
             'headers' => [
                 'Content-Type' => 'application/json',
             ],

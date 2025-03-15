@@ -14,8 +14,8 @@ class Importer implements ModuleInterface {
     {
         add_submenu_page(
             'meliconnect',
-            __('Importer', 'meliconnect'),
-            __('Importer', 'meliconnect'),
+            esc_html__('Importer', 'meliconnect'),
+            esc_html__('Importer', 'meliconnect'),
             'meliconnect_manage_plugin',
             'meliconnect-importer',
             [$this, 'renderImporterPage'],

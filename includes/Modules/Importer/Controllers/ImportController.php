@@ -9,7 +9,6 @@ use StoreSync\Meliconnect\Core\Interfaces\ControllerInterface;
 use StoreSync\Meliconnect\Core\Models\Process;
 use StoreSync\Meliconnect\Core\Models\UserConnection;
 use StoreSync\Meliconnect\Modules\Importer\Models\UserListingToImport;
-use StoreSync\Meliconnect\Modules\Importer\UserListingsTable;
 
 class ImportController implements ControllerInterface
 {
@@ -26,7 +25,7 @@ class ImportController implements ControllerInterface
         // Logic to get and return data
         $data = [];
         $process = Process::getCurrentProcessData('custom-import');
-        $process_finished = Process::getCurrentProcessData('custom-import', 'finished');
+        $process_finished = Process::getCurrentProcessData('custom-import', ['finished']);
 
         $data = [
             'import_process_finished' => $process_finished,
@@ -60,59 +59,59 @@ class ImportController implements ControllerInterface
     {
 
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'clear_selected_matches_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
         $meli_listings_ids = (isset($_POST['meli_listings_ids'])) ? $_POST['meli_listings_ids'] : null;
 
-        
 
-        if(!$meli_listings_ids) {
-            wp_send_json_error(__('Invalid data', 'meliconnect'));
+
+        if (!$meli_listings_ids) {
+            wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
             return;
         }
 
         $cleared = UserListingToImport::clear_matches($meli_listings_ids);
 
-        if($cleared) {
-            wp_send_json_success(); 
+        if ($cleared) {
+            wp_send_json_success();
         } else {
-            wp_send_json_error(__('Something went wrong', 'meliconnect'));
+            wp_send_json_error(esc_html__('Something went wrong', 'meliconnect'));
         }
     }
 
     public static function handleApplyMatch()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'apply_match_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
         $user_listing_id = (isset($_POST['user_listing_id'])) ? $_POST['user_listing_id'] : null;
         $woo_product_id = (isset($_POST['woo_product_id'])) ? $_POST['woo_product_id'] : null;
 
-        if(!$user_listing_id || !$woo_product_id) {
-            wp_send_json_error(__('Invalid data', 'meliconnect'));
+        if (!$user_listing_id || !$woo_product_id) {
+            wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
             return;
         }
 
         $applied_match = UserListingToImport::update_vinculated_product($user_listing_id, $woo_product_id, 'manual');
 
-        if($applied_match) {
-            wp_send_json_success(); 
+        if ($applied_match) {
+            wp_send_json_success();
         } else {
-            wp_send_json_error( __('Error applying match', 'meliconnect'));
+            wp_send_json_error(esc_html__('Error applying match', 'meliconnect'));
         }
     }
 
@@ -120,12 +119,12 @@ class ImportController implements ControllerInterface
     {
 
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'match_listings_with_products_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -142,10 +141,10 @@ class ImportController implements ControllerInterface
         if (!$user_listings_to_import) {
             Helper::logData('No listings to import with pending vinculation', 'import');
             Helper::logData('------ END Match listings with products ------', 'import');
-            wp_send_json_error(__('No listings to import with pending vinculation', 'meliconnect'));
+            wp_send_json_error(esc_html__('No listings to import with pending vinculation', 'meliconnect'));
             return;
         }
-        //Helper::logData('Listings to import: ' . var_export($user_listings_to_import,true) , 'import');
+        //Helper::logData('Listings to import: ' . wp_json_encode($user_listings_to_import) , 'import');
 
         foreach ($user_listings_to_import as $user_listing) {
             $product = null;
@@ -170,39 +169,44 @@ class ImportController implements ControllerInterface
             }
         }
         Helper::logData('------ END Match listings with products ------', 'import');
-        wp_send_json_success(__('Listings matched with products', 'meliconnect'));
+        wp_send_json_success(esc_html__('Listings matched with products', 'meliconnect'));
     }
 
     public static function handleClearMatches()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'clear_all_matches_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
         $clear = UserListingToImport::clear_matches();
 
         if (!$clear) {
-            wp_send_json_error(__('Problem clearing matches', 'meliconnect'));
+            wp_send_json_error(esc_html__('Problem clearing matches', 'meliconnect'));
             return;
         }
 
-        wp_send_json_success(__('Matches cleared', 'meliconnect'));
+        wp_send_json_success(esc_html__('Matches cleared', 'meliconnect'));
     }
 
     public static function handleImportProcess()
     {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'get_process_progress_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
+            return;
+        }
+
         $process_id = $_POST['process_id'];
 
         $progress_data = Process::getProcessProgress($process_id);
 
         if (!$progress_data) {
-            wp_send_json_error(__('Process not found', 'meliconnect'));
+            wp_send_json_error(esc_html__('Process not found', 'meliconnect'));
             return;
         }
 
@@ -212,9 +216,14 @@ class ImportController implements ControllerInterface
 
     public static function handleGetMeliUserListings()
     {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'get_meli_user_listings_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
+            return;
+        }
+
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -223,21 +232,21 @@ class ImportController implements ControllerInterface
 
         // Verifica si la solicitud está vacía
         if (!isset($data['user_id'])) {
-            wp_send_json_error(__('Invalid request data', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid request data', 'meliconnect'));
             return;
         }
 
         $meli_user = UserConnection::getUser($data['user_id']);
 
         if (!$meli_user) {
-            wp_send_json_error(__('User not found', 'meliconnect'));
+            wp_send_json_error(esc_html__('User not found', 'meliconnect'));
             return;
         }
 
         $meli_user_listings_ids = self::getMeliUserLisntingIds($meli_user);
 
         if ($meli_user_listings_ids === false) {
-            wp_send_json_error(__('There was an error getting the user listings. Check connections page.', 'meliconnect'));
+            wp_send_json_error(esc_html__('There was an error getting the user listings. Check connections page.', 'meliconnect'));
             return;
         }
 
@@ -249,20 +258,20 @@ class ImportController implements ControllerInterface
         UserListingToImport::update_meli_user_listings_extra_data_to_import($listings_extra_data);
 
         /* echo PHP_EOL . '-------------------- listings_extra_data --------------------' . PHP_EOL;
-        echo '<pre>' . var_export( $listings_extra_data, true) . '</pre>';
+        echo '<pre>' . wp_json_encode( $listings_extra_data) . '</pre>';
         echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL; */
     }
 
     public static function handleResetMeliUserListings()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'reset_listings_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -274,13 +283,13 @@ class ImportController implements ControllerInterface
     public static function handleInitImportProcess()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'init_import_process_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -293,13 +302,13 @@ class ImportController implements ControllerInterface
     public static function handlePauseCustomImport()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'pause_custom_import_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -311,13 +320,13 @@ class ImportController implements ControllerInterface
     public static function handleCancelCustomImport()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cancel_custom_import_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -340,13 +349,13 @@ class ImportController implements ControllerInterface
     public static function handleCancelFinishedProcesses()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cancel_finished_processes_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -366,14 +375,14 @@ class ImportController implements ControllerInterface
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'import_bulk_action_nonce')) {
             Helper::logData('Invalid nonce', 'bulk-actions-import');
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
             Helper::logData('Permission denied', 'bulk-actions-import');
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -382,7 +391,7 @@ class ImportController implements ControllerInterface
 
         if (!$selected_ids || !$action || $action == -1) {
             Helper::logData('Invalid data: missing selected_ids or action', 'bulk-actions-import');
-            wp_send_json_error(__('Invalid data', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
         }
 
         $selected_ids_arr = explode(',', $selected_ids);
@@ -449,13 +458,13 @@ class ImportController implements ControllerInterface
     public static function handleDesvinculateWooProduct()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'desvinculate_product_nonce')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -463,23 +472,29 @@ class ImportController implements ControllerInterface
         $meliListingId = isset($_POST['meliListingId']) ? sanitize_text_field($_POST['meliListingId']) : '';
 
         if (!$wooProductId || !$meliListingId) {
-            wp_send_json_error(__('Invalid data', 'meliconnect'));
+            wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
         }
 
         Helper::unlinkProduct($wooProductId);
 
-        if(!empty($meliListingId)){
+        if (!empty($meliListingId)) {
             UserListingToImport::unlink_woo_product($meliListingId);
         }
 
-        wp_send_json_success(array('message' => __('Product desvinculated successfully.', 'meliconnect')));
+        wp_send_json_success(array('message' => esc_html__('Product desvinculated successfully.', 'meliconnect')));
     }
 
     public static function handleGetMatchAvailableProducts()
     {
+
+        if (!isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'get_match_available_products_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
+            return;
+        }
+
         // Verifica los permisos del usuario
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -489,19 +504,17 @@ class ImportController implements ControllerInterface
 
 
         // Consulta para obtener productos de WooCommerce que no tienen el postmeta 'melicon_meli_listing_id'
-        $query = $wpdb->prepare(
-            "
-        SELECT p.ID, p.post_title, p.post_type, p.post_status
-        FROM {$wpdb->posts} p
-        LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = 'melicon_meli_listing_id'
-        WHERE pm.post_id IS NULL
-          AND p.post_type = 'product'
-        ORDER BY p.post_title ASC
-        ");
 
-        $results = $wpdb->get_results($query, ARRAY_A);
+        $results = $wpdb->get_results($wpdb->prepare(
+            "SELECT p.ID, p.post_title, p.post_type, p.post_status
+                FROM {$wpdb->posts} p
+                LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = 'melicon_meli_listing_id'
+                WHERE pm.post_id IS NULL
+                AND p.post_type = 'product'
+                ORDER BY p.post_title ASC"
+        ), ARRAY_A);
 
-        
+
         // Construir la respuesta HTML para Select2
         $options = '';
         foreach ($results as $product) {
@@ -509,8 +522,8 @@ class ImportController implements ControllerInterface
             $product_obj = wc_get_product($product_id);
             /* $product_type = $product_obj->get_type();
             echo PHP_EOL . '-------------------- product type --------------------' . PHP_EOL;
-            echo '<pre>' . var_export( $product_id, true) . '</pre>';
-            echo '<pre>' . var_export( $product_type, true) . '</pre>';
+            echo '<pre>' . wp_json_encode( $product_id) . '</pre>';
+            echo '<pre>' . wp_json_encode( $product_type) . '</pre>';
             echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL; */
             if ($product_obj->is_type($product_type)) {
                 if ($product_type === 'simple') {
@@ -546,7 +559,7 @@ class ImportController implements ControllerInterface
                         esc_attr($product_id),
                         esc_attr($product['post_status']),
                         esc_attr($product_type),
-                        esc_attr(json_encode($variations_data)),
+                        esc_attr(wp_json_encode($variations_data)),
                         esc_html($product['post_title'])
                     );
                 }
@@ -554,7 +567,7 @@ class ImportController implements ControllerInterface
         }
 
         if (empty($options)) {
-            wp_send_json_success(__('No products found', 'meliconnect'));
+            wp_send_json_success(esc_html__('No products found', 'meliconnect'));
         } else {
             wp_send_json_success(['options' => $options]);
         }
@@ -619,12 +632,12 @@ class ImportController implements ControllerInterface
 
             if (!isset($listingsWithExtraData['body']) || $listingsWithExtraData['httpCode'] !== 200) {
                 Helper::logData('Error getting chunk extra data in listings: ' . implode(',', $chunk), 'importer');
-                
-                Helper::logData('ListingsWithExtraData: ' . json_encode($listingsWithExtraData, JSON_PRETTY_PRINT), 'importer');
+
+                Helper::logData('ListingsWithExtraData: ' . wp_json_encode($listingsWithExtraData, JSON_PRETTY_PRINT), 'importer');
 
                 Helper::logData('Access Token: ' . $seller_data->access_token, 'importer');
                 Helper::logData('current_url: ' . $current_url, 'importer');
-                
+
                 continue;
             }
 
@@ -641,7 +654,7 @@ class ImportController implements ControllerInterface
 
 
         if (!empty($listings_with_errors)) {
-            Helper::logData('Listings with errors: ' . json_encode($listings_with_errors, JSON_PRETTY_PRINT), 'importer');
+            Helper::logData('Listings with errors: ' . wp_json_encode($listings_with_errors, JSON_PRETTY_PRINT), 'importer');
         }
 
         Helper::logData('Obteined extra data from:' . count($meli_user_listings_with_data) . ' listings', 'importer');
@@ -693,7 +706,7 @@ class ImportController implements ControllerInterface
             }
         }
 
-        Helper::logData('Listings from seller: ' . $seller_data->user_id . ' are: ' . json_encode($meli_user_listings, JSON_PRETTY_PRINT), 'importer');
+        Helper::logData('Listings from seller: ' . $seller_data->user_id . ' are: ' . wp_json_encode($meli_user_listings, JSON_PRETTY_PRINT), 'importer');
 
         return $meli_user_listings;
     }

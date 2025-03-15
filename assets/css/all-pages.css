@@ -1,0 +1,12 @@
+#toplevel_page_meliconnect .wp-first-item{
+    display: none;
+}
+
+.switch[type=checkbox].is-warning:checked+label::before, .switch[type=checkbox].is-warning:checked+label:before{
+    background-color: #bfbf36 !important;
+}
+
+
+.melicon-select::after{
+    border: none !important;
+}

@@ -30,7 +30,7 @@ class ApiManager {
         $users_in_domain = $request->get_param('users_in_domain');
 
         if (!is_array($users_in_domain)) {
-            Helper::logData('Received bad parameters in request: ' . var_export($request->get_params(), true)  , 'users_in_domain');
+            Helper::logData('Received bad parameters in request: ' . wp_json_encode($request->get_params())  , 'users_in_domain');
 
             return rest_ensure_response([
                 'message' => 'Missing required parameters.',
@@ -38,7 +38,7 @@ class ApiManager {
             ]);
         }
 
-        Helper::logData('Received connected users: ' . var_export($users_in_domain, true) . '', 'users_in_domain');
+        Helper::logData('Received connected users: ' . wp_json_encode($users_in_domain) . '', 'users_in_domain');
       
         UserConnection::update_users_connections($users_in_domain);
 

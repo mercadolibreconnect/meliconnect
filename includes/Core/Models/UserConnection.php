@@ -23,13 +23,11 @@ class UserConnection
 
         self::init();
 
-        $table_name = self::$table_name;;
+        $table_name = self::$table_name;
 
-        // Realizar la consulta para obtener todos los usuarios
-        $query = "SELECT * FROM {$table_name}";
 
         // Obtener los resultados
-        $results = $wpdb->get_results($query);
+        $results = $wpdb->get_results("SELECT * FROM {$table_name}");
 
         return $results;
     }
@@ -42,16 +40,13 @@ class UserConnection
 
         $table_name = self::$table_name;
 
-        // Construir la consulta SQL
-        $query = "SELECT * FROM {$table_name}";
-
         // Preparar y ejecutar la consulta
-        $results = $wpdb->get_results($query);
+        $results = $wpdb->get_results("SELECT * FROM {$table_name}");
 
         return $results;
     }
 
-    public static function getUser($user_id = null, $nickname = null)
+    public static function getUser($user_id = null)
     {
         global $wpdb;
 
@@ -59,35 +54,23 @@ class UserConnection
 
         $table_name = self::$table_name;
 
-        // Construir la consulta SQL
-        $query = "SELECT * FROM {$table_name} WHERE 1=1";
-        $params = array();
-
-        // Añadir condiciones a la consulta según los parámetros
+        // Obtener resultados según si se proporciona $user_id
         if (!is_null($user_id)) {
-            $query .= " AND user_id = %d";
-            $params[] = $user_id;
+            $result = $wpdb->get_results(
+                $wpdb->prepare("SELECT * FROM {$table_name} WHERE user_id = %d", $user_id)
+            );
+        } else {
+            $result = $wpdb->get_results("SELECT * FROM {$table_name}");
         }
 
-        if (!is_null($nickname)) {
-            $query .= " AND nickname = %s";
-            $params[] = $nickname;
-        }
-
-        // Preparar y ejecutar la consulta
-        if (!empty($params)) {
-            $query = $wpdb->prepare($query, $params);
-        }
-
-        // Obtener los resultados
-        $result = $wpdb->get_results($query);
-
-        if (count($result) === 1 && (!empty($user_id) || !empty($nickname))) {
+        // Si hay exactamente un resultado, retornarlo directamente
+        if (count($result) === 1) {
             $result = $result[0];
         }
 
         return $result;
     }
+
 
     /**
      * Callback para procesar el dominio y actualizar las conexiones de usuarios.
@@ -101,6 +84,8 @@ class UserConnection
 
         $table_name = self::$table_name;
 
+        $pending_count = 0;
+
 
         // Eliminar todas las conexiones existentes antes de insertar las nuevas
         $wpdb->query("DELETE FROM {$table_name}");
@@ -108,11 +93,17 @@ class UserConnection
         // Insertar cada usuario recibido en la tabla `wp_melicon_user_connection`
         foreach ($users_in_domain as $user) {
 
+            if (is_null($user['access_token']) && is_null($user['user_id'])) {
+                // Guardar un mensaje de notificación en caso de estar pendiente
+                $pending_count++;
+                continue; // Saltar la inserción en la base de datos para este caso
+            }
+
             $params = ['access_token' => $user['access_token']];
             $meli = new MeliconMeli($user['app_id'], $user['secret_key'], $user['access_token']);
             $meli_user_data = $meli->get('/users/' . $user['user_id'], $params);
 
-            //Helper::logData('Meli user data: ' . var_export($meli_user_data, true)  , 'users_in_domain');
+            //Helper::logData('Meli user data: ' . wp_json_encode($meli_user_data)  , 'users_in_domain');
 
             $insert_data = [
                 'access_token'    => $user['access_token'],
@@ -136,86 +127,24 @@ class UserConnection
             if($wpdb->last_error) {
                 Helper::logData('Error creating user connection: ' . $wpdb->last_error  , 'users_in_domain');
             }else{
-                Helper::logData('User connection created: ' . print_r($insert_data, true)  , 'users_in_domain');
+                Helper::logData('User connection created: ' . wp_json_encode($insert_data, true)  , 'users_in_domain');
             }
 
 
+        }
+        
+        //TO FIX
+        if ($pending_count > 0) {
+            $message = "You have {$pending_count} connections pending vinculation to MercadoLibre in hub.";
+            Helper::logData($message, 'users_in_domain');
+            update_option('melicon_pending_connection_notifications', $message);
+        } else {
+            // Eliminar el mensaje si no hay conexiones pendientes
+            delete_option('melicon_pending_connection_notifications');
         }
 
         // Responder con el estado de la acción
         return true;
     }
 
-
-
-
-
-
-    public static function create_update_user_connection($userData, $meli_user_data = null)
-    {
-        global $wpdb;
-
-        self::init();
-
-        $table_name = self::$table_name;
-
-        // Obtener los datos actuales de la tabla para determinar qué usuarios están desactualizados
-        $existing_users = $wpdb->get_results("SELECT user_id FROM {$table_name}", ARRAY_A);
-        $existing_user_ids = array_column($existing_users, 'user_id');
-
-        // Datos a actualizar o insertar
-        $userDataToUpdate = [
-            'app_id' => sanitize_text_field($userData->app_id),
-            'secret_key' => sanitize_text_field($userData->secret_key),
-            'access_token' => sanitize_text_field($userData->access_token),
-            'refresh_token' => sanitize_text_field($userData->refresh_token),
-            'expires_in' => intval($userData->expires_in),
-            'user_id' => intval($userData->user_id),
-            'nickname' => sanitize_text_field($userData->nickname),
-            'permalink' => esc_url($userData->permalink),
-            'site_id' => sanitize_text_field($userData->site_id),
-            'country' => sanitize_text_field($userData->country),
-            'has_mercadoshops' => (isset($meli_user_data['body']->tags) && is_array($meli_user_data['body']->tags) && in_array('mshops', $meli_user_data['body']->tags)) ? 1 : 0,
-            'status' => 'vinculated',
-            'updated_at' => current_time('mysql')
-        ];
-
-
-        // Actualizar o insertar el usuario
-        $wpdb->replace(
-            $table_name,
-            $userDataToUpdate,
-            [
-                '%s', // app_id
-                '%s', // secret_key
-                '%s', // access_token
-                '%s', // refresh_token
-                '%d', // expires_in
-                '%d', // user_id
-                '%s', // nickname
-                '%s', // permalink
-                '%s', // site_id
-                '%s', // country
-                '%d', // has_mercadoshops
-                '%s', // status
-                '%s'  // updated_at
-            ]
-        );
-
-
-        // Actualizar el estado de los usuarios que no están en los datos recibidos
-        foreach ($existing_user_ids as $id) {
-            if ($id != $userData->user_id) {
-                $wpdb->update(
-                    $table_name,
-                    ['status' => 'desvinculated'],
-                    ['user_id' => $id],
-                    ['%s'],
-                    ['%d']
-                );
-            }
-        }
-
-        return 'updated';
-    }
 }

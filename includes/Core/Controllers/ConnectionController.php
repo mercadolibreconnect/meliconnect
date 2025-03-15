@@ -22,7 +22,7 @@ class ConnectionController implements ControllerInterface
     {
         // Logic to get and return data
         $data = [];
-        $data['domain'] = self::getDomainName();
+        $data['domain'] = Helper::getDomainName();
         $data['users'] = UserConnection::getConnectedUsers();
         return $data;
     }
@@ -56,34 +56,5 @@ class ConnectionController implements ControllerInterface
         }
     }
 
-    public static function getDomainName()
-    {
-        // Check if HTTPS is enabled
-        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
-
-        // Get the host
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-
-        // Get PHP_SELF to build the full URL
-        $self = $_SERVER['PHP_SELF'] ?? '';
-
-        // Build the full URL
-        $fullUrl = filter_var("$scheme://$host$self", FILTER_SANITIZE_URL);
-
-        // Find the position of 'wp-admin' in the URL
-        $wpAdminPos = strpos($fullUrl, '/wp-admin');
-
-        if ($wpAdminPos !== false) {
-            // Cut the URL before 'wp-admin'
-            $domainUrl = substr($fullUrl, 0, $wpAdminPos);
-        } else {
-            // If 'wp-admin' is not found, use the full URL
-            $domainUrl = $fullUrl;
-        }
-
-        // Remove trailing slash if it exists
-        $domainUrl = rtrim($domainUrl, '/');
-
-        return $domainUrl;
-    }
+    
 }

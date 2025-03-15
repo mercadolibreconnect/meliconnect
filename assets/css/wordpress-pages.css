@@ -1,0 +1,27 @@
+:not(.melicon-app) a {
+    color: #2271b1;
+  }
+
+  :not(.melicon-app) strong, :not(.melicon-app) b {
+    font-weight:600;
+    color:#000000;
+  }
+
+  :not(.melicon-app) table{
+    border-collapse: unset;
+  }
+
+
+  #meliconnect_meta_box_data .postbox-header, #meliconnect_meta_box .postbox-header{
+    background: #f8f600;
+  }
+
+  #meliconnect_meta_box_data .postbox-header h2, #meliconnect_meta_box .postbox-header h2{
+    color: #000000;
+    font-weight: 400;
+    font-size: 16px;
+  }
+
+  .mercadolibre_tab a, .meliconnect_logs_tab a{
+    color: #848404;
+  }

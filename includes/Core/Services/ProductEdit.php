@@ -40,7 +40,8 @@ class ProductEdit
 
     public function __construct()
     {
-        add_action('add_meta_boxes', [$this, 'add_meliconnect_meta_box']);
+        add_action('add_meta_boxes', [$this, 'add_meliconnect_meta_box_data']);
+        add_action('add_meta_boxes', [$this, 'add_meliconnect_meta_box_actions']);
         add_action('woocommerce_product_options_pricing', [$this, 'meliconnect_add_general_tab_html']);
         add_action('woocommerce_product_options_inventory_product_data', [$this, 'meliconnect_add_stock_tab_html']);
         add_filter('woocommerce_product_data_tabs', [$this, 'add_mercadolibre_product_tab']);
@@ -57,10 +58,7 @@ class ProductEdit
 
         add_action('woocommerce_variation_options',  [$this, 'melicon_custom_variation_fields'], 10, 3);
 
-        //when user saves variations
-        /* add_action('woocommerce_ajax_save_product_variations', [$this, 'melicon_save_template_variations'], 10, 1);
 
-        add_action('woocommerce_ajax_save_attributes', [$this, 'melicon_save_attributes'], 10, 1); */
 
 
 
@@ -68,49 +66,49 @@ class ProductEdit
         $this->loadAssets();
 
         $this->shipping_modes_names = [
-            'custom' => __('Custom', 'meliconnect'),
-            'not_specified' => __('No Shipping Configuration', 'meliconnect'),
-            'me2' => __('Mercado Envíos - Standard ', 'meliconnect') . '(' . __('ME2', 'meliconnect') . ')',
-            'me1' => __('Mercado Envíos - Express ', 'meliconnect') . '(' . __('ME1', 'meliconnect') . ')',
+            'custom' => esc_html__('Custom', 'meliconnect'),
+            'not_specified' => esc_html__('No Shipping Configuration', 'meliconnect'),
+            'me2' => esc_html__('Mercado Envíos - Standard ', 'meliconnect') . '(' . esc_html__('ME2', 'meliconnect') . ')',
+            'me1' => esc_html__('Mercado Envíos - Express ', 'meliconnect') . '(' . esc_html__('ME1', 'meliconnect') . ')',
         ];
 
         $this->select_options = [
-            'buying_modes' => ['buy_it_now' => __('Buy It Now', 'meliconnect')],
+            'buying_modes' => ['buy_it_now' => esc_html__('Buy It Now', 'meliconnect')],
             'listing_types' => [
-                'gold_premium' => __('Gold Premium', 'meliconnect'),
-                'gold' => __('Gold', 'meliconnect'),
-                'silver' => __('Silver', 'meliconnect'),
+                'gold_premium' => esc_html__('Gold Premium', 'meliconnect'),
+                'gold' => esc_html__('Gold', 'meliconnect'),
+                'silver' => esc_html__('Silver', 'meliconnect'),
             ],
             'conditions' => [
-                'new' => __('New', 'meliconnect'),
-                'used' => __('Used', 'meliconnect'),
+                'new' => esc_html__('New', 'meliconnect'),
+                'used' => esc_html__('Used', 'meliconnect'),
             ],
             'warranty_types' => [
-                '2230280' => __('Seller Warranty', 'meliconnect'),
-                '2230279' => __('Manufacturer Warranty', 'meliconnect'),
-                '6150835' => __('No Warranty', 'meliconnect'),
+                '2230280' => esc_html__('Seller Warranty', 'meliconnect'),
+                '2230279' => esc_html__('Manufacturer Warranty', 'meliconnect'),
+                '6150835' => esc_html__('No Warranty', 'meliconnect'),
             ],
             'warranty_time_units' => [
-                'días' => __('días', 'meliconnect'),
-                'meses' => __('meses', 'meliconnect'),
-                'años' => __('años', 'meliconnect'),
+                'días' => esc_html__('días', 'meliconnect'),
+                'meses' => esc_html__('meses', 'meliconnect'),
+                'años' => esc_html__('años', 'meliconnect'),
             ],
             'currencies' => [
-                'USD' => __('USD', 'meliconnect'),
+                'USD' => esc_html__('USD', 'meliconnect'),
             ],
-            'channels' => ['mercadolibre' => __('Mercadolibre', 'meliconnect')],
+            'channels' => ['mercadolibre' => esc_html__('Mercadolibre', 'meliconnect')],
             'shipping_methods' => [
-                'me2' => __('Mercado Envíos - Standard ', 'meliconnect') . '(' . __('ME2', 'meliconnect') . ')',
-                'me1' => __('Mercado Envíos - Express ', 'meliconnect') . '(' . __('ME1', 'meliconnect') . ')',
-                'not_specified' => __('No Shipping Configuration', 'meliconnect'),
+                'me2' => esc_html__('Mercado Envíos - Standard ', 'meliconnect') . '(' . esc_html__('ME2', 'meliconnect') . ')',
+                'me1' => esc_html__('Mercado Envíos - Express ', 'meliconnect') . '(' . esc_html__('ME1', 'meliconnect') . ')',
+                'not_specified' => esc_html__('No Shipping Configuration', 'meliconnect'),
             ],
             'manufacturing_time_units' => [
-                'días' => __('días', 'meliconnect'),
+                'días' => esc_html__('días', 'meliconnect'),
             ],
             'status' => [
-                'active' => __('Active', 'meliconnect'),
-                'paused' => __('Paused', 'meliconnect'),
-                'closed' => __('Closed', 'meliconnect'),
+                'active' => esc_html__('Active', 'meliconnect'),
+                'paused' => esc_html__('Paused', 'meliconnect'),
+                'closed' => esc_html__('Closed', 'meliconnect'),
             ],
             'official_stores' => []
         ];
@@ -143,23 +141,38 @@ class ProductEdit
 
     public function melicon_woocommerce_save_product_variation($variation, $i)
     {
-        $parent_id = $_POST['product_id'];
-        $variation_id = $variation->get_id();
+        if (! isset($_POST['melicon_variation_nonce']) || ! check_admin_referer('melicon_save_product_variation_nonce', 'melicon_variation_nonce')) {
+            // Si el nonce no es válido, aborta la ejecución
+            wp_die('Invalid nonce. Please reload the page and try again.');
+        }
 
+        if (isset($_POST['product_id'])) {
+            $parent_id = sanitize_text_field(wp_unslash($_POST['product_id']));
+        } else {
+            wp_die('Product ID not found.');
+        }
+
+        if (isset($_POST['template']['variations'])) {
+            $template_variations = sanitize_text_field(wp_unslash($_POST['template']['variations']));
+        } else {
+            wp_die('Product ID not found.');
+        }
+
+        $variation_id = $variation->get_id();
         $template_id = get_post_meta($parent_id, 'melicon_asoc_template_id', true);
 
 
-        foreach ($_POST['template']['variations'] as $variation_key => $variation_values) {
+        foreach ($template_variations as $variation_key => $variation_values) {
             $current_meli_variation_id = $variation_values['variation_data']['meli_variation_id'] ?? '';
 
-            if(isset($variation_values['variation_data']['disable_sync']) && $variation_values['variation_data']['disable_sync'] == 1){
-                update_post_meta( $variation_id, 'melicon_meli_asoc_variation_sync_disabled', 1 );
-            }else{
-                update_post_meta( $variation_id, 'melicon_meli_asoc_variation_sync_disabled', 0 );
+            if (isset($variation_values['variation_data']['disable_sync']) && $variation_values['variation_data']['disable_sync'] == 1) {
+                update_post_meta($variation_id, 'melicon_meli_asoc_variation_sync_disabled', 1);
+            } else {
+                update_post_meta($variation_id, 'melicon_meli_asoc_variation_sync_disabled', 0);
             }
 
             foreach ($variation_values['attrs'] as $meli_attribute_name => $meli_value_data) {
-                
+
                 $meliDataUnescaped = stripslashes($meli_value_data['meli_data']);
                 $meliDataArray = json_decode($meliDataUnescaped, true);
 
@@ -167,7 +180,7 @@ class ProductEdit
                     'template_id' =>  $template_id,
                     'used_by' => 'variation',
                     'used_asoc_id' => $variation_id,
-                    'product_parent_id' => $_POST['product_id'],
+                    'product_parent_id' => $parent_id,
                     'woo_attribute_id' => '',
                     'meli_variation_id' =>  $current_meli_variation_id, // Ej: 181734597045
                     'meli_attribute_id' => $meliDataArray['id'], //Ej: COLOR
@@ -175,26 +188,23 @@ class ProductEdit
                     'meli_value_id' => $meli_value_data['value'], // Ej: 52049
                     'meli_value_name' => $meli_attribute_name, //Ej: Negro
                     'meli_value_type' => $meliDataArray['value_type'], //Ej: string 
-                    'allow_variations_tag' => (isset($meliDataArray['tags']['allow_variations']) && $meliDataArray['tags']['allow_variations']) ? 1 : 0 , // Ej:1
-                    'variation_attribute_tag' => (isset($meliDataArray['tags']['variation_attribute_tag']) && $meliDataArray['tags']['variation_attribute']) ? 1 : 0 , // Ej:0
-                    'required_tag' => (isset($meliDataArray['tags']['required_tag']) && $meliDataArray['tags']['required']) ? 1 : 0 , // Ej:0
+                    'allow_variations_tag' => (isset($meliDataArray['tags']['allow_variations']) && $meliDataArray['tags']['allow_variations']) ? 1 : 0, // Ej:1
+                    'variation_attribute_tag' => (isset($meliDataArray['tags']['variation_attribute_tag']) && $meliDataArray['tags']['variation_attribute']) ? 1 : 0, // Ej:0
+                    'required_tag' => (isset($meliDataArray['tags']['required_tag']) && $meliDataArray['tags']['required']) ? 1 : 0, // Ej:0
                     'not_apply' => 0,
                 ];
                 /* echo PHP_EOL . '-------------------- variation_template_data --------------------' . PHP_EOL;
-                echo '<pre>' . var_export($meliDataArray, true) . '</pre>';
-                echo '<pre>' . var_export( $variation_template_data, true) . '</pre>';
+                echo '<pre>' . wp_json_encode($meliDataArray) . '</pre>';
+                echo '<pre>' . wp_json_encode( $variation_template_data) . '</pre>';
                 echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
                 wp_die(); */
-                Template::createUpdateTemplateAttributes('variation', $variation_id, $meliDataArray['id'], $variation_template_data );  
+                Template::createUpdateTemplateAttributes('variation', $variation_id, $meliDataArray['id'], $variation_template_data);
             }
         }
-
-
     }
 
     public function melicon_custom_variation_fields($loop, $variation_data, $variation)
     {
-
         $this->set_product_vars();
 
         $current_variation_attrs = $this->filterVariationAttributes($variation_data);
@@ -205,88 +215,77 @@ class ProductEdit
 
         $meli_variation_id = $this->mapVariationWithMeliVariations($variation, $current_variation_attrs);
 
-        
+        wp_nonce_field('melicon_save_product_variation_nonce', 'melicon_variation_nonce');
 
-        //Prints selects with values as selected
+        // Prints selects with values as selected
         foreach ($current_variation_attrs as $name => $attr_value) {
-
-            // Normalizar el nombre del atributo de la variación usando Helper::normalizeString
             $normalized_name = Helper::normalizeString($name);
-
-            // Normalizar las claves de los atributos de MercadoLibre
             $meli_attributes_normalized = array_map(function ($key) {
                 return Helper::normalizeString($key);
             }, array_keys($this->meli_category_variable_attrs));
 
-            // Verificar si el atributo normalizado existe en los atributos de meli
             $meli_attr_index = array_search($normalized_name, $meli_attributes_normalized);
 
             if ($meli_attr_index !== false) {
-                // Obtener el nombre real del atributo mapeado en el array original
                 $meli_attr_name = array_keys($this->meli_category_variable_attrs)[$meli_attr_index];
 
-                // Mostrar el nombre del atributo
                 echo "<div class='melicon_variation_row'>";
-                echo "<label for='attribute_$meli_attr_name'>$name:</label><br>";
+                echo '<label for="attribute_' . esc_attr($meli_attr_name) . '">' . esc_html($name) . ':</label><br>';
 
                 $meli_attr_data = $this->getCurrentAttrMeliData($name);
-                $meli_attr_data_json = json_encode($meli_attr_data);
-                $ml_attr_data_escaped = htmlspecialchars($meli_attr_data_json, ENT_QUOTES, 'UTF-8');
-
-                echo '<input type="text" style="display:none" name="template[variations][' . $loop . '][attrs][' . $meli_attr_name . '][meli_data]" value="' . $ml_attr_data_escaped . '">';
-               
+                $meli_attr_data_json = wp_json_encode($meli_attr_data); // Usar WordPress JSON escape
+                echo '<input type="text" style="display:none" name="template[variations][' . esc_attr($loop) . '][attrs][' . esc_attr($meli_attr_name) . '][meli_data]" value="' . esc_attr($meli_attr_data_json) . '">';
 
                 // Select dropdown con los valores
-                echo "<select name='template[variations][$loop][attrs][$meli_attr_name][value]' id='attribute_$meli_attr_name'>";
+                echo '<select name="template[variations][' . esc_attr($loop) . '][attrs][' . esc_attr($meli_attr_name) . '][value]" id="attribute_' . esc_attr($meli_attr_name) . '">';
 
                 // Opción predeterminada
-                echo "<option value=''>Select a value</option>";
+                echo '<option value="">' . esc_html__('Select a value', 'meliconnect') . '</option>';
 
-                // Recorrer los valores posibles del atributo
                 foreach ($this->meli_category_variable_attrs[$meli_attr_name] as $meli_value_id => $meli_value_name) {
-                    // Normalizar el nombre y el valor para comparar
                     $normalized_value = Helper::normalizeString($meli_value_name);
                     $normalized_current_value = Helper::normalizeString($attr_value);
+                    $selected = ($normalized_current_value === $normalized_value) ? 'selected' : '';
 
-                    // Marcar como seleccionado si los valores normalizados coinciden
-                    $selected = ($normalized_current_value == $normalized_value) ? 'selected' : '';
-                    echo "<option value='$meli_value_id' $selected>$meli_value_name</option>";
+                    echo '<option value="' . esc_attr($meli_value_id) . '" ' . esc_attr($selected) . '>' . esc_html($meli_value_name) . '</option>';
                 }
 
-                echo "</select>";
-
-                echo "</div><br>";
+                echo '</select>';
+                echo '</div><br>';
             } else {
-                // Si el atributo no está mapeado
-                echo "<p>Attribute '" . esc_html($name) . "' is not mapped.</p>";
+                echo '<p>' . sprintf(
+                    /* translators: %s: is the attribute name that is not mapped */
+                    esc_html__(
+                        "Attribute '%s' is not mapped.",
+                        "meliconnect"
+                    ),
+                    esc_html($name)
+                ) . '</p>';
             }
         }
 
         echo '</p>';
+
         // Agregar el checkbox para deshabilitar la sincronización
-
         $variation_sync_is_disabled = get_post_meta($variation->ID, 'melicon_meli_asoc_variation_sync_disabled', true);
+        $checked_disabled = $variation_sync_is_disabled ? 'checked' : '';
 
-        $checked_disabled = ($variation_sync_is_disabled) ? 'checked' : '';
-
-
-        echo '<input type="text" style="display:none" name="template[variations][' . $loop . '][variation_data][meli_variation_id]" value="' . $meli_variation_id . '">';
-        echo "<input type='checkbox' name='template[variations][$loop][variation_data][disable_sync]' class='melicon_variation_disable_sync' value='1' $checked_disabled>";
-        echo "<label for='disable_sync_$meli_attr_name'>" . _e("Disable sync for this variation", "meliconnect") . "</label>";
+        echo '<input type="text" style="display:none" name="template[variations][' . esc_attr($loop) . '][variation_data][meli_variation_id]" value="' . esc_attr($meli_variation_id) . '">';
+        echo '<input type="checkbox" name="template[variations][' . esc_attr($loop) . '][variation_data][disable_sync]" class="melicon_variation_disable_sync" value="1" ' . esc_attr($checked_disabled) . '>';
+        echo '<label for="disable_sync_' . esc_attr($meli_attr_name) . '">' . esc_html__('Disable sync for this variation', 'meliconnect') . '</label>';
 
         echo '</div>';
-
-        /* $template_attr = $this->findInTemplateAttrs($meli_attr_name, $this->template_attibutes); */
     }
+
 
     public function mapVariationWithMeliVariations($variation, $current_variation_attrs)
     {
         //Find saved variation postmeta
-        $meli_variation_id = get_post_meta( $variation->ID, 'melicon_meli_asoc_variation_id', true);
+        $meli_variation_id = get_post_meta($variation->ID, 'melicon_meli_asoc_variation_id', true);
 
 
         //TODO if variation meta not exists. Check if product has a vinculated product and map values
-        
+
         return $meli_variation_id;
     }
 
@@ -314,18 +313,18 @@ class ProductEdit
         foreach ($template_attrs as $template_attr) {
             if (isset($template_attr['allow_variations_tag']) && $template_attr['allow_variations_tag'] == 1) {
                 echo PHP_EOL . '-------------------- template_attr --------------------' . PHP_EOL;
-                echo '<pre>' . var_export($template_attr, true) . '</pre>';
+                echo '<pre>' . wp_json_encode($template_attr) . '</pre>';
                 echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
             }
         }
 
 
         echo PHP_EOL . '-------------------- VARIATION --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($variation, true) . '</pre>';
+        echo '<pre>' . wp_json_encode($variation) . '</pre>';
         echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
 
         echo PHP_EOL . '-------------------- ATTRIBUTES --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($current_variation_attrs, true) . '</pre>';
+        echo '<pre>' . wp_json_encode($current_variation_attrs) . '</pre>';
         echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
 
         //find in current meli variations
@@ -363,14 +362,6 @@ class ProductEdit
 
 
 
-    public function melicon_save_template_variations($post_id)
-    {
-
-        echo PHP_EOL . '-------------------- $_POST --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($_POST, true) . '</pre>';
-        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
-        wp_die();
-    }
 
     public function melicon_save_attributes($post_id)
     {
@@ -380,61 +371,46 @@ class ProductEdit
 
     public function match_mercadolibre_atts($attribute, $i)
     {
+        $data = $this->get_match_data($attribute, $i);
+        $data['instance'] = $this;
 
-        echo '<div class="melicon_meli_attribute_info_container">';
+        Helper::load_partial('includes/Core/Views/Partials/meliconnect_product_edit_match_atts.php', $data, false);
+    }
 
-        // Obtén el objeto de la taxonomía si está presente
+    public function get_match_data($attribute, $i)
+    {
         $taxonomy_object = $attribute->get_taxonomy_object();
 
-
-
-        // Si existe el objeto de la taxonomía y tiene una etiqueta de atributo
+        // Determinar el nombre del atributo
         if (!empty($taxonomy_object) && isset($taxonomy_object->attribute_label) && !empty($taxonomy_object->attribute_label)) {
             $current_attr_name = $taxonomy_object->attribute_label;
         } else {
-            // Si no existe, obten el nombre del atributo
             $current_attr_name = $attribute->get_name();
         }
 
-        // Obtén las opciones del atributo (IDs de los términos)
+        // Obtener opciones del atributo
         $current_attr_options = $attribute->get_options();
 
-        // Si es una taxonomía, obten los nombres de los términos
+        // Si es una taxonomía, obtener los nombres de los términos
         if ($attribute->is_taxonomy()) {
-            $taxonomy_name = $attribute->get_name(); // Nombre de la taxonomía (ej: 'pa_color')
-
-            // Recorre los IDs y obtén los nombres de los términos
+            $taxonomy_name = $attribute->get_name();
             $term_names = [];
             foreach ($current_attr_options as $term_id) {
-                // Obtén el término por ID
                 $term = get_term_by('id', $term_id, $taxonomy_name);
                 if ($term && !is_wp_error($term)) {
-                    $term_names[] = $term->name; // Obtén el nombre del término
+                    $term_names[] = $term->name;
                 }
             }
-
-            // Asigna los nombres al array de opciones
             $current_attr_options = $term_names;
         }
 
-        /* echo PHP_EOL . '-------------------- current_attr_name --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($current_attr_name, true) . '</pre>';
-        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
-
-        echo PHP_EOL . '-------------------- current_attr_options --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($current_attr_options, true) . '</pre>';
-        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL; */
-
-
-
+        // Buscar coincidencias en MercadoLibre
         $find_in_meli_attr = $this->findTaxonomyInMeliAttrs($current_attr_name);
-
+        $template_attr_value = null;
+        $escaped_attr_value = '';
 
         if ($find_in_meli_attr) {
-            // Almacenar la coincidencia de atributos en el array de atributos coincidentes
             $this->matched_attrs[] = $find_in_meli_attr;
-
-            // Crear un array con los valores de MercadoLibre y WooCommerce
             $template_attr_value = [
                 'meli' => $find_in_meli_attr,
                 'woo'  => [
@@ -443,63 +419,84 @@ class ProductEdit
                     'values' => $current_attr_options
                 ]
             ];
-
-            // Escapar el JSON de forma segura
-            $escaped_attr_value = htmlspecialchars(json_encode($template_attr_value), ENT_QUOTES, 'UTF-8');
-
-            // Mostrar la coincidencia y los valores posibles de MercadoLibre
-
-            echo '<p><strong>' . __('Attribute MATCH by name with meli Attr', 'meliconnect') . '</strong></p>';
-            echo '<p><strong>' . __('Meli value requirements: ', 'meliconnect') . '</strong>' . $this->printPossibleValues($find_in_meli_attr) . '</p>';
-
-
-
-            if (isset($find_in_meli_attr['values']) && !empty($find_in_meli_attr['values'])) {
-                $values = array_column($find_in_meli_attr['values'], 'name');
-
-                if (in_array($find_in_meli_attr['value_type'], ['list', 'boolean'])) {
-                    $this->display_compare_values_messages($values, $current_attr_options);
-                }
-            }
-
-            // Input HTML para los atributos
-            echo '<input type="text" style="display:none" class="melicon-mercadolibre-attr-input" name="template[attrs][' . esc_attr($i) . ']" value="' . $escaped_attr_value . '" />';
-
-            // Mostrar información adicional sobre los atributos
-            $this->display_attribute_tags_info($find_in_meli_attr);
-        } else {
-            // Mensaje de no coincidencia
-            echo '<p>' . __('Attribute NOT MATCH by name with meli Attr', 'meliconnect') . '</p>';
+            $escaped_attr_value = htmlspecialchars(wp_json_encode($template_attr_value), ENT_QUOTES, 'UTF-8');
         }
 
-        echo '</div>';
+
+
+        return [
+            'i' => $i,
+            'current_attr_name' => $current_attr_name,
+            'current_attr_options' => $current_attr_options,
+            'find_in_meli_attr' => $find_in_meli_attr,
+            'escaped_attr_value' => $escaped_attr_value, 
+            'attribute_tags_info' => $this->getAttributeTagsInfo($find_in_meli_attr),
+        ];
     }
 
-    public function display_compare_values_messages($meli_possbile_values, $woo_attr_values)
+    public function getAttributeTagsInfo($attribute)
     {
-        /* echo PHP_EOL . '-------------------- meli_category_attrs --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($this->meli_category_attrs, true) . '</pre>';
-        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL; */
-        /* echo PHP_EOL . '-------------------- $meli_possbile_values --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($meli_possbile_values, true) . '</pre>';
-        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
-        echo PHP_EOL . '-------------------- woo_attr_values --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($woo_attr_values, true) . '</pre>';
-        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL; */
-        $not_exportable_values = array_diff($woo_attr_values, $meli_possbile_values);
+        $messages = [];
 
-        // Si hay valores que no se pueden exportar
-        if (!empty($not_exportable_values)) {
-            // Crear el mensaje con los valores que no se pueden exportar
-            $message = __('The following attribute values cannot be exported: ', 'meliconnect') . implode(', ', $not_exportable_values);
+        if (isset($attribute['tags']) && is_array($attribute['tags'])) {
+            $tags = $attribute['tags'];
 
-            // Mostrar el mensaje
-            echo '<p class="melicon-color-error"><strong>' . $message . '</strong></p>';
-        } else {
-            // Todos los valores son exportables
-            echo '<p class="melicon-color-success"><strong>' . __('All attributes values can be exported.', 'meliconnect') . '</strong></p>';
+            if (!empty($tags['allow_variations'])) {
+                $messages[] = __('Variations are allowed for this attribute.', 'meliconnect');
+            }
+            if (!empty($tags['catalog_required'])) {
+                $messages[] = __('It\'s required to identify the product the item represents.', 'meliconnect');
+            }
+            if (!empty($tags['conditional_required'])) {
+                $messages[] = __('This attribute is required when certain conditions are met.', 'meliconnect');
+            }
+            if (!empty($tags['defines_picture'])) {
+                $messages[] = __('This attribute defines the variation picture.', 'meliconnect');
+            }
+            if (!empty($tags['fixed'])) {
+                $messages[] = __('The value is fixed for this category. This value can\'t be changed.', 'meliconnect');
+            }
+            if (!empty($tags['grid_filter'])) {
+                $messages[] = __('This attribute can be used as a filter when searching on category existing grids.', 'meliconnect');
+            }
+            if (!empty($tags['grid_template_required'])) {
+                $messages[] = __('This attribute is required for technical specifications in the grid defined for the category.', 'meliconnect');
+            }
+            if (!empty($tags['hidden'])) {
+                $messages[] = __('This attribute is hidden for this category.', 'meliconnect');
+            }
+            if (!empty($tags['inferred'])) {
+                $messages[] = __('The value is inferred for this category.', 'meliconnect');
+            }
+            if (!empty($tags['multivalued'])) {
+                $messages[] = __('More than one value may be assigned to this attribute.', 'meliconnect');
+            }
+            if (!empty($tags['new_required'])) {
+                $messages[] = __('This attribute is required when the item\'s condition is new.', 'meliconnect');
+            }
+            if (!empty($tags['others'])) {
+                $messages[] = __('This attribute is fixed or restricted but not inferred for all the category\'s sisters.', 'meliconnect');
+            }
+            if (!empty($tags['product_pk'])) {
+                $messages[] = __('This attribute is part of the primary key of the product and can identify a unique product in the catalog.', 'meliconnect');
+            }
+            if (!empty($tags['read_only'])) {
+                $messages[] = __('This attribute is read-only and is used for internal purposes only.', 'meliconnect');
+            }
+            if (!empty($tags['required'])) {
+                $messages[] = __('is a REQUIRED attribute for this category.', 'meliconnect');
+            }
+            if (!empty($tags['restricted_values'])) {
+                $messages[] = __('The values are restricted for this category.', 'meliconnect');
+            }
+            if (!empty($tags['variation_attribute'])) {
+                $messages[] = __('This attribute is an attribute of a variation.', 'meliconnect');
+            }
         }
+
+        return $messages;
     }
+
 
 
     public static function getMeliConnection()
@@ -533,16 +530,18 @@ class ProductEdit
 
     public function loadAssets()
     {
-        // Verifica si estás en la página de edición de productos de WooCommerce
-        /* if (isset($_GET['post_type']) && $_GET['post_type'] === 'product' && isset($_GET['action']) && $_GET['action'] === 'edit') {
-            wp_enqueue_script('melicon-product-edit-js', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-product-edit.js', ['jquery'], '1.0.0', true);
-        } */
 
-        // Alternativamente, también puedes verificar si estás en la página de edición de un producto específico
-        if (isset($_GET['post']) && get_post_type($_GET['post']) === 'product') {
-            wp_enqueue_script('melicon-product-edit-js', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-product-edit.js', ['jquery'], '1.0.0', true);
+        // Verifica que el parámetro 'post' esté presente en $_GET y que sea un número válido
+        if (isset($_GET['post']) && absint($_GET['post']) > 0) {
+            $post_id = absint($_GET['post']); // Sanitizar el ID del post
+
+            // Verifica que el tipo de post sea 'product'
+            if (get_post_type($post_id) === 'product') {
+                wp_enqueue_script('melicon-product-edit-js', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-product-edit.js', ['jquery'], '1.0.0', true);
+            }
         }
     }
+
 
     public function set_product_vars()
     {
@@ -583,7 +582,7 @@ class ProductEdit
 
             $meli_category_attrs = MeliconMeli::simpleGet('https://api.mercadolibre.com/categories/' . $meli_category_id . '/attributes');
 
-            
+
 
             if (!empty($meli_category_attrs)) {
                 $this->meli_category_attrs = $meli_category_attrs;
@@ -620,7 +619,8 @@ class ProductEdit
             //Get official stores by category and seller
 
             //$official_stores_by_seller_response = MeliconMeli::simpleGet('https://api.mercadolibre.com/users/' . $seller_data->user_id . '/brands');
-            $official_stores_by_seller_response = $meli->getWithHeader('users/' . $seller_data->user_id . '/brands', $seller_data->access_token);
+
+            //$official_stores_by_seller_response = $meli->getWithHeader('users/' . $seller_data->user_id . '/brands', $seller_data->access_token);
             //$official_stores_by_seller_response = $meli->getWithHeader('/users/1477536226/brands', $seller_data->access_token);
 
             if (isset($official_stores_by_seller_response['body']->brands)) {
@@ -639,7 +639,7 @@ class ProductEdit
         }
 
         /* echo PHP_EOL . '-------------------- meli_category_sale_terms --------------------' . PHP_EOL;
-        echo '<pre>' . var_export( $this->meli_category_sale_terms , true) . '</pre>';
+        echo '<pre>' . wp_json_encode( $this->meli_category_sale_terms ) . '</pre>';
         echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
         wp_die(); */
     }
@@ -649,7 +649,7 @@ class ProductEdit
         $meli_category_variable_attrs = [];
 
         /* echo PHP_EOL . '-------------------- meli_category_attrs --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($meli_category_attrs, true) . '</pre>';
+        echo '<pre>' . wp_json_encode($meli_category_attrs) . '</pre>';
         echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL; */
 
         foreach ($meli_category_attrs as $value) {
@@ -762,11 +762,11 @@ class ProductEdit
             $this->select_options['buying_modes'] = [];
 
             if (in_array('auction', $meli_category_data['settings']['buying_modes'])) {
-                $this->select_options['buying_modes']['auction'] = __('Auction', 'meliconnect');
+                $this->select_options['buying_modes']['auction'] = esc_html__('Auction', 'meliconnect');
             }
 
             if (in_array('buy_it_now', $meli_category_data['settings']['buying_modes'])) {
-                $this->select_options['buying_modes']['buy_it_now'] = __('Buy It Now', 'meliconnect');
+                $this->select_options['buying_modes']['buy_it_now'] = esc_html__('Buy It Now', 'meliconnect');
             }
         }
 
@@ -791,9 +791,9 @@ class ProductEdit
     {
         if (isset($seller_data->has_mercadoshops) && $seller_data->has_mercadoshops) {
             $this->select_options['channels'] = [
-                'mercadolibre' => __('Mercadolibre', 'meliconnect'),
-                'mercadoshop' => __('Mercadoshop', 'meliconnect'),
-                'all' => __('Mercadolibre y Mercadoshop', 'meliconnect'),
+                'mercadolibre' => esc_html__('Mercadolibre', 'meliconnect'),
+                'mercadoshop' => esc_html__('Mercadoshop', 'meliconnect'),
+                'all' => esc_html__('Mercadolibre y Mercadoshop', 'meliconnect'),
             ];
         }
     }
@@ -885,6 +885,12 @@ class ProductEdit
 
     public function melicon_save_custom_product_data($post_id)
     {
+
+        //VERIFY NONCE
+        if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'woocommerce_save_product')) {
+            //wp_die('Nonce verification failed');
+        }
+
         $post = wp_unslash($_POST);
 
         $template_id = get_post_meta($post_id, 'melicon_asoc_template_id', true);
@@ -939,92 +945,21 @@ class ProductEdit
 
     public function add_mercadolibre_attrs_content()
     {
+
+
         $pending_required_attrs_names = $this->getPendingrequiredAttrs();
         $meli_attrs = $this->meli_category_attrs;
 
-        /* echo PHP_EOL . '-------------------- meli_attrs --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($meli_attrs, true) . '</pre>';
-        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL; */
+        $logs_view_data = [
+            'meli_attrs' => $meli_attrs,
+            'pending_required_attrs_names' => $pending_required_attrs_names,
+            'instance' => $this
+        ];
 
-        echo '<div id="melicon-mercadolibre-attributes" class="melicon_hide_if_change_category  melicon-mt-2">';
-        if (!empty($pending_required_attrs_names)) {
-            echo '<div class="melicon-mercadolibre-attributes-warning" style="background-color: #ffcccc; padding: 10px; border-radius: 5px; font-size: 14px">';
-            echo '<p><strong>' . __('Following Attributes are REQUIRED and are missing in your product to update or create in Mercadolibre: ', 'meliconnect') . '</strong></br>';
-            echo '<span style="font-size: 16px">' . implode(', ', $pending_required_attrs_names) . '</span></p>';
-
-            echo '</div>';
-        }
-        echo '<hr>';
-        if (!empty($meli_attrs) && is_array($meli_attrs)) {
-
-            echo '<p><strong>' . __('Mercadolibre Attributes: ', 'meliconnect') . '</strong></p>';
-            echo '<p>' . __('You can create following attributes to update or create in Mercadolibre.', 'meliconnect') . '</p>';
-            echo '<div class="melicon-mercadolibre-attributes-table" style="max-height: 500px; overflow-y: auto "> ';
-            echo '<table class="wp-list-table widefat fixed striped">';
-            echo '<thead>';
-            echo '<tr>';
-            echo '<th scope="col" class="manage-column column-primary" style="font-weight: bold">' . __('Name', 'meliconnect') . '</th>';
-            echo '<th scope="col" class="manage-column" style="text-align:center; font-weight: bold">' . __('Possible Values', 'meliconnect') . '</th>';
-            echo '<th scope="col" class="manage-column" style="text-align:center; font-weight: bold">' . __('Required', 'meliconnect') . '</th>';
-            echo '<th scope="col" class="manage-column" style="text-align:center; font-weight: bold">' . __('Catalog Required', 'meliconnect') . '</th>';
-            echo '<th scope="col" class="manage-column" style="text-align:center; font-weight: bold">' . __('Can be used for variations', 'meliconnect') . '</th>';
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-
-            foreach ($meli_attrs as $attr) {
-
-                $is_matched = $this->attr_is_matched($attr['name']);
-
-                /* if (isset($attr['tags']['hidden']) && $attr['tags']['hidden'] === true) {
-                    continue;
-                } */
-
-                echo '<tr>';
-
-                echo '<td class="column-primary">';
-                echo esc_html($attr['name']) . ' ';
-                if ($is_matched) {
-                    echo ' <i class="fas fa-solid fa-check melicon-color-success"></i>';
-                }
-                echo '</td>';
-                echo '<td style="text-align:center; min-width: 100px">' . $this->printPossibleValues($attr) . '</td>';
-
-                echo '<td style="text-align:center">';
-                if ($this->isRequiredAttribute($attr)) {
-                    echo '<span class="melicon-tag melicon-bg-success">' . __('YES', 'meliconnect') . '</span>';
-                } else {
-                    echo '<span class="melicon-tag melicon-bg-error">' . __('NO', 'meliconnect') . '</span>';
-                }
-                echo '</td>';
-
-                echo '<td style="text-align:center">';
-                if (isset($attr['tags']['catalog_required']) && $attr['tags']['catalog_required'] === true) {
-                    echo '<span class="melicon-tag melicon-bg-success">' . __('YES', 'meliconnect') . '</span>';
-                } else {
-                    echo '<span class="melicon-tag melicon-bg-error">' . __('NO', 'meliconnect') . '</span>';
-                }
-                echo '</td>';
-
-                echo '<td style="text-align:center">';
-                if (isset($attr['tags']['allow_variations']) && $attr['tags']['allow_variations'] === true) {
-                    echo '<span class="melicon-tag melicon-bg-success">' . __('YES', 'meliconnect') . '</span>';
-                } else {
-                    echo '<span class="melicon-tag melicon-bg-error">' . __('NO', 'meliconnect') . '</span>';
-                }
-                echo '</td>';
-
-                echo '</tr>';
-            }
-
-            echo '</tbody>';
-            echo '</table>';
-
-            echo '</div>';
-        }
-
-        echo '</div>';
+        Helper::load_partial('includes/Core/Views/Partials/meliconnect_product_edit_atts_tab.php', $logs_view_data);
     }
+
+
 
     public function attr_is_matched($attr_name)
     {
@@ -1041,58 +976,41 @@ class ProductEdit
         return false;
     }
 
-    public function printPossibleValues($attr)
+    public function get_attr_value_type($attr)
     {
-        $html = '';
-        // Determinamos si es requerido por ser de tipo list o boolean
-        $is_required = in_array($attr['value_type'], ['list', 'boolean']);
+        // Validamos que 'value_type' exista en el atributo
+        if (!isset($attr['value_type'])) {
+            return esc_html__('Invalid attribute type', 'meliconnect');
+        }
 
         switch ($attr['value_type']) {
             case 'list':
             case 'boolean':
-                $html .= __('Value must be in list', 'meliconnect');
-                break;
+                return esc_html__('Value must be in list', 'meliconnect');
 
             case 'string':
-                $html .= __('Any text', 'meliconnect');
-                break;
+                return esc_html__('Any text', 'meliconnect');
 
             case 'number':
-                $html .= __('Any number', 'meliconnect');
-                break;
+                return esc_html__('Any number', 'meliconnect');
 
             case 'number_unit':
+                // Verificamos si 'allowed_units' está disponible y no está vacío
                 if (isset($attr['allowed_units']) && is_array($attr['allowed_units']) && !empty($attr['allowed_units'])) {
                     $allowed_units = array_map('esc_html', array_column($attr['allowed_units'], 'name'));
-                    $html .= __('Any number with units in: ', 'meliconnect') . '<br>' . implode(' | ', $allowed_units);
+                    return esc_html__('Any number with units in: ', 'meliconnect') . implode(' | ', $allowed_units);
                 } else {
-                    $html .= __('Any number', 'meliconnect');
+                    return esc_html__('Any number', 'meliconnect');
                 }
-                break;
 
             default:
-                $html .= $attr['value_type'];
-                break;
+                // Si no hay coincidencia, retornar el tipo de valor
+                return esc_html__('Unknown value type: ', 'meliconnect') . esc_html($attr['value_type']);
         }
-
-
-
-        // Mostrar valores sugeridos si no es requerido pero tiene valores posibles
-        if (isset($attr['values']) && is_array($attr['values']) && !empty($attr['values'])) {
-
-            if ($is_required) {
-                $label = '<b>' . __('Required values:', 'meliconnect') . '</b>';
-            } else {
-                $label = '<b>' . __('Suggested values:', 'meliconnect') . '</b>';
-            }
-
-            $html .= '<br>' . $label . '<br>';
-            $values = array_column($attr['values'], 'name'); // Extraer los nombres de los valores
-            $html .= implode(' | ', array_map('esc_html', $values));
-        }
-
-        return $html;
     }
+
+
+    
 
     public function display_attribute_tags_info($attribute)
     {
@@ -1101,87 +1019,87 @@ class ProductEdit
 
             // Variations are allowed for this attribute
             if (isset($tags['allow_variations']) && $tags['allow_variations'] === true) {
-                echo '<p>' . __('Variations are allowed for this attribute.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('Variations are allowed for this attribute.', 'meliconnect') . '</p>';
             }
 
             // It's required to identify the product the item represents
             if (isset($tags['catalog_required']) && $tags['catalog_required'] === true) {
-                echo '<p>' . __('It\'s required to identify the product the item represents.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('It\'s required to identify the product the item represents.', 'meliconnect') . '</p>';
             }
 
             // Conditional required
             if (isset($tags['conditional_required']) && $tags['conditional_required'] === true) {
-                echo '<p>' . __('This attribute is required when certain conditions are met.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute is required when certain conditions are met.', 'meliconnect') . '</p>';
             }
 
             // Defines the variation picture
             if (isset($tags['defines_picture']) && $tags['defines_picture'] === true) {
-                echo '<p>' . __('This attribute defines the variation picture.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute defines the variation picture.', 'meliconnect') . '</p>';
             }
 
             // The value is fixed for this category
             if (isset($tags['fixed']) && $tags['fixed'] === true) {
-                echo '<p>' . __('The value is fixed for this category. This value can\'t be changed.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('The value is fixed for this category. This value can\'t be changed.', 'meliconnect') . '</p>';
             }
 
             // Can be used as a filter in grid searches
             if (isset($tags['grid_filter']) && $tags['grid_filter'] === true) {
-                echo '<p>' . __('This attribute can be used as a filter when searching on category existing grids.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute can be used as a filter when searching on category existing grids.', 'meliconnect') . '</p>';
             }
 
             // Required for technical specifications in the grid
             if (isset($tags['grid_template_required']) && $tags['grid_template_required'] === true) {
-                echo '<p>' . __('This attribute is required for technical specifications in the grid defined for the category.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute is required for technical specifications in the grid defined for the category.', 'meliconnect') . '</p>';
             }
 
             // Hidden for this category
             if (isset($tags['hidden']) && $tags['hidden'] === true) {
-                echo '<p>' . __('This attribute is hidden for this category.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute is hidden for this category.', 'meliconnect') . '</p>';
             }
 
             // Inferred for this category
             if (isset($tags['inferred']) && $tags['inferred'] === true) {
-                echo '<p>' . __('The value is inferred for this category.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('The value is inferred for this category.', 'meliconnect') . '</p>';
             }
 
             // More than one value can be assigned to this attribute
             if (isset($tags['multivalued']) && $tags['multivalued'] === true) {
-                echo '<p>' . __('More than one value may be assigned to this attribute.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('More than one value may be assigned to this attribute.', 'meliconnect') . '</p>';
             }
 
             // Required when the condition is new
             if (isset($tags['new_required']) && $tags['new_required'] === true) {
-                echo '<p>' . __('This attribute is required when the item\'s condition is new.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute is required when the item\'s condition is new.', 'meliconnect') . '</p>';
             }
 
             // Fixed or restricted for all the category's sisters
             if (isset($tags['others']) && $tags['others'] === true) {
-                echo '<p>' . __('This attribute is fixed or restricted but not inferred for all the category\'s sisters.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute is fixed or restricted but not inferred for all the category\'s sisters.', 'meliconnect') . '</p>';
             }
 
             // Part of the product's primary key
             if (isset($tags['product_pk']) && $tags['product_pk'] === true) {
-                echo '<p>' . __('This attribute is part of the primary key of the product and can identify a unique product in the catalog.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute is part of the primary key of the product and can identify a unique product in the catalog.', 'meliconnect') . '</p>';
             }
 
             // Read-only attribute for internal purposes
             if (isset($tags['read_only']) && $tags['read_only'] === true) {
-                echo '<p>' . __('This attribute is read-only and is used for internal purposes only.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute is read-only and is used for internal purposes only.', 'meliconnect') . '</p>';
             }
 
             // Required attribute
             if (isset($tags['required']) && $tags['required'] === true) {
-                echo '<p>' . __('is a REQUIRED attribute for this category.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('is a REQUIRED attribute for this category.', 'meliconnect') . '</p>';
             }
 
             // Restricted values for this category
             if (isset($tags['restricted_values']) && $tags['restricted_values'] === true) {
-                echo '<p>' . __('The values are restricted for this category.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('The values are restricted for this category.', 'meliconnect') . '</p>';
             }
 
             // Attribute is used for variations
             if (isset($tags['variation_attribute']) && $tags['variation_attribute'] === true) {
-                echo '<p>' . __('This attribute is an attribute of a variation.', 'meliconnect') . '</p>';
+                echo '<p>' . esc_html__('This attribute is an attribute of a variation.', 'meliconnect') . '</p>';
             }
         }
     }
@@ -1198,7 +1116,7 @@ class ProductEdit
                 if ($value['name'] === $attrName) {
                     return $value;
                 }/* else{
-                    echo '<pre> No match:' . var_export($value['name'] , true) . '</pre>';
+                    echo '<pre> No match:' . wp_json_encode($value['name']) . '</pre>';
                 } */
             }
         }
@@ -1210,14 +1128,14 @@ class ProductEdit
     public  function add_mercadolibre_product_tab($tabs)
     {
         $tabs['mercadolibre'] = array(
-            'label'    => __('Mercadolibre', 'meliconnect'),
+            'label'    => esc_html__('Mercadolibre', 'meliconnect'),
             'target'   => 'mercadolibre_product_data',
             'class'    => array('show_if_simple', 'show_if_variable'), // Mostrar para productos simples y variables
             'priority' => 60,
         );
 
         $tabs['meliconnect_logs'] = array(
-            'label'    => __('Export Logs', 'meliconnect'),
+            'label'    => esc_html__('Export Logs', 'meliconnect'),
             'target'   => 'meliconnect_logs_product_data',
             'class'    => array('show_if_simple', 'show_if_variable'), // Mostrar para productos simples y variables
             'priority' => 60,
@@ -1235,7 +1153,7 @@ class ProductEdit
 
 
         /* echo PHP_EOL . '-------------------- $this->template_data --------------------' . PHP_EOL;
-        echo '<pre>' . var_export($this->template_data, true) . '</pre>';
+        echo '<pre>' . wp_json_encode($this->template_data) . '</pre>';
         echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
         wp_die(); */
 
@@ -1258,15 +1176,22 @@ class ProductEdit
 
         $item_export_error = !empty($item_export_error) ? maybe_unserialize($item_export_error) : [];
 
+        $last_export_time =  get_post_meta($this->woo_product_id, 'melicon_last_export_time', true);
         $error_time =  get_post_meta($this->woo_product_id, 'melicon_export_meli_error_time', true);
 
-        if (!empty($error_time)) {
-            $error_time = date('d-m-Y H:i:s', $error_time);
+        if (!empty($last_export_time)) {
+            $last_export_time = wp_date('d-m-Y H:i:s', $last_export_time);
         }
+        
+        if (!empty($error_time)) {
+            $error_time = wp_date('d-m-Y H:i:s', $error_time);
+        }
+
         $logs_view_data = [
             'item_export_error'             => (isset($item_export_error['item']) && !empty($item_export_error['item'])) ? $item_export_error['item'] : '',
             'description_export_error'      => (isset($item_export_error['description']) && !empty($item_export_error['description'])) ? $item_export_error['description'] : '',
             'export_error_time'             => $error_time,
+            'last_export_time'              => $last_export_time,
             'last_json_sent'                => get_post_meta($this->woo_product_id, 'melicon_last_export_json_sent', true),
         ];
 
@@ -1300,14 +1225,29 @@ class ProductEdit
     }
 
     // Función para agregar el metabox en la página de edición de productos
-    public function add_meliconnect_meta_box()
+
+    public function add_meliconnect_meta_box_data()
+    {
+        $this->set_product_vars();
+
+        add_meta_box(
+            'meliconnect_meta_box_data', // ID del metabox
+            esc_html__('Meliconnect Data', 'meliconnect'), // Título del metabox
+            [$this, 'display_meliconnect_meta_box_data'], // Función para mostrar el contenido
+            'product',
+            'side', // Contexto, puedes usar 'normal', 'side' o 'advanced'
+            'high' // Prioridad
+        );
+    }
+
+    public function add_meliconnect_meta_box_actions()
     {
         $this->set_product_vars();
 
         add_meta_box(
             'meliconnect_meta_box', // ID del metabox
-            __('Meliconnect', 'meliconnect'), // Título del metabox
-            [$this, 'display_meliconnect_meta_box'], // Función para mostrar el contenido
+            esc_html__('Meliconnect Actions', 'meliconnect'), // Título del metabox
+            [$this, 'display_meliconnect_meta_box_actions'], // Función para mostrar el contenido
             'product',
             'side', // Contexto, puedes usar 'normal', 'side' o 'advanced'
             'high' // Prioridad
@@ -1315,7 +1255,7 @@ class ProductEdit
     }
 
     // Function to display the content of the metabox
-    public function display_meliconnect_meta_box($post)
+    public function display_meliconnect_meta_box_data($post)
     {
         // Get postmeta values
         $meli_listing_id = get_post_meta($post->ID, 'melicon_meli_listing_id', true);
@@ -1335,20 +1275,44 @@ class ProductEdit
             'woo_product_id' => get_the_ID(),
         ];
 
-        Helper::load_partial('includes/Core/Views/Partials/meliconnect_meta_box.php', $box_view_data);
+        Helper::load_partial('includes/Core/Views/Partials/meliconnect_meta_box_data.php', $box_view_data);
+    }
+
+    public function display_meliconnect_meta_box_actions($post)
+    {
+        // Get postmeta values
+        $meli_listing_id = get_post_meta($post->ID, 'melicon_meli_listing_id', true);
+        $meli_permalink = get_post_meta($post->ID, 'melicon_meli_permalink', true);
+        $template_id = get_post_meta($post->ID, 'melicon_asoc_template_id', true);
+        $seller_id = get_post_meta($post->ID, 'melicon_meli_seller_id', true);
+        $meli_status = get_post_meta($post->ID, 'melicon_meli_status', true);
+
+
+        // Pass variables to the template
+        $box_view_data = [
+            'meli_listing_id' => $meli_listing_id,
+            'meli_permalink' => $meli_permalink,
+            'template_id' => $template_id,
+            'seller_id' => $seller_id,
+            'meli_status' => $meli_status,
+            'woo_product_id' => get_the_ID(),
+        ];
+
+
+
+        Helper::load_partial('includes/Core/Views/Partials/meliconnect_meta_box_actions.php', $box_view_data);
     }
 
 
     public static function handleImportSingleListing()
     {
-
-        /* if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'import_single_listing')) {
-            wp_send_json_error(__('Invalid nonce', 'meliconnect'));
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_import_single_listing_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
-        } */
+        }
 
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -1369,15 +1333,20 @@ class ProductEdit
         // 2- Format items data to send, Send data to API server and Get response and process response creating or updating items in WooCommerce
         $productDataFacade->importAndCreateProduct($meli_listing_id, $seller_id, $template_id, $woo_product_id);
 
-        wp_send_json_success(__('Product imported successfully', 'meliconnect'));
+        wp_send_json_success(esc_html__('Product imported successfully', 'meliconnect'));
 
         wp_die();
     }
 
     public static function handleExportSingleListing()
     {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_export_single_listing_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
+            return;
+        }
+
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             return;
         }
 
@@ -1385,6 +1354,7 @@ class ProductEdit
         $seller_id = isset($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null;
         $template_id = isset($_POST['template_id']) ? sanitize_text_field($_POST['template_id']) : null;
         $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field($_POST['woo_product_id']) : null;
+
 
         if (empty($seller_id) || empty($woo_product_id) || empty($template_id)) {
             wp_send_json_error(['message' => 'Invalid data']);
@@ -1408,45 +1378,45 @@ class ProductEdit
             // Item validation
             if (isset($listing_response['item']['success']) && $listing_response['item']['success'] == true) {
                 $item_success = true;
-                $item_message = __('Item published successfully.', 'meliconnect');
+                $item_message = esc_html__('Item published successfully.', 'meliconnect');
             } else {
-                $item_message = $listing_response['item']['body'] ?? __('Item publication failed.', 'meliconnect');
+                $item_message = $listing_response['item']['body'] ?? esc_html__('Item publication failed.', 'meliconnect');
             }
 
             // Description validation
             if (isset($listing_response['description']['success']) && $listing_response['description']['success'] == true) {
                 $description_success = true;
-                $description_message = __('Description published successfully.', 'meliconnect');
+                $description_message = esc_html__('Description published successfully.', 'meliconnect');
             } else {
-                $description_message = $listing_response['description']['body'] ?? __('Description publication failed.', 'meliconnect');
+                $description_message = $listing_response['description']['body'] ?? esc_html__('Description publication failed.', 'meliconnect');
             }
 
             // Handle different success or failure cases
             if ($item_success && $description_success) {
                 // Both successful
                 wp_send_json_success([
-                    'message' => __('Export successful', 'meliconnect'),
+                    'message' => esc_html__('Export successful', 'meliconnect'),
                     'item_message' => $item_message,
                     'description_message' => $description_message
                 ]);
             } elseif ($item_success && !$description_success) {
                 // Item successful, description failed
                 wp_send_json_error([
-                    'message' => __('Item exported successfully, but there was an issue with the description.', 'meliconnect'),
+                    'message' => esc_html__('Item exported successfully, but there was an issue with the description.', 'meliconnect'),
                     'item_message' => $item_message,
                     'description_message' => $description_message
                 ]);
             } elseif (!$item_success && $description_success) {
                 // Description successful, item failed
                 wp_send_json_error([
-                    'message' => __('Description exported successfully, but there was an issue with the item.', 'meliconnect'),
+                    'message' => esc_html__('Description exported successfully, but there was an issue with the item.', 'meliconnect'),
                     'item_message' => $item_message,
                     'description_message' => $description_message
                 ]);
             } else {
                 // Both failed
                 wp_send_json_error([
-                    'message' => __('Error exporting item and description.', 'meliconnect'),
+                    'message' => esc_html__('Error exporting item and description.', 'meliconnect'),
                     'item_message' => $item_message,
                     'description_message' => $description_message
                 ]);
@@ -1454,7 +1424,7 @@ class ProductEdit
         } else {
             // General error case
             wp_send_json_error([
-                'message' => __('Error during export.', 'meliconnect'),
+                'message' => esc_html__('Error during export.', 'meliconnect'),
                 'response' => $exportedResponse
             ]);
         }
@@ -1464,9 +1434,14 @@ class ProductEdit
 
     public static function handleUnlinkSingleListing()
     {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_unlink_single_listing_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
+            wp_die();
+        }
+
         // Verifica permisos
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             wp_die();
         }
 
@@ -1475,7 +1450,7 @@ class ProductEdit
         $unlink_type = isset($_POST['unlink_type']) ? sanitize_text_field($_POST['unlink_type']) : null;
 
         if (empty($woo_product_id) || empty($unlink_type)) {
-            wp_send_json_error(['message' => __('Invalid data', 'meliconnect')]);
+            wp_send_json_error(['message' => esc_html__('Invalid data', 'meliconnect')]);
             wp_die();
         }
 
@@ -1503,9 +1478,9 @@ class ProductEdit
         if (empty($new_status) || $update_status) {
             Helper::unlinkProduct($woo_product_id);
             ProductToExport::unlink_woo_product($woo_product_id);
-            wp_send_json_success(['message' => __('Product desvinculated successfully', 'meliconnect')]);
+            wp_send_json_success(['message' => esc_html__('Product desvinculated successfully', 'meliconnect')]);
         } else {
-            wp_send_json_error(['message' => __('Failed to update product status', 'meliconnect')]);
+            wp_send_json_error(['message' => esc_html__('Failed to update product status', 'meliconnect')]);
         }
 
         wp_die();
@@ -1513,8 +1488,13 @@ class ProductEdit
 
     public static function handleSaveTemplateData()
     {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_save_template_data_nonce')) {
+            wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
+            wp_die();
+        }
+
         if (!current_user_can('meliconnect_manage_plugin')) {
-            wp_send_json_error(__('You do not have permission to perform this action', 'meliconnect'));
+            wp_send_json_error(esc_html__('You do not have permission to perform this action', 'meliconnect'));
             wp_die();
         }
 
@@ -1523,7 +1503,7 @@ class ProductEdit
         $woo_product_title = isset($_POST['woo_product_title']) ? sanitize_text_field($_POST['woo_product_title']) : null;
 
         if (empty($templateDataJSON) || empty($woo_product_id) || empty($woo_product_title)) {
-            wp_send_json_error(['message' => __('Invalid data', 'meliconnect')]);
+            wp_send_json_error(['message' => esc_html__('Invalid data', 'meliconnect')]);
             wp_die();
         }
 
@@ -1539,13 +1519,20 @@ class ProductEdit
             $template_id = Template::createUpdateProductTemplateFromPost($parsed_template_data['template'], $woo_product_id, $woo_product_title);
 
             if (empty($template_id)) {
-                wp_send_json_error(['message' => __('Failed to save template', 'meliconnect')]);
+                wp_send_json_error(['message' => esc_html__('Failed to save template', 'meliconnect')]);
                 wp_die();
             }
 
-            wp_send_json_success(['message' => __('Template saved successfully', 'meliconnect')]);
+            wp_send_json_success(['message' => esc_html__('Template saved successfully', 'meliconnect')]);
         } else {
-            wp_send_json_error(['message' => __('Failed to decode Template Data: ' . json_last_error_msg(), 'meliconnect')]);
+
+            $message = sprintf(
+                /* translators: %s is the error message returned by json_last_error_msg() */
+                esc_html__('Failed to decode Template Data: %s', 'meliconnect'),
+                json_last_error_msg()
+            );
+
+            wp_send_json_error(['message' => $message]);
         }
 
         wp_die();

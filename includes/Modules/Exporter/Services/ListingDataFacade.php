@@ -39,7 +39,7 @@ class ListingDataFacade
 
 
         if (!isset($exportedResponse['status']) || $exportedResponse['status'] !== 200 || !isset($exportedResponse['data']) || empty($exportedResponse['data'])) {
-            Helper::logData('Hub error exporting listing data: ' . json_encode($exportedResponse), 'custom-export');
+            Helper::logData('Hub error exporting listing data: ' . wp_json_encode($exportedResponse), 'custom-export');
             return false;
         }
 
@@ -83,6 +83,8 @@ class ListingDataFacade
             ProductToExport::update_product_to_export_status($woo_product_id, 'finished', '');
         }
 
+        update_post_meta($woo_product_id, 'melicon_last_export_time', time());
+
         // Si hay errores, almacenarlos en un array serializado en la base de datos
         if (!empty($all_errors)) {
             update_post_meta($woo_product_id, 'melicon_export_meli_errors', maybe_serialize($all_errors));
@@ -98,7 +100,7 @@ class ListingDataFacade
 
     private function processListingItem($woo_product_id, $listing_item, $type)
     {
-        //error_log('listing_item: ' . var_export($listing_item, true));
+        //Helper::logData('listing_item: ' . wp_json_encode($listing_item));
 
         if ($listing_item['success'] === true) {
             delete_post_meta($woo_product_id, 'melicon_export_meli_errors');
@@ -122,7 +124,7 @@ class ListingDataFacade
     {
         
         $listing_item = $listing_item['body'];
-        error_log('listing_item: ' . var_export($listing_item, true));
+        Helper::logData('listing_item: ' . wp_json_encode($listing_item));
 
         update_post_meta($woo_product_id, 'melicon_meli_seller_id', $listing_item['seller_id']);
         update_post_meta($woo_product_id, 'melicon_meli_category_id', $listing_item['category_id']);
