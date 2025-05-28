@@ -21,7 +21,7 @@ class WooCommerceProductAdapter
         
     }
 
-    public function getTransformedProductData($meli_listing_data, $meli_user_id, $template_id = NULL, $woo_product_id = NULL)
+    public function getTransformedProductData($meli_listing_data, $meli_user_id, $template_id = NULL, $woo_product_id = NULL, $sync_options = NULL)
     {
         
 
@@ -35,6 +35,7 @@ class WooCommerceProductAdapter
 
             'meli_listing' => $meli_listing_data,
             'settings' => Helper::getMeliconnectOptions('import'),
+            'sync_options' => $sync_options
             //'woo_product' => $this->getWooProductData($woo_product_id),
             //'woo_variations' => $this->getWooProductVariations($woo_product_id),
             //'template' => $this->getMeliconTemplateData($template_id),

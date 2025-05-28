@@ -26,7 +26,7 @@ class ProductDataFacade
         $this->productCreationService = $productCreationService;
     }
 
-    public function importAndCreateProduct($meliListingId, $meli_user_id, $template_id = NULL, $woo_product_id = NULL)
+    public function importAndCreateProduct($meliListingId, $meli_user_id, $template_id = NULL, $woo_product_id = NULL, $sync_options = NULL)
     {
         $meli_user_data = UserConnection::getUser($meli_user_id);
 
@@ -38,7 +38,7 @@ class ProductDataFacade
         $meli_listing_data = MeliconMeli::getMercadoLibreListingData($meliListingId, $meli_user_data->access_token);
 
         // Obtener datos transformados desde el servidor usando el adaptador
-        $transformedData = $this->wooCommerceAdapter->getTransformedProductData($meli_listing_data, $meli_user_id, $template_id, $woo_product_id);
+        $transformedData = $this->wooCommerceAdapter->getTransformedProductData($meli_listing_data, $meli_user_id, $template_id, $woo_product_id, $sync_options);
 
         if (!isset($transformedData['status']) || $transformedData['status'] !== 200 || !isset($transformedData['data']) || empty($transformedData['data'])) {
             // Manejo de errores si no se pudo obtener o transformar los datos

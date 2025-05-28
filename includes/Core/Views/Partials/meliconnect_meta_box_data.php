@@ -35,18 +35,19 @@
             </div>
         <?php else: ?>
             <!-- To Create Section -->
-            <span class="melicon-tag melicon-is-success melicon-is-medium"><?php _e('To Create', 'meliconnect'); ?></span>
+            <span class="melicon-tag melicon-is-success melicon-is-medium melicon-mb-3"><?php _e('To Create', 'meliconnect'); ?></span>
+
             <?php if (!empty($template_id)): ?>
                 <div class="melicon-field">
                     <p class="melicon-control">
                         <button
-                            class="melicon-button melicon-is-success"
+                            class="melicon-button melicon-is-warning"
                             id="melicon_export_meli"
                             data-meli-listing-id="<?php echo esc_attr($meli_listing_id); ?>"
                             data-woo-product-id="<?php echo esc_attr($woo_product_id); ?>"
                             data-template-id="<?php echo esc_attr($template_id); ?>"
                             data-seller-id="<?php echo esc_attr($seller_id); ?>">
-                            <?php _e('Export', 'meliconnect'); ?>
+                            <?php _e('Create Listing', 'meliconnect'); ?>
                         </button>
                     </p>
                 </div>

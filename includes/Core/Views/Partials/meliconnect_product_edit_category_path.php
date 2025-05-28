@@ -1,11 +1,3 @@
-<?php if (!empty($categories)) : ?>
-    <select>
-        <option value=""><?php esc_html_e('Select a category', 'meliconnect'); ?></option>
-        <?php foreach ($categories as $category) : ?>
-            <option value="<?php echo esc_attr($category->id); ?>"><?php echo esc_html($category->name); ?></option>
-        <?php endforeach; ?>
-    </select>
-<?php endif; ?>
 
 <div class="options_group">
     <p class="form-field">

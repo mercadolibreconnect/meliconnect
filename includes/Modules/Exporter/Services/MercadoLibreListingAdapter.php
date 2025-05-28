@@ -22,7 +22,7 @@ class MercadoLibreListingAdapter
         
     }
 
-    public function getTransformedListingData($meli_user_data, $woo_product_id, $template_id, $meliListingId = NULL)
+    public function getTransformedListingData($meli_user_data, $woo_product_id, $template_id, $meliListingId = NULL, $sync_options = NULL)
     {
 
         $rawData = [
@@ -38,10 +38,10 @@ class MercadoLibreListingAdapter
             'meli_listing' => MeliconMeli::getMercadoLibreListingData($meliListingId, $meli_user_data->access_token),
             'woo_product' => $this->getWooProductData($woo_product_id),
             'template' => $this->getMeliconTemplateData($template_id),
+            'sync_options' => $sync_options
         ];
 
         //Helper::logData('Raw data sent to hub: ' . wp_json_encode($rawData), 'custom-export');
-
         update_post_meta($woo_product_id, 'melicon_last_export_json_sent', $rawData);
 
         // Enviar datos sin procesar al servidor y recibir datos transformados
@@ -154,7 +154,41 @@ class MercadoLibreListingAdapter
         $meta_data = [];
         $meta_fields = get_post_meta($product_id);
 
+        $metas_to_send = [
+            'melicon_meli_listing_id',
+            'melicon_meli_seller_id',
+            'melicon_meli_permalink',
+            'melicon_meli_listing_type_id',
+            'melicon_meli_category_id',
+            'melicon_meli_status',
+            'melicon_meli_sub_status',
+            'melicon_meli_site_id',
+            'melicon_meli_catalog_product_id',
+            'melicon_meli_domain_id',
+            'melicon_asoc_template_id',
+            'melicon_last_export_time',
+            'melicon_meli_channels',
+            'melicon_meli_sold_quantity',
+            'melicon_meli_shipping_mode',
+            'melicon_meli_shipping_logistic_type',
+            'melicon_meli_shipping_has_free_shipping',
+            'total_sales',
+            '_thumbnail_id',
+            '_manage_stock',
+            '_sold_individually',
+            '_stock',
+            '_stock_status',
+            '_product_image_gallery',
+            '_price',
+            '_sale_price',
+            '_regular_price',
+            '_product_attributes'
+        ];
+
         foreach ($meta_fields as $key => $value) {
+            if (!in_array($key, $metas_to_send)) {
+                continue;
+            }
             $meta_data[$key] = maybe_unserialize($value[0]);
         }
 

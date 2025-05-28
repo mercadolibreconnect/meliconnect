@@ -28,8 +28,8 @@ jQuery(document).ready(function ($) {
                     confirmButtonText: mcTranslations.confirm,
                     cancelButtonText: mcTranslations.cancel,
                     customClass: {
-                        confirmButton: 'melicon-swal-confirm-button',  // Clase personalizada para el botón de confirmación
-                        cancelButton: 'melicon-swal-cancel-button'  // Clase personalizada para el botón de cancelación
+                        confirmButton: 'melicon-button melicon-is-primary',
+                        cancelButton: 'melicon-button melicon-is-secondary'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -288,9 +288,9 @@ jQuery(document).ready(function ($) {
             confirmButtonText: mcTranslations.copy_to_clipboard,
             cancelButtonText: mcTranslations.back,
             customClass: {
-                confirmButton: 'melicon-swal-confirm-button',  // Clase personalizada para el botón de confirmación
-                cancelButton: 'melicon-swal-cancel-button'  // Clase personalizada para el botón de cancelación
-            },
+                confirmButton: 'melicon-button melicon-is-primary',
+                cancelButton: 'melicon-button melicon-is-secondary'
+            }
             preConfirm: function () {
                 // Función para copiar el JSON al portapapeles
                 var jsonContent = $('.melicon-copy-json-sent-unformated').html();
@@ -334,8 +334,8 @@ jQuery(document).ready(function ($) {
             confirmButtonText: mcTranslations.confirm,
             cancelButtonText: mcTranslations.cancel,
             customClass: {
-                confirmButton: 'melicon-swal-confirm-button', // Clase personalizada para el botón de confirmación
-                cancelButton: 'melicon-swal-cancel-button'    // Clase personalizada para el botón de cancelación
+                confirmButton: 'melicon-button melicon-is-primary',
+                cancelButton: 'melicon-button melicon-is-secondary'
             },
             preConfirm: function () {
                 // Realizar la solicitud AJAX si el usuario confirma la acción
@@ -379,8 +379,8 @@ jQuery(document).ready(function ($) {
             confirmButtonText: mcTranslations.confirm,
             cancelButtonText: mcTranslations.cancel,
             customClass: {
-                confirmButton: 'melicon-swal-confirm-button', // Clase personalizada para el botón de confirmación
-                cancelButton: 'melicon-swal-cancel-button'    // Clase personalizada para el botón de cancelación
+                confirmButton: 'melicon-button melicon-is-primary',
+                cancelButton: 'melicon-button melicon-is-secondary'
             },
             preConfirm: function () {
                 // Realizar la solicitud AJAX si el usuario confirma la desvinculación

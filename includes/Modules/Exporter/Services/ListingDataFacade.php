@@ -25,7 +25,7 @@ class ListingDataFacade
         $this->mercadoLibreListingAdapter = $mercadoLibreListingAdapter;
     }
 
-    public function getAndExportListing($meli_user_id, $woo_product_id, $template_id, $meliListingId = NULL)
+    public function getAndExportListing($meli_user_id, $woo_product_id, $template_id, $meliListingId = NULL, $sync_options = NULL)
     {
         $meli_user_data = UserConnection::getUser($meli_user_id);
 
@@ -35,7 +35,7 @@ class ListingDataFacade
         }
 
         // Obtener datos transformados desde el servidor usando el adaptador
-        $exportedResponse = $this->mercadoLibreListingAdapter->getTransformedListingData($meli_user_data, $woo_product_id, $template_id, $meliListingId);
+        $exportedResponse = $this->mercadoLibreListingAdapter->getTransformedListingData($meli_user_data, $woo_product_id, $template_id, $meliListingId, $sync_options);
 
 
         if (!isset($exportedResponse['status']) || $exportedResponse['status'] !== 200 || !isset($exportedResponse['data']) || empty($exportedResponse['data'])) {

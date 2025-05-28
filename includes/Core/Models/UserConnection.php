@@ -89,6 +89,8 @@ class UserConnection
 
         // Eliminar todas las conexiones existentes antes de insertar las nuevas
         $wpdb->query("DELETE FROM {$table_name}");
+        
+        
 
         // Insertar cada usuario recibido en la tabla `wp_melicon_user_connection`
         foreach ($users_in_domain as $user) {
@@ -102,8 +104,10 @@ class UserConnection
             $params = ['access_token' => $user['access_token']];
             $meli = new MeliconMeli($user['app_id'], $user['secret_key'], $user['access_token']);
             $meli_user_data = $meli->get('/users/' . $user['user_id'], $params);
-
+            
             //Helper::logData('Meli user data: ' . wp_json_encode($meli_user_data)  , 'users_in_domain');
+            Helper::logData('Site ID before insert: ' . wp_json_encode($user['site_id']), 'users_in_domain');
+
 
             $insert_data = [
                 'access_token'    => $user['access_token'],
@@ -112,7 +116,7 @@ class UserConnection
                 'user_id'         => $user['user_id'],
                 'nickname'        => $user['nickname'],
                 'permalink'       => $user['permalink'] ?? 'no-data',
-                'site_id'         => $user['site_id'],
+                'site_id'         => !empty($user['site_id']) ? (string) $user['site_id'] : 'MLA',
                 'status'          => $user['status'], 
                 'country'         => $user['country'], 
                 'has_mercadoshops' => (isset($meli_user_data['body']->tags) && is_array($meli_user_data['body']->tags) && in_array('mshops', $meli_user_data['body']->tags)) ? 1 : 0,
@@ -122,7 +126,15 @@ class UserConnection
                 'updated_at'      => current_time('mysql'),
             ];
 
-            $wpdb->insert($table_name, $insert_data);
+            //Helper::logData('Insert data: ' . wp_json_encode($insert_data)  , 'users_in_domain');
+
+            $wpdb->insert(
+                $table_name,
+                array_map('strval', $insert_data), // Convierte todo a string
+                array('%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s')
+            );
+
+            Helper::logData('SQL Query: ' . $wpdb->last_query, 'users_in_domain');
 
             if($wpdb->last_error) {
                 Helper::logData('Error creating user connection: ' . $wpdb->last_error  , 'users_in_domain');

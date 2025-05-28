@@ -1,7 +1,7 @@
 jQuery(document).ready(function ($) {
 
     var current_category = $('#melicon_general_category_id_input').val();
-
+    //console.log('current_category', current_category);
     showExportErrors();
 
     if (current_category == '') {
@@ -67,8 +67,7 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 if (response.success) {
 
-                    if (response.data.options !== null) {
-                        console.log(response.data.options);
+                    if (response.data.options !== null && response.data.options.trim() !== '') {
                         // Destruir la instancia anterior de Select2
                         $('#melicon_general_category_id').select2('destroy');
 
@@ -166,7 +165,11 @@ jQuery(document).ready(function ($) {
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: meliconSwalConfirmButtonText,
-                cancelButtonText: meliconSwalCancelButtonText
+                cancelButtonText: meliconSwalCancelButtonText,
+                customClass: {
+                    confirmButton: 'melicon-button melicon-is-primary',
+                    cancelButton: 'melicon-button melicon-is-secondary'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     var category_id = $('#melicon_general_category_id_input').val();
@@ -258,7 +261,7 @@ jQuery(document).ready(function ($) {
                 meli_listing_id: meli_listing_id,
                 template_id: template_id,
                 seller_id: seller_id,
-                sync_options: syncOptions // Send selected sync options
+                sync_options: syncOptions 
             },
             success: function (response) {
                 console.log(response);
@@ -277,7 +280,7 @@ jQuery(document).ready(function ($) {
                     });
 
                     // Reload the page if necessary
-                    location.reload();
+                    //location.reload();
                 } else {
                     // Handle error response
                     var received_message = response.data && response.data.message ? response.data.message : 'Unknown Error';
@@ -348,7 +351,7 @@ jQuery(document).ready(function ($) {
         });
 
     });
-
+    */
 
     $('body').on('click', '#melicon_export_meli', function (e) {
         e.preventDefault();
@@ -427,7 +430,7 @@ jQuery(document).ready(function ($) {
                 });
             }
         });
-    }); */
+    }); 
 
 
 

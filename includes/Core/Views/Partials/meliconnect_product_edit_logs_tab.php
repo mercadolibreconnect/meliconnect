@@ -43,7 +43,10 @@
                 <strong class="log_name melicon-is-size-6"><?php esc_html_e('Json', 'meliconnect'); ?></strong>
             </h3>
             <div class="woocommerce_log_data wc-metabox-content hidden" style="display: block;">
-                <pre><?php echo wp_json_encode($last_json_sent, JSON_PRETTY_PRINT); ?></pre>
+                <button type="button" style="position:absolute;right:20px;" class="melicon-button melicon-is-link melicon-m-2 melicon-is-small" id="copy-last-json-button">
+                    <?php esc_html_e('Copy to clipboard', 'meliconnect'); ?>
+                </button>
+                <pre id="meliconnect-json-to-copy"><?php echo wp_json_encode($last_json_sent, JSON_PRETTY_PRINT); ?></pre>
             </div>
         </div>
         <div class="melicon-mt-4">
@@ -53,3 +56,25 @@
 
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const copyBtn = document.getElementById('copy-last-json-button');
+    const jsonPre = document.getElementById('meliconnect-json-to-copy');
+
+    if (copyBtn && jsonPre) {
+        copyBtn.addEventListener('click', function () {
+            const text = jsonPre.innerText;
+
+            navigator.clipboard.writeText(text).then(function () {
+                copyBtn.innerText = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.innerText = 'Copy last JSON sent';
+                }, 2000);
+            }).catch(function (err) {
+                alert('Error copying JSON: ' + err);
+            });
+        });
+    }
+});
+</script>

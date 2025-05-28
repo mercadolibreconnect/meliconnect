@@ -536,7 +536,7 @@ class Helper
         }
     }
 
-    public static function handleLoadMeliCategories_NEW()
+    public static function handleLoadMeliCategories()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_load_meli_categories_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
@@ -595,6 +595,7 @@ class Helper
 
         // Cargar la vista y obtener el HTML generado
         $path_from_route_html = Helper::load_partial('includes/Core/Views/Partials/meliconnect_product_edit_category_path.php', $data, true,false);
+        
 
         // Responder con JSON
         wp_send_json_success([
@@ -608,7 +609,7 @@ class Helper
     }
 
 
-    public static function handleLoadMeliCategories()
+    public static function handleLoadMeliCategories_OLD()
     {
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_load_meli_categories_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));

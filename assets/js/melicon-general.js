@@ -5,9 +5,10 @@ const MeliconSwal = Swal.mixin({
         popup: 'melicon-swal-popup',  // Clase personalizada para el popup
         title: 'melicon-swal-title',  // Clase personalizada para el título
         content: 'melicon-swal-content',  // Clase personalizada para el contenido
-        confirmButton: 'melicon-swal-confirm-button',  // Clase personalizada para el botón de confirmación
-        cancelButton: 'melicon-swal-cancel-button'  // Clase personalizada para el botón de cancelación (opcional)
+        confirmButton: 'melicon-button melicon-is-primary',
+        cancelButton: 'melicon-button melicon-is-secondary'
     },
+    
     buttonsStyling: false,  // Desactiva los estilos predeterminados de los botones
 });
 

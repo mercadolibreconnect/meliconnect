@@ -18,6 +18,11 @@
         <label class="melicon-label"><?php esc_html_e('Select Data to Sync', 'meliconnect'); ?></label>
         <div class="melicon-control">
             <select id="meli_sync_options" multiple style="width:100%">
+                <option value="title"><?php esc_html_e('Title', 'meliconnect'); ?></option>
+                <option value="sku"><?php esc_html_e('SKU', 'meliconnect'); ?></option>
+                <option value="gtin"><?php esc_html_e('GTIN', 'meliconnect'); ?></option>
+                <option value="attributes"><?php esc_html_e('Attributes', 'meliconnect'); ?></option>
+                <option value="categories"><?php esc_html_e('Categories', 'meliconnect'); ?></option>
                 <option value="description"><?php esc_html_e('Description', 'meliconnect'); ?></option>
                 <option value="images"><?php esc_html_e('Images', 'meliconnect'); ?></option>
                 <option value="price"><?php esc_html_e('Price', 'meliconnect'); ?></option>

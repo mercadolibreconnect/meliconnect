@@ -591,31 +591,9 @@ body[class*="meliconnect"] #wpcontent {
     font-weight: 600;
 }
 
-.melicon-swal-confirm-button {
-    background-color: #0073aa;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-}
 
-.melicon-swal-confirm-button:hover {
-    background-color: #006799;
-}
 
-.melicon-swal-cancel-button {
-    background-color: #d4d4d4;
-    color: #000000;
-    border: none;
-    border-radius: 3px;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    display: inline-block;
-    margin-left: 10px;
-}
+
 
 
 

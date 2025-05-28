@@ -1187,6 +1187,8 @@ class ProductEdit
             $error_time = wp_date('d-m-Y H:i:s', $error_time);
         }
 
+
+
         $logs_view_data = [
             'item_export_error'             => (isset($item_export_error['item']) && !empty($item_export_error['item'])) ? $item_export_error['item'] : '',
             'description_export_error'      => (isset($item_export_error['description']) && !empty($item_export_error['description'])) ? $item_export_error['description'] : '',
@@ -1244,6 +1246,14 @@ class ProductEdit
     {
         $this->set_product_vars();
 
+        global $post;
+
+        $meli_listing_id = get_post_meta($post->ID, 'melicon_meli_listing_id', true);
+
+        if (empty($meli_listing_id)) {
+            return;
+        }
+
         add_meta_box(
             'meliconnect_meta_box', // ID del metabox
             esc_html__('Meliconnect Actions', 'meliconnect'), // Título del metabox
@@ -1282,6 +1292,7 @@ class ProductEdit
     {
         // Get postmeta values
         $meli_listing_id = get_post_meta($post->ID, 'melicon_meli_listing_id', true);
+        
         $meli_permalink = get_post_meta($post->ID, 'melicon_meli_permalink', true);
         $template_id = get_post_meta($post->ID, 'melicon_asoc_template_id', true);
         $seller_id = get_post_meta($post->ID, 'melicon_meli_seller_id', true);
@@ -1320,6 +1331,9 @@ class ProductEdit
         $seller_id = isset($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null;
         $template_id = isset($_POST['template_id']) ? sanitize_text_field($_POST['template_id']) : null;
         $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field($_POST['woo_product_id']) : null;
+        $sync_options = isset($_POST['sync_options']) ? array_map('sanitize_text_field', (array) $_POST['sync_options']) : null;
+
+
 
         if (empty($seller_id) || empty($meli_listing_id)) {
             wp_send_json_error(['message' => 'Invalid data']);
@@ -1331,7 +1345,7 @@ class ProductEdit
         $productDataFacade = new ProductDataFacade($wooCommerceAdapter, $productCreationService);
 
         // 2- Format items data to send, Send data to API server and Get response and process response creating or updating items in WooCommerce
-        $productDataFacade->importAndCreateProduct($meli_listing_id, $seller_id, $template_id, $woo_product_id);
+        $productDataFacade->importAndCreateProduct($meli_listing_id, $seller_id, $template_id, $woo_product_id, $sync_options);
 
         wp_send_json_success(esc_html__('Product imported successfully', 'meliconnect'));
 
@@ -1354,6 +1368,7 @@ class ProductEdit
         $seller_id = isset($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null;
         $template_id = isset($_POST['template_id']) ? sanitize_text_field($_POST['template_id']) : null;
         $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field($_POST['woo_product_id']) : null;
+        $sync_options = isset($_POST['sync_options']) ? array_map('sanitize_text_field', (array) $_POST['sync_options']) : null;
 
 
         if (empty($seller_id) || empty($woo_product_id) || empty($template_id)) {
@@ -1364,7 +1379,7 @@ class ProductEdit
         $meliListingAdapter = new MercadoLibreListingAdapter();
         $listingDataFacade = new ListingDataFacade($meliListingAdapter);
 
-        $exportedResponse = $listingDataFacade->getAndExportListing($seller_id, $woo_product_id, $template_id, $meli_listing_id);
+        $exportedResponse = $listingDataFacade->getAndExportListing($seller_id, $woo_product_id, $template_id, $meli_listing_id, $sync_options);
 
         // Variables to handle the success or failure of item and description
         $item_success = false;
