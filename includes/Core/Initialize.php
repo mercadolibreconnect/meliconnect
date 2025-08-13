@@ -393,10 +393,7 @@ class Initialize
 
     public static function registerTextDomain()
     {
+        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
         load_plugin_textdomain('meliconnect', false, 'meliconnect/languages');
-
-
-
-
     }
 }

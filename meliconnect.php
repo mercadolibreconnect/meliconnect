@@ -1,17 +1,19 @@
 <?php
-/**
- * Plugin Name:     MeliConnect
- * Plugin URI:      https://meliconnect.com/
- * Description:     Conecta WooCommerce con Mercadolibre - Sincroniza publicaciones y más.
- * Version:         1.0.0
- * Author:          StoreSync
- * Author URI:      https://meliconnect.com/
- * Text Domain:     meliconnect
- * License: GPLv3
- * License URI: https://www.gnu.org/licenses/gpl-3.0.html
- * Domain Path:     /languages
- * Requires PHP:    8.0
- */
+/*
+Plugin Name: Meliconnect
+Plugin URI: https://mercadolibre.meliconnect.com/
+Description: WooCommerce & Mercado Libre integration plugin to import, export, and synchronize products between your WooCommerce store and Mercado Libre accounts.
+Version: 1.0.0
+Author: storesync
+Author URI: https://mercadolibre.meliconnect.com/
+Text Domain: meliconnect
+Domain Path: /languages
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Requires at least: 5.8
+Requires PHP: 8.0
+Tags: woocommerce, mercadolibre, integration, marketplace, sync
+*/
 
 
 
