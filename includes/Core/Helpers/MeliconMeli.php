@@ -451,13 +451,16 @@ class MeliconMeli
             'headers' => $headers
         ]);
 
+        
         // Verificamos si hubo un error en la solicitud
         if (is_wp_error($response)) {
             return $response;  // Devolvemos el error para manejarlo más tarde
         }
 
+
         // Obtenemos el código de respuesta HTTP
         $status_code = wp_remote_retrieve_response_code($response);
+
 
         // Si el código no es 200, retornamos un error
         if ($status_code !== 200) {
@@ -466,6 +469,7 @@ class MeliconMeli
 
         // Extraemos el cuerpo de la respuesta
         $body = wp_remote_retrieve_body($response);
+
 
         // Decodificamos si es JSON
         $data = json_decode($body, true);

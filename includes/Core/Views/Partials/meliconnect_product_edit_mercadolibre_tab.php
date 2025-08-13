@@ -47,7 +47,8 @@
 
     </div>
     <div id="melicon-meessage-category-container" class="options_group melicon_show_if_change_category melicon-m-1">
-        <?php wc_print_notice(esc_html__('You must select a category and save product template to see category options', 'meliconnect'), 'notice');  ?>
+        <?php echo '<div class="notice notice-warning"><p>'.esc_html__('You must select a category and save product template to see category options', 'meliconnect') .'</p></div>'; ?>
+        
     </div>
     <div class="options_group melicon_hide_if_change_category ">
         <p class="form-field melicon_general_buying_mode_field">

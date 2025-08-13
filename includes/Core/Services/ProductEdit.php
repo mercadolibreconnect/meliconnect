@@ -436,6 +436,7 @@ class ProductEdit
 
     public function getAttributeTagsInfo($attribute)
     {
+        $attribute = json_decode(json_encode($attribute), true);
         $messages = [];
 
         if (isset($attribute['tags']) && is_array($attribute['tags'])) {
@@ -502,7 +503,7 @@ class ProductEdit
     public static function getMeliConnection()
     {
         if (self::$meliConnection === null) {
-            $seller_data = self::getSellerData(); // Método que puedes definir para obtener seller_data
+            $seller_data = self::getSellerData();
             self::$seller_data = $seller_data;
 
             if (!empty($seller_data) && !empty($seller_data->access_token)) {
@@ -548,6 +549,10 @@ class ProductEdit
 
         global $post;
 
+        $meli = self::getMeliConnection();
+        $seller_data = self::$seller_data;
+
+
         if (isset($this->woo_product_id) && !empty($this->woo_product_id)) {
             //prevent reload product data in each variation
             return true;
@@ -580,7 +585,15 @@ class ProductEdit
                 $this->formatCategoryData($meli_category_data); // Condition, Currencies, Buying_modes
             }
 
-            $meli_category_attrs = MeliconMeli::simpleGet('https://api.mercadolibre.com/categories/' . $meli_category_id . '/attributes');
+            if (!empty($meli) && !empty($seller_data)) {
+                $meli_category_attrs_response = $meli->getWithHeader('categories/' . $meli_category_id . '/attributes', $seller_data->access_token);
+
+                if (isset($meli_category_attrs_response['body']) && is_array($meli_category_attrs_response['body'])) {
+                    $meli_category_attrs = $meli_category_attrs_response['body'];
+                } else {
+                    $meli_category_attrs = [];
+                }
+            }
 
 
 
@@ -590,7 +603,17 @@ class ProductEdit
                 $this->meli_category_variable_attrs = $this->getAttributesWithTag($meli_category_attrs, ['allow_variations']);
             }
 
-            $meli_category_sale_terms = MeliconMeli::simpleGet('https://api.mercadolibre.com/categories/' . $meli_category_id . '/sale_terms');
+            if (!empty($meli) && !empty($seller_data)) {
+                $meli_sale_terms_response = $meli->getWithHeader('categories/' . $meli_category_id . '/sale_terms', $seller_data->access_token);
+
+                if (isset($meli_sale_terms_response['body']) && is_array($meli_sale_terms_response['body'])) {
+                    $meli_category_sale_terms = $meli_category_attrs_response['body'];
+                } else {
+                    $meli_category_sale_terms = [];
+                }
+            }
+
+            //$meli_category_sale_terms = MeliconMeli::simpleGet('https://api.mercadolibre.com/categories/' . $meli_category_id . '/sale_terms');
 
             if (!empty($meli_category_sale_terms)) {
                 $this->meli_category_sale_terms = $meli_category_sale_terms;
@@ -599,8 +622,7 @@ class ProductEdit
             }
         }
 
-        $meli = self::getMeliConnection();
-        $seller_data = self::$seller_data;
+        
 
 
         if (!empty($meli) && !empty($seller_data)) {
@@ -644,13 +666,16 @@ class ProductEdit
         wp_die(); */
     }
 
+
     public function getAttributesWithTag($meli_category_attrs, $tags_filter = ['allow_variations'])
     {
         $meli_category_variable_attrs = [];
 
-        /* echo PHP_EOL . '-------------------- meli_category_attrs --------------------' . PHP_EOL;
-        echo '<pre>' . wp_json_encode($meli_category_attrs) . '</pre>';
-        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL; */
+        if (is_array($meli_category_attrs) && isset($meli_category_attrs[0]) && is_object($meli_category_attrs[0])) {
+            // Convertir objetos internos a arrays
+            $meli_category_attrs = json_decode(json_encode($meli_category_attrs), true);
+        }
+        
 
         foreach ($meli_category_attrs as $value) {
             // Verifica si el atributo tiene 'tags'
@@ -803,31 +828,31 @@ class ProductEdit
         if (!empty($sale_terms) && is_iterable($sale_terms)) {
             foreach ($sale_terms as $term) {
 
-                if ($term['id'] == 'WARRANTY_TYPE') {
+                if ($term->id == 'WARRANTY_TYPE') {
                     $warranty_type = [];
 
-                    foreach ($term['values'] as $value) {
-                        $warranty_type[$value['id']] = $value['name'];
+                    foreach ($term->values as $value) {
+                        $warranty_type[$value->id] = $value->name;
                     }
 
                     $this->select_options['warranty_types'] = $warranty_type;
                 }
 
-                if ($term['id'] == 'WARRANTY_TIME') {
+                if ($term->id == 'WARRANTY_TIME') {
                     $time_allowed_units = [];
 
-                    foreach ($term['allowed_units'] as $unit) {
-                        $time_allowed_units[$unit['id']] = $unit['name'];
+                    foreach ($term->allowed_units as $unit) {
+                        $time_allowed_units[$unit->id] = $unit->name;
                     }
 
                     $this->select_options['warranty_time_units'] = $time_allowed_units;
                 }
 
-                if ($term['id'] == 'MANUFACTURING_TIME') {
+                if ($term->id == 'MANUFACTURING_TIME') {
                     $manufacturing_allowed_units = [];
 
-                    foreach ($term['allowed_units'] as $unit) {
-                        $manufacturing_allowed_units[$unit['id']] = $unit['name'];
+                    foreach ($term->allowed_units as $unit) {
+                        $manufacturing_allowed_units[$unit->id] = $unit->name;
                     }
 
                     $this->select_options['manufacturing_time_units'] = $manufacturing_allowed_units;
@@ -923,10 +948,14 @@ class ProductEdit
         foreach ($meli_attrs as $meli_attr) {
             // Verificar si el tag 'required' está presente en los tags del atributo
             if ($this->isRequiredAttribute($meli_attr)) {
+
+                $id = is_array($meli_attr) ? ($meli_attr['id'] ?? null) : ($meli_attr->id ?? null);
+                $name = is_array($meli_attr) ? ($meli_attr['name'] ?? '') : ($meli_attr->name ?? '');
+
                 // Verificar si el atributo no está en used_attrs
-                if (!in_array($meli_attr['id'], $used_attr_ids)) {
+                if (!in_array($id, $used_attr_ids)) {
                     // Agregar el atributo pendiente al array
-                    $pending_required_attrs_names[] = $meli_attr['name'];
+                    $pending_required_attrs_names[] = $name;
                 }
             }
         }
@@ -937,7 +966,13 @@ class ProductEdit
 
     public function isRequiredAttribute($meli_attr)
     {
-        return isset($meli_attr['tags']['required']) || isset($meli_attr['tags']['conditional_required']) || in_array($meli_attr['id'], ['BRAND', 'MODEL']);
+        if (is_object($meli_attr)) {
+            $meli_attr = json_decode(json_encode($meli_attr), true);
+        }
+
+        return isset($meli_attr['tags']['required']) 
+            || isset($meli_attr['tags']['conditional_required']) 
+            || (isset($meli_attr['id']) && in_array($meli_attr['id'], ['BRAND', 'MODEL']));
     }
 
 
@@ -967,7 +1002,7 @@ class ProductEdit
 
         if (!empty($matched_attrs) && is_array($matched_attrs)) {
             foreach ($matched_attrs as $matched) {
-                if ($matched['name'] === $attr_name) {
+                if ($matched->name === $attr_name) {
                     return true;
                 }
             }
@@ -978,6 +1013,10 @@ class ProductEdit
 
     public function get_attr_value_type($attr)
     {
+        if (is_object($attr)) {
+            $attr = json_decode(json_encode($attr), true);
+        }
+
         // Validamos que 'value_type' exista en el atributo
         if (!isset($attr['value_type'])) {
             return esc_html__('Invalid attribute type', 'meliconnect');
@@ -1113,7 +1152,7 @@ class ProductEdit
 
             foreach ($this->meli_category_attrs as $key => $value) {
 
-                if ($value['name'] === $attrName) {
+                if ($value->name === $attrName) {
                     return $value;
                 }/* else{
                     echo '<pre> No match:' . wp_json_encode($value['name']) . '</pre>';

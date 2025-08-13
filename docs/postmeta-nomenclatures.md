@@ -168,7 +168,4 @@ Cada postmeta sigue la estructura `melicon_meli_[key]`. A continuación se descr
 
 
 
-## Notas Adicionales
 
-- Asegúrate de mantener este documento actualizado a medida que se añaden o modifican postmetas.
-- Todos los valores deben ser validados y sanitizados antes de su almacenamiento para evitar inconsistencias y problemas de seguridad.

@@ -4,7 +4,6 @@
     $pending_required_attrs_names = $data['pending_required_attrs_names'] ?? [];
     $instance = $data['instance'] ?? null;
 
-    
 ?>
 
 <div id="melicon-mercadolibre-attributes" class="melicon_hide_if_change_category melicon-mt-2">
@@ -46,11 +45,13 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    
                     <?php foreach ($meli_attrs as $attr) : ?>
                         <tr>
                             <td class="melicon-column-primary">
-                                <?php echo esc_html($attr['name']); ?>
-                                <?php if ($instance->attr_is_matched($attr['name'])) : ?>
+                                <?php echo esc_html($attr->name); ?>
+                                <?php if ($instance->attr_is_matched($attr->name)) : ?>
                                     <i class="fas fa-solid fa-check melicon-color-success"></i>
                                 <?php endif; ?>
                             </td>
@@ -58,13 +59,14 @@
                                
 
                                 <p><strong><?php esc_html_e('Meli value type: ', 'meliconnect'); ?></strong> 
-                                    <?php echo $instance->get_attr_value_type($attr); ?>
+                                    <?php echo esc_html($instance->get_attr_value_type($attr)); ?>
                                 </p>
 
                                 <?php
-                                $is_required = in_array($attr['value_type'], ['list', 'boolean']);
 
-                                if (isset($attr['values']) && is_array($attr['values']) && !empty($attr['values'])) {
+                                $is_required = in_array($attr->value_type, ['list', 'boolean']);
+                                
+                                if (isset($attr->values) && is_array($attr->values) && !empty($attr->values)) {
                         
                                     if ($is_required) {
                                         $label = esc_html__('Required values:', 'meliconnect');
@@ -76,10 +78,9 @@
                                         <p><strong><?php echo esc_html($label); ?></strong></p>
                                     <?php
 
-                                    foreach ($attr['values'] as $value) {
-                                        $value_name = $value['name'];
-                                        esc_html_e($value_name);
-                                        echo ' | ';   
+                                    foreach ($attr->values as $value) {
+                                        $value_name = $value->name;
+                                        echo esc_html($value_name) . ' | ';
                                     }
                                 }
                                 ?>
@@ -92,14 +93,14 @@
                                 <?php endif; ?>
                             </td>
                             <td style="text-align:center">
-                                <?php if (!empty($attr['tags']['catalog_required'])) : ?>
+                                <?php if (!empty($attr->tags->catalog_required)) : ?>
                                     <span class="melicon-tag melicon-bg-success"><?php esc_html_e('YES', 'meliconnect'); ?></span>
                                 <?php else : ?>
                                     <span class="melicon-tag melicon-bg-error"><?php esc_html_e('NO', 'meliconnect'); ?></span>
                                 <?php endif; ?>
                             </td>
                             <td style="text-align:center">
-                                <?php if (!empty($attr['tags']['allow_variations'])) : ?>
+                                <?php if (!empty($attr->tags->allow_variations)) : ?>
                                     <span class="melicon-tag melicon-bg-success"><?php esc_html_e('YES', 'meliconnect'); ?></span>
                                 <?php else : ?>
                                     <span class="melicon-tag melicon-bg-error"><?php esc_html_e('NO', 'meliconnect'); ?></span>

@@ -1,94 +1,118 @@
-# MeliConnect
+# Meliconnect - WooCommerce & Mercado Libre Integration Plugin
 
-**Tags:** WooCommerce, MercadoLibre, synchronization, e-commerce  
-**Requires PHP:** 7.4  
-**Requires at least:** 5.8  
-**Tested up to:** 6.7  
-**Stable tag:** 1.0.0  
-**License:** GPLv3  
-**License URI:** https://www.gnu.org/licenses/gpl-3.0.html  
+## 1. Requirements
+- WordPress 5.8 or higher
+- PHP 8.0 or higher
+- WooCommerce installed and activated
+- An active Mercado Libre account
 
-Effortlessly synchronize WooCommerce with MercadoLibre to manage products, inventory, and pricing in real-time.
+## 2. Installation
+1. Download the plugin from the WordPress.org repository or from [Meliconnect](https://mercadolibre.meliconnect.com/).
+2. Upload the ZIP file to your WordPress via **Plugins > Add New**.
+3. Click **Install Now**.
+4. Activate the plugin via **Plugins > Activate**.
 
+## 3. Connecting to Mercado Libre
+The plugin allows you to link one or multiple active Mercado Libre accounts to the same domain. Follow these steps:
 
----
+### Create or log in to Meliconnect
+- Visit [Meliconnect](https://meliconnect.com) and log in or create a new account.
 
-## Description
+### Add your domain
+1. Click **+ Create Domain**.
+2. Select your plan.
+3. Enter the **URL of the domain** where the plugin will be used.
+4. Choose the **country** corresponding to your Mercado Libre account.
+5. After saving, the domain will appear with the status **“Connection Pending”**.
 
-The **MercadoLibre Connect** plugin bridges the gap between MercadoLibre and your WooCommerce-powered store. Automate data synchronization, reduce manual work, and ensure your store and MercadoLibre listings are always up-to-date.
+### Connect your Mercado Libre account
+1. Click the green **Connect to MercadoLibre** button.
+2. A modal will open.  
+   **Important:** Make sure you are logged out of Mercado Libre or logged in with the account you want to connect.
+3. Accept Mercado Libre's terms and authorize the app (only required for the first connection).
 
-### Key Features
+### Confirm the connection
+- Once authorized, the page will reload and show the connected account in the list.
+- To verify, go to **Meliconnect → Connection** in WordPress and check the connected user and associated data.
 
-- **Product Synchronization:** Sync product data between WooCommerce and MercadoLibre, including titles, descriptions, images, prices, and stock levels.  
-- **Variations Support:** Handle variable products and multiple options seamlessly.  
-- **Real-Time Updates:** Automatically push updates from your WooCommerce store to MercadoLibre and vice versa.  
-- **Manual Sync:** Initiate manual syncs for precise control.  
-- **Customizable Mapping:** Map WooCommerce attributes to MercadoLibre fields as needed.  
-- **Error Logs:** Debug synchronization issues with detailed logs.  
+## 4. Configuration
+Before starting any mass or automatic import/export process, check and adjust settings in **Meliconnect → Settings**.
 
----
+### General settings
+- Default images to add to all listings.
+- Description template for product listings.
+- Activation and configuration of the exporter (WooCommerce → Mercado Libre) or importer (Mercado Libre → WooCommerce), manual or automatic.
+- These settings will affect all import/export processes.
 
-## Installation
+### Export settings
+- Choose which data to sync from WooCommerce to Mercado Libre:
+  - Titles
+  - Stock
+  - Prices
+  - Images, etc.
+- Specify whether the data is exported on creation, update, or both.
+- Decide the behavior when a WooCommerce product is deleted while linked to an active Mercado Libre listing.
 
-1. Download the plugin ZIP file.  
-2. Upload the plugin to the `/wp-content/plugins/` directory.  
-3. Activate the plugin through the 'Plugins' menu in WordPress.  
-4. Navigate to **WooCommerce > Settings > MercadoLibre Sync** to configure the plugin.
+### Import settings
+- Define how products from Mercado Libre are imported:
+  - Price adjustments (e.g., apply a 10% discount)
+  - Stock settings
+- Adapt imported products automatically to your store.
 
----
+### Synchronization settings
+- Enable automatic processes to keep stock and prices in sync between WooCommerce and Mercado Libre in real-time.
 
-## Frequently Asked Questions
+## 5. Importing or Exporting Individual Products
+### Export a WooCommerce product to Mercado Libre
+1. Edit the product in WooCommerce.
+2. Go to the **Mercado Libre** tab.
+3. Select the connected seller and category.
+4. Save changes and reload the page.
+5. Configure listing details:
+   - Listing type
+   - Shipping methods
+   - Condition (new, used, etc.)
+6. Fill in the **Listing Attributes**. Required fields must be completed to create the listing.
 
-### Does this plugin support variable products?  
-Yes, it fully supports variable products and allows mapping attributes to MercadoLibre fields.  
+## 6. Mass Import
+1. Go to **Meliconnect → Importer**.
+2. Select the seller and click **Get Listings** to load their active listings.
+3. Use **Clean Listings** to remove temporary listings if needed.
+4. Check the box for each listing to import as a WooCommerce product.
+5. Use **Find Match** in the **Woo Product** column to link existing products.
+6. Execute import:
+   - **Import selected**: via **Bulk Actions > Import Selected > Apply**
+   - **Import all**: click **Process Import**
 
-### Can I synchronize only specific products?  
-Yes, you can manually select which products to sync.  
+## 7. Mass Export
+1. Go to **Meliconnect → Exporter**.
+2. Select products to export.
+3. Choose **Export Selected** in **Bulk Actions** and click **Apply**.
+4. Check **Meli Listing** column:
+   - **To Create**: a new Mercado Libre listing will be created.
+   - Otherwise, the listing will be updated.
+   - Optionally, unlink a product to recreate it.
 
-### Is real-time synchronization supported?  
-Yes, real-time synchronization is available for automatic updates.  
+## 8. Automatic Import/Export
+### Enable and configure
+1. Go to **Meliconnect → Settings → General**.
+2. Activate automatic process.
+3. Choose import or export.
+4. Set items per process and time interval.
+5. Select execution method:
+   - **WordPress**: uses WP cron by default.
+   - **Custom**: configure server cron pointing to the provided URL.
 
-### Are there any regional limitations?  
-This plugin supports all regions where MercadoLibre operates.
+### Prevent infinite loops
+Automatic import and export cannot run simultaneously.
 
----
+### Advanced field settings
+- In **Exporter** and **Importer**, select which fields to update or ignore in automatic processes.
 
-## Screenshots
-
-1. **Settings Page**: Configure your MercadoLibre account and sync preferences.  
-2. **Product Mapping**: Map WooCommerce attributes to MercadoLibre fields.  
-3. **Sync Logs**: Review synchronization details and debug errors.
-
----
-
-## Changelog
-
-### 1.0.0  
-- Initial release.  
-- Full support for product synchronization with MercadoLibre.  
-- Real-time and manual sync options.
-
----
-
-## License
-
-This plugin is licensed under the GPLv2 or later. See the [LICENSE](https://www.gnu.org/licenses/gpl-2.0.html) for more details.
-
-
-
-# - How to create .pot files for Meliconnect plugin 
-Use wp CLI command to create .pot files for Meliconnect plugin
-'''
-wp i18n make-pot ./wp-content/plugins/meliconnect ./wp-content/plugins/meliconnect/languages/meliconnect.pot --exclude=node_modules,vendor
-'''
-
-if you are in plugin folder in terminal. Run this command
-'''
-wp i18n make-pot ./ ./languages/meliconnect.pot --exclude=node_modules,vendor
-'''
-
-
-
-
-
+## 9. FAQs
+### How can I view logs to understand what the plugin is doing?
+- The plugin uses WooCommerce’s default logging system.
+- Go to **WooCommerce → Status → Logs**.
+- Look for logs starting with **melicon-**.
+- These logs provide detailed information about plugin operations for debugging.
 

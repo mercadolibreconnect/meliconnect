@@ -1,3 +1,9 @@
+<?php
+// Convertir a array si es objeto, para evitar errores al acceder con []
+if (is_object($find_in_meli_attr)) {
+    $find_in_meli_attr = json_decode(json_encode($find_in_meli_attr), true);
+}
+?>
 <div class="melicon_meli_attribute_info_container melicon-container melicon-p-4">
     <div class="melicon-content">
         <?php if ($find_in_meli_attr): ?>

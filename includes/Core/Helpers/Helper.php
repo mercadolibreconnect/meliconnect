@@ -507,32 +507,30 @@ class Helper
         return false;
     }
 
-    public static function load_partial($template_path, $data = [],$once=true, $print=true)
-    {
-
+    public static function load_partial($template_path, $data = [], $once = true, $print = true) {
         $full_path = MC_PLUGIN_ROOT . $template_path;
 
         if (!file_exists($full_path)) {
-            esc_html_e('View: ' . $template_path . ' not found.', 'meliconnect');
+            /* translators: %s is the template path that could not be found. */
+            printf(esc_html__('View: %s not found.', 'meliconnect'), esc_html($template_path));
             return;
         }
-    
+
         extract($data); // Extract variables for use in the template
-    
-        if ($print) {
-            if ($once) {
-                include_once($full_path);
-            } else {
-                include($full_path);
-            }
+
+        ob_start();
+        if ($once) {
+            include_once($full_path);
         } else {
-            ob_start(); // Start output buffering
-            if ($once) {
-                include_once($full_path);
-            } else {
-                include($full_path);
-            }
-            return ob_get_clean(); // Capture and return the buffered output
+            include($full_path);
+        }
+        $output = ob_get_clean();
+
+        if ($print) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo $output;
+        } else {
+            return $output;
         }
     }
 
