@@ -1,5 +1,37 @@
-.vscode
+# Node/NPM
+node_modules/
+npm-debug.log
 
-/vendor/
+# Composer
+vendor/
+composer.lock
 
-/node_modules
+# Build tools
+dist/
+build/
+*.map
+*.css.map
+*.min.js
+*.min.css
+
+# Tests
+tests/
+phpunit.xml*
+
+# Demos/Docs
+docs/
+demos/
+
+# Git
+.git/
+.gitignore
+
+# IDE/OS
+*.swp
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+.idea/
+.vscode/
+.env
+
