@@ -1,9 +1,9 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core\Helpers;
+namespace Meliconnect\Meliconnect\Core\Helpers;
 
-use StoreSync\Meliconnect\Core\Models\Template;
-use StoreSync\Meliconnect\Core\Models\UserConnection;
+use Meliconnect\Meliconnect\Core\Models\Template;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
 
 class Helper
 {

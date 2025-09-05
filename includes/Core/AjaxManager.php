@@ -1,12 +1,12 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core;
+namespace Meliconnect\Meliconnect\Core;
 
-use StoreSync\Meliconnect\Core\Controllers\SettingController;
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Services\ProductEdit;
-use StoreSync\Meliconnect\Modules\Exporter\Controllers\ExportController;
-use StoreSync\Meliconnect\Modules\Importer\Controllers\ImportController;
+use Meliconnect\Meliconnect\Core\Controllers\SettingController;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Services\ProductEdit;
+use Meliconnect\Meliconnect\Modules\Exporter\Controllers\ExportController;
+use Meliconnect\Meliconnect\Modules\Importer\Controllers\ImportController;
 
 class AjaxManager {
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Exporter\Services;
+namespace Meliconnect\Meliconnect\Modules\Exporter\Services;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Helpers\MeliconMeli;
-use StoreSync\Meliconnect\Core\Models\Template;
-use StoreSync\Meliconnect\Core\Models\UserConnection;
-use StoreSync\Meliconnect\Modules\Exporter\Models\ProductToExport;
-use StoreSync\Meliconnect\Modules\Exporter\Services\MercadoLibreListingAdapter;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\MeliconMeli;
+use Meliconnect\Meliconnect\Core\Models\Template;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
+use Meliconnect\Meliconnect\Modules\Exporter\Models\ProductToExport;
+use Meliconnect\Meliconnect\Modules\Exporter\Services\MercadoLibreListingAdapter;
 
 /**
  * Orchestrates the process of obtaining transformed product data from

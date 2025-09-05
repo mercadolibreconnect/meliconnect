@@ -1,6 +1,6 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core\Interfaces;
+namespace Meliconnect\Meliconnect\Core\Interfaces;
 
 interface ControllerInterface {
     public function loadAssets();

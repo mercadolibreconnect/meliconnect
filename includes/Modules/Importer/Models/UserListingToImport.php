@@ -1,9 +1,9 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Importer\Models;
+namespace Meliconnect\Meliconnect\Modules\Importer\Models;
 
 use Error;
-use StoreSync\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
 
 class UserListingToImport
 {

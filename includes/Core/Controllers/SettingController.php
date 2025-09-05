@@ -1,10 +1,10 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core\Controllers;
+namespace Meliconnect\Meliconnect\Core\Controllers;
 
-use StoreSync\Meliconnect\Core\Helpers\FormHelper;
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Interfaces\ControllerInterface;
+use Meliconnect\Meliconnect\Core\Helpers\FormHelper;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Interfaces\ControllerInterface;
 
 class SettingController implements ControllerInterface
 {

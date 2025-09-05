@@ -2,8 +2,8 @@
 <div id="melicon-page-exporter-main" class="melicon-app">
     <?php
 
-    use StoreSync\Meliconnect\Core\Helpers\Helper;
-    use StoreSync\Meliconnect\Modules\Exporter\Controllers\ExportController;
+    use Meliconnect\Meliconnect\Core\Helpers\Helper;
+    use Meliconnect\Meliconnect\Modules\Exporter\Controllers\ExportController;
 
     $exportController = new ExportController();
     $data = $exportController->getData();
@@ -241,7 +241,7 @@
 
                             <?php
 
-                            $exportProductsTable = new StoreSync\Meliconnect\Modules\Exporter\Services\ExportProductsTable();
+                            $exportProductsTable = new Meliconnect\Meliconnect\Modules\Exporter\Services\ExportProductsTable();
                             $exportProductsTable->prepare_items();
                             $exportProductsTable->display();
                             ?>

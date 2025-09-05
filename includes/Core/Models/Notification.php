@@ -1,6 +1,6 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core\Models;
+namespace Meliconnect\Meliconnect\Core\Models;
 
 class Notification
 {

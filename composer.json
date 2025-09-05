@@ -1,17 +1,17 @@
 {
-    "name": "vitex/meliconnect",
+    "name": "meliconnect/meliconnect",
     "description": "Conecta WooCommerce con Mercadolibre - Gestiona preguntas, ventas, cobros, envíos y más.",
     "type": "wordpress-plugin",
     "license": "GPL-3.0-or-later",
     "autoload": {
         "psr-4": {
-            "StoreSync\\Meliconnect\\": "includes/"
+            "Meliconnect\\Meliconnect\\": "includes/"
         }
     },
     "authors": [
         {
-            "name": "StoreSync",
-            "email": "mercadolibreconnect@gmail.com",
+            "name": "meliconnect",
+            "email": "plugins@meliconnect.com",
             "homepage": "https://meliconnect.com/"
         }
     ],

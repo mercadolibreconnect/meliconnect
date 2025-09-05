@@ -1,6 +1,6 @@
 <?php
 
-use StoreSync\Meliconnect\Core\Models\Notification;
+use Meliconnect\Meliconnect\Core\Models\Notification;
 
 Notification::init();
 

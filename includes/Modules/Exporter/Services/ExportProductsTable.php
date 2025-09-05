@@ -1,9 +1,9 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Exporter\Services;
+namespace Meliconnect\Meliconnect\Modules\Exporter\Services;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Modules\Exporter\Models\ProductToExport;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Modules\Exporter\Models\ProductToExport;
 
 if (!class_exists('WP_List_Table')) {
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');

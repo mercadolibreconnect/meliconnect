@@ -1,9 +1,9 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core;
+namespace Meliconnect\Meliconnect\Core;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Models\UserConnection;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
 
 class ApiManager {
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2024 StoreSync
+# Copyright (C) 2024 Meliconnect
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgid "Conecta WooCommerce con Mercadolibre - Gestiona preguntas, ventas, cobros
 msgstr ""
 
 #. Author of the plugin
-msgid "StoreSync"
+msgid "Meliconnect"
 msgstr ""
 
 #. Author URI of the plugin

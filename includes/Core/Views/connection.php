@@ -2,7 +2,7 @@
 <div id="melicon-page-core-connection" class="melicon-app">
     <?php
 
-    use StoreSync\Meliconnect\Core\Controllers\ConnectionController;
+    use Meliconnect\Meliconnect\Core\Controllers\ConnectionController;
 
     // Crear una instancia del controlador y obtener los datos
     $connectionController = new ConnectionController();

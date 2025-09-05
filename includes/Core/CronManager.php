@@ -1,19 +1,19 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core;
+namespace Meliconnect\Meliconnect\Core;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Models\Process;
-use StoreSync\Meliconnect\Core\Models\ProcessItems;
-use StoreSync\Meliconnect\Core\Models\Template;
-use StoreSync\Meliconnect\Modules\Exporter\Models\ProductToExport;
-use StoreSync\Meliconnect\Modules\Exporter\Services\MercadoLibreListingAdapter;
-use StoreSync\Meliconnect\Modules\Exporter\Services\ListingDataFacade;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Models\Process;
+use Meliconnect\Meliconnect\Core\Models\ProcessItems;
+use Meliconnect\Meliconnect\Core\Models\Template;
+use Meliconnect\Meliconnect\Modules\Exporter\Models\ProductToExport;
+use Meliconnect\Meliconnect\Modules\Exporter\Services\MercadoLibreListingAdapter;
+use Meliconnect\Meliconnect\Modules\Exporter\Services\ListingDataFacade;
 
-use StoreSync\Meliconnect\Modules\Importer\Models\UserListingToImport;
-use StoreSync\Meliconnect\Modules\Importer\Services\ProductDataFacade;
-use StoreSync\Meliconnect\Modules\Importer\Services\WooCommerceProductAdapter;
-use StoreSync\Meliconnect\Modules\Importer\Services\WooCommerceProductCreationService;
+use Meliconnect\Meliconnect\Modules\Importer\Models\UserListingToImport;
+use Meliconnect\Meliconnect\Modules\Importer\Services\ProductDataFacade;
+use Meliconnect\Meliconnect\Modules\Importer\Services\WooCommerceProductAdapter;
+use Meliconnect\Meliconnect\Modules\Importer\Services\WooCommerceProductCreationService;
 
 class CronManager
 {

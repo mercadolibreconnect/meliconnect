@@ -1,9 +1,9 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Importer;
+namespace Meliconnect\Meliconnect\Modules\Importer;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Modules\ModuleInterface;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Modules\ModuleInterface;
 
 class Importer implements ModuleInterface {
     public function init() {

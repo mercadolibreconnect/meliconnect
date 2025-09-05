@@ -1,4 +1,4 @@
-# Copyright (C) 2024 StoreSync
+# Copyright (C) 2024 Meliconnect
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
@@ -35,8 +35,8 @@ msgstr ""
 " cobranças, envios e muito mais."
 
 #. Author of the plugin
-msgid "StoreSync"
-msgstr "StoreSync eCommerce LLC"
+msgid "Meliconnect"
+msgstr "Meliconnect eCommerce LLC"
 
 #. Author URI of the plugin
 msgid "https://meliconnect.com/"

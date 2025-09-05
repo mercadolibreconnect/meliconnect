@@ -1,9 +1,9 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core\Models;
+namespace Meliconnect\Meliconnect\Core\Models;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Helpers\MeliconMeli;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\MeliconMeli;
 
 class UserConnection
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Importer;
+namespace Meliconnect\Meliconnect\Modules\Importer;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
 
 // includes/Core/Controllers/ProductsListTableController.php
 if (!class_exists('WP_List_Table')) {

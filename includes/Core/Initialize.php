@@ -1,14 +1,14 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core;
+namespace Meliconnect\Meliconnect\Core;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Helpers\HelperJSTranslations;
-use StoreSync\Meliconnect\Core\Services\ProductEdit;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\HelperJSTranslations;
+use Meliconnect\Meliconnect\Core\Services\ProductEdit;
 
 /**
  * Class Initialize
- * @package StoreSync\Meliconnect
+ * @package Meliconnect\Meliconnect
  */
 class Initialize
 {
@@ -213,7 +213,7 @@ class Initialize
             require_once $file;
 
             $className = $this->getClassNameFromFile($file);
-            if (class_exists($className) && in_array('StoreSync\Meliconnect\Modules\ModuleInterface', class_implements($className))) {
+            if (class_exists($className) && in_array('Meliconnect\Meliconnect\Modules\ModuleInterface', class_implements($className))) {
                 $moduleName = (new \ReflectionClass($className))->getShortName();
 
                 // Cargar el módulo si está en la lista de módulos activados o si no hay módulos activados especificados
@@ -230,7 +230,7 @@ class Initialize
     {
         // Convertir la ruta del archivo a un nombre de clase
         $path = str_replace([__DIR__ . '/../', '.php'], ['', ''], $file);
-        return 'StoreSync\\Meliconnect\\' . str_replace('/', '\\', ucfirst($path));
+        return 'Meliconnect\\Meliconnect\\' . str_replace('/', '\\', ucfirst($path));
     }
 
     public function registerWPUserRoles()
@@ -270,7 +270,7 @@ class Initialize
             wp_enqueue_style(self::$css_pre . 'font-awesome-duotone', MC_PLUGIN_URL . 'assets/css/font-awesome/css/duotone.min.css', [], '5');
             wp_enqueue_style(self::$css_pre . 'bulma-switch-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma-switch.min.css', [], '1.0.1');
             wp_enqueue_style(self::$css_pre . 'select2', MC_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.1.0');
-            wp_enqueue_style(self::$css_pre . 'swal-css', MC_PLUGIN_URL . 'assets/css/sweetalert/sweetalert2.min.css', [], '11.14.0', false);
+            wp_enqueue_style(self::$css_pre . 'swal-css', MC_PLUGIN_URL . 'assets/css/sweetalert/sweetalert2.min.css', [], '11.4.8', false);
             wp_enqueue_style(self::$css_pre . 'melicon-custom', MC_PLUGIN_URL . 'assets/css/melicon-custom.css', [], '1.0.0');
         }
     }
@@ -298,7 +298,7 @@ class Initialize
 
         if ($this->is_plugin_page() || $this->is_wordpress_page_used_by_plugin()) {
 
-            wp_enqueue_script('melicon-swal-js', MC_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js', ['jquery'], '11.14.0', true);
+            wp_enqueue_script('melicon-swal-js', MC_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js', ['jquery'], '11.4.8', true);
             wp_enqueue_script(self::$js_pre . 'select-2', MC_PLUGIN_URL . 'assets/js/select2/select2.min.js', ['jquery'], '1.0.0', true);
 
             wp_register_script(self::$js_pre . 'general-script', MC_PLUGIN_URL . 'assets/js/melicon-general.js', ['jquery'], '1.0.0', true);

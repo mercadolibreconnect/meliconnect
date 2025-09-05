@@ -1,12 +1,12 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core\Controllers;
+namespace Meliconnect\Meliconnect\Core\Controllers;
 
-use StoreSync\Meliconnect\Core\Interfaces\ControllerInterface;
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Helpers\HubApi;
-use StoreSync\Meliconnect\Core\Helpers\MeliconMeli;
-use StoreSync\Meliconnect\Core\Models\UserConnection;
+use Meliconnect\Meliconnect\Core\Interfaces\ControllerInterface;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\HubApi;
+use Meliconnect\Meliconnect\Core\Helpers\MeliconMeli;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
 
 class ConnectionController implements ControllerInterface
 {

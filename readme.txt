@@ -1,11 +1,11 @@
 === Meliconnect - WooCommerce & Mercado Libre Integration Plugin ===
-Contributors: storesync
+Contributors: meliconnect
 Donate link: https://mercadolibre.meliconnect.com/support-us
 Tags: woocommerce, mercadolibre, integration, marketplace, sync
 Requires at least: 5.8
 Requires PHP:    8.0
 Tested up to: 6.8
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Exporter\Models;
+namespace Meliconnect\Meliconnect\Modules\Exporter\Models;
 
 use Error;
-use StoreSync\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
 
 class ProductToExport
 {

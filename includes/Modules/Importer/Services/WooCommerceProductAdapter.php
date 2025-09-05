@@ -1,10 +1,10 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Importer\Services;
+namespace Meliconnect\Meliconnect\Modules\Importer\Services;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Helpers\MeliconMeli;
-use StoreSync\Meliconnect\Core\Models\UserConnection;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\MeliconMeli;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
 
 /**
  * Handles communication with the external server to processs and send raw product data

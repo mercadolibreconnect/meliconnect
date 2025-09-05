@@ -1,11 +1,11 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core;
+namespace Meliconnect\Meliconnect\Core;
 
 
 /**
  * Class DatabaseManager
- * @package StoreSync\Meliconnect
+ * @package Meliconnect\Meliconnect
  */
 class DatabaseManager
 {

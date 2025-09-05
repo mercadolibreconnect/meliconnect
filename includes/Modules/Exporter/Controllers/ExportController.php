@@ -1,13 +1,13 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Exporter\Controllers;
+namespace Meliconnect\Meliconnect\Modules\Exporter\Controllers;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Helpers\HelperJSTranslations;
-use StoreSync\Meliconnect\Core\Interfaces\ControllerInterface;
-use StoreSync\Meliconnect\Core\Models\Process;
-use StoreSync\Meliconnect\Core\Models\ProcessItems;
-use StoreSync\Meliconnect\Modules\Exporter\Models\ProductToExport;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\HelperJSTranslations;
+use Meliconnect\Meliconnect\Core\Interfaces\ControllerInterface;
+use Meliconnect\Meliconnect\Core\Models\Process;
+use Meliconnect\Meliconnect\Core\Models\ProcessItems;
+use Meliconnect\Meliconnect\Modules\Exporter\Models\ProductToExport;
 
 class ExportController implements ControllerInterface
 {

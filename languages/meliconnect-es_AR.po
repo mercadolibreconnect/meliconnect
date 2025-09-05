@@ -30,7 +30,7 @@ msgid "https://meliconnect.com/"
 msgstr ""
 
 #. Author of the plugin
-msgid "StoreSync"
+msgid "Meliconnect"
 msgstr ""
 
 #. Name of the plugin

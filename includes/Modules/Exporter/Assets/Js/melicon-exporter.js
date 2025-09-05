@@ -290,7 +290,7 @@ jQuery(document).ready(function ($) {
             customClass: {
                 confirmButton: 'melicon-button melicon-is-primary',
                 cancelButton: 'melicon-button melicon-is-secondary'
-            }
+            },
             preConfirm: function () {
                 // Función para copiar el JSON al portapapeles
                 var jsonContent = $('.melicon-copy-json-sent-unformated').html();

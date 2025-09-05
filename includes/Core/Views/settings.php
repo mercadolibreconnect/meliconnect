@@ -2,7 +2,7 @@
 <div id="melicon-page-core-settings" class="melicon-app">
     <?php
 
-    use StoreSync\Meliconnect\Core\Controllers\SettingController;
+    use Meliconnect\Meliconnect\Core\Controllers\SettingController;
 
     // Crea una instancia del controlador
     $settingController = new SettingController();

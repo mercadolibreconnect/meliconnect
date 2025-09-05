@@ -1,9 +1,9 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Exporter;
+namespace Meliconnect\Meliconnect\Modules\Exporter;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Modules\ModuleInterface;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Modules\ModuleInterface;
 
 class Exporter implements ModuleInterface
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Importer\Controllers;
+namespace Meliconnect\Meliconnect\Modules\Importer\Controllers;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Helpers\HelperJSTranslations;
-use StoreSync\Meliconnect\Core\Helpers\MeliconMeli;
-use StoreSync\Meliconnect\Core\Interfaces\ControllerInterface;
-use StoreSync\Meliconnect\Core\Models\Process;
-use StoreSync\Meliconnect\Core\Models\UserConnection;
-use StoreSync\Meliconnect\Modules\Importer\Models\UserListingToImport;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\HelperJSTranslations;
+use Meliconnect\Meliconnect\Core\Helpers\MeliconMeli;
+use Meliconnect\Meliconnect\Core\Interfaces\ControllerInterface;
+use Meliconnect\Meliconnect\Core\Models\Process;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
+use Meliconnect\Meliconnect\Modules\Importer\Models\UserListingToImport;
 
 class ImportController implements ControllerInterface
 {

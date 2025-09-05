@@ -1,5 +1,5 @@
 <?php
-use StoreSync\Meliconnect\Core\Models\UserConnection;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
 
 // Obtén la lista de vendedores
 $sellers = UserConnection::getUser();

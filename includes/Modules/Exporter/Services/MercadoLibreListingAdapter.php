@@ -1,11 +1,11 @@
 <?php
 
-namespace StoreSync\Meliconnect\Modules\Exporter\Services;
+namespace Meliconnect\Meliconnect\Modules\Exporter\Services;
 
-use StoreSync\Meliconnect\Core\Helpers\Helper;
-use StoreSync\Meliconnect\Core\Helpers\MeliconMeli;
-use StoreSync\Meliconnect\Core\Models\Template;
-use StoreSync\Meliconnect\Core\Models\UserConnection;
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Core\Helpers\MeliconMeli;
+use Meliconnect\Meliconnect\Core\Models\Template;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
 
 /**
  * Handles communication with the external server to processs and get raw listing data

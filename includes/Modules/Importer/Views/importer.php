@@ -2,8 +2,8 @@
 <div id="melicon-page-importer-main" class="melicon-app">
     <?php
 
-    use StoreSync\Meliconnect\Modules\Importer\Controllers\ImportController;
-    use StoreSync\Meliconnect\Core\Helpers\Helper;
+    use Meliconnect\Meliconnect\Modules\Importer\Controllers\ImportController;
+    use Meliconnect\Meliconnect\Core\Helpers\Helper;
 
     $importController = new ImportController();
     $data = $importController->getData();
@@ -398,7 +398,7 @@
 
                             <?php
 
-                            $userListingsTable = new StoreSync\Meliconnect\Modules\Importer\UserListingsTable();
+                            $userListingsTable = new Meliconnect\Meliconnect\Modules\Importer\UserListingsTable();
                             $userListingsTable->prepare_items();
                             $userListingsTable->display();
                             ?>

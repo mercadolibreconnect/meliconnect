@@ -1,6 +1,6 @@
 <?php
 
-namespace StoreSync\Meliconnect\Core\Helpers;
+namespace Meliconnect\Meliconnect\Core\Helpers;
 
 class HelperJSTranslations
 {
