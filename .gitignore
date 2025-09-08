@@ -9,10 +9,6 @@ composer.lock
 # Build tools
 dist/
 build/
-*.map
-*.css.map
-*.min.js
-*.min.css
 
 # Tests
 tests/
@@ -35,4 +31,5 @@ demos/
 .vscode/
 .env
 
-.zip
+# ZIPs generados
+*.zip

@@ -106,7 +106,7 @@ class UserConnection
             $meli_user_data = $meli->get('/users/' . $user['user_id'], $params);
             
             //Helper::logData('Meli user data: ' . wp_json_encode($meli_user_data)  , 'users_in_domain');
-            Helper::logData('Site ID before insert: ' . wp_json_encode($user['site_id']), 'users_in_domain');
+            //Helper::logData('Site ID before insert: ' . wp_json_encode($user['site_id']), 'users_in_domain');
 
 
             $insert_data = [
@@ -134,7 +134,7 @@ class UserConnection
                 array('%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s')
             );
 
-            Helper::logData('SQL Query: ' . $wpdb->last_query, 'users_in_domain');
+            //Helper::logData('SQL Query: ' . $wpdb->last_query, 'users_in_domain');
 
             if($wpdb->last_error) {
                 Helper::logData('Error creating user connection: ' . $wpdb->last_error  , 'users_in_domain');

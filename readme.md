@@ -1,4 +1,4 @@
-# Meliconnect - WooCommerce & Mercado Libre Integration
+# Meliconnect
 
 ## 1. Requirements
 - WordPress 5.8 or higher

@@ -1,4 +1,4 @@
-=== Meliconnect - WooCommerce & Mercado Libre Integration ===
+=== Meliconnect ===
 Contributors: meliconnect
 Donate link: https://mercadolibre.meliconnect.com/support-us
 Tags: woocommerce, mercadolibre, integration, marketplace, sync

@@ -11,7 +11,6 @@ $prefix = $wpdb->prefix . 'melicon_';
 // Listado de tablas personalizadas del plugin
 $tables = [
     'notifications',
-    'user_connection',
     'templates',
     'template_metas',
     'processes',
