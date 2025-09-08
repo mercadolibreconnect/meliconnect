@@ -98,6 +98,34 @@ Meliconnect is a powerful plugin that integrates WooCommerce with Mercado Libre,
 7. Advanced settings: choose which fields to update or ignore in automatic processes.
 
 
+== External services ==
+
+This plugin relies on external services to function correctly.  
+
+=== Mercado Libre API ===  
+- **What it is**: The official API from Mercado Libre (https://developers.mercadolibre.com/).  
+- **Why it is used**: Needed to connect your WooCommerce store with Mercado Libre, allowing product data synchronization (import/export), image uploads, and listing management.  
+- **What data is sent**:  
+  - Product details (title, description, price, stock, images) when exporting to Mercado Libre.  
+  - Access tokens are used to authenticate API requests.  
+- **When data is sent**: Only when you actively perform import/export actions or synchronize products with Mercado Libre.  
+- **Service provider**: Mercado Libre S.R.L.  
+  - Terms of Service: https://developers.mercadolibre.com.ar/en_us/mercado-libre-developer-terms-and-conditions
+  - Privacy Policy: https://www.mercadolibre.com/privacy/privacy-notice
+
+=== Meliconnect API ===  
+- **What it is**: An integration service provided by Meliconnect (https://meliconnect.com).  
+- **Why it is used**: Required to process and transform product and listing data before sending it to Mercado Libre or importing it into WooCommerce.  
+- **What data is sent**:  
+  - Product details (title, description, price, stock, attributes, categories, and images).  
+  - Store configuration data needed for synchronization.  
+- **When data is sent**:  
+  - When exporting product data to Mercado Libre.  
+  - When importing product data from Mercado Libre to WooCommerce.  
+- **Service provider**: Meliconnect.  
+  - Terms of Service: https://mercadolibre.meliconnect.com/terms-of-service/ 
+  - Privacy Policy: https://mercadolibre.meliconnect.com/privacy-policy/ 
+
 == FAQ ==
 = How can I view logs of plugin processes? =
 - Go to **WooCommerce → Status → Logs**
