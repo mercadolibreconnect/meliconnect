@@ -56,15 +56,14 @@ class ImportController implements ControllerInterface
         }
 
         // Obtener IDs seleccionados y sanitizar
-        $meli_listings_ids = isset($_POST['meli_listings_ids']) ? wp_unslash($_POST['meli_listings_ids']) : null;
+        $meli_listings_ids = isset($_POST['meli_listings_ids'])
+            ? array_map('sanitize_text_field', wp_unslash($_POST['meli_listings_ids']))
+            : null;
 
         if (! $meli_listings_ids || ! is_array($meli_listings_ids)) {
             wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
             return;
         }
-
-        // Sanitizar cada string del array
-        $meli_listings_ids = array_map('sanitize_text_field', $meli_listings_ids);
 
         // Limpiar matches
         $cleared = UserListingToImport::clear_matches($meli_listings_ids);
@@ -501,7 +500,7 @@ class ImportController implements ControllerInterface
 
         global $wpdb;
 
-         $product_type = isset( $_GET['productType'] ) ? sanitize_text_field( wp_unslash( $_GET['productType'] ) ) : '';
+        $product_type = isset($_GET['productType']) ? sanitize_text_field(wp_unslash($_GET['productType'])) : '';
 
 
         // Consulta para obtener productos de WooCommerce que no tienen el postmeta 'melicon_meli_listing_id'
