@@ -40,7 +40,7 @@ class ExportController implements ControllerInterface
     
     public static function handleCancelCustomExport()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cancel_custom_export_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'cancel_custom_export_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -67,7 +67,7 @@ class ExportController implements ControllerInterface
 
     public static function handleBulkExportAction()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'export_bulk_action_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'export_bulk_action_nonce' )) {
             Helper::logData('Invalid nonce', 'bulk-actions-export');
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
@@ -196,7 +196,7 @@ class ExportController implements ControllerInterface
     }
 
     public static function handleDesvinculateListing(){
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'desvinculate_product_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'desvinculate_product_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -220,7 +220,7 @@ class ExportController implements ControllerInterface
 
     public static function handleCleanCustomExportProcess()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'clean_custom_export_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'clean_custom_export_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }

@@ -27,7 +27,7 @@ class SettingController implements ControllerInterface
     {
 
 
-        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'ajax_settings_nonce' ) ) {
+        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'ajax_settings_nonce'  ) ) {
             wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
             wp_die();
         }
@@ -43,7 +43,7 @@ class SettingController implements ControllerInterface
 
     public static function handleSettingsGetExportHtml()
     {
-        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'ajax_settings_nonce' ) ) {
+        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'ajax_settings_nonce'  ) ) {
             wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
             wp_die();
         }
@@ -59,7 +59,7 @@ class SettingController implements ControllerInterface
 
     public static function handleSettingsGetImportHtml()
     {
-        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'ajax_settings_nonce' ) ) {
+        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'ajax_settings_nonce'  ) ) {
             wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
             wp_die();
         }
@@ -75,7 +75,7 @@ class SettingController implements ControllerInterface
 
     public static function handleSettingsGetSyncHtml()
     {
-        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'ajax_settings_nonce' ) ) {
+        if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'ajax_settings_nonce'  ) ) {
             wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
             wp_die();
         }
@@ -91,7 +91,7 @@ class SettingController implements ControllerInterface
 
     public static function handleSaveGeneralSettings()
     {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ajax_settings_nonce' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ajax_settings_nonce'  ) ) {
             wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
             wp_die();
         }
@@ -133,7 +133,7 @@ class SettingController implements ControllerInterface
 
     public static function handleSaveOthersSettings()
     {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ajax_settings_nonce' ) ) {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ajax_settings_nonce'  ) ) {
             wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );
             wp_die();
         }

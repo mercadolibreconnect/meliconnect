@@ -46,7 +46,7 @@ class ImportController implements ControllerInterface
     public static function handleClearSelectedProductsMatch()
     {
 
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'clear_selected_matches_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'clear_selected_matches_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -76,7 +76,7 @@ class ImportController implements ControllerInterface
 
     public static function handleApplyMatch()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'apply_match_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'apply_match_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -106,7 +106,7 @@ class ImportController implements ControllerInterface
     public static function handleMatchListingsWithProducts()
     {
 
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'match_listings_with_products_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'match_listings_with_products_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -162,7 +162,7 @@ class ImportController implements ControllerInterface
 
     public static function handleClearMatches()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'clear_all_matches_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'clear_all_matches_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -184,7 +184,7 @@ class ImportController implements ControllerInterface
 
     public static function handleImportProcess()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'get_process_progress_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'get_process_progress_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -204,7 +204,7 @@ class ImportController implements ControllerInterface
 
     public static function handleGetMeliUserListings()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'get_meli_user_listings_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'get_meli_user_listings_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -252,7 +252,7 @@ class ImportController implements ControllerInterface
 
     public static function handleResetMeliUserListings()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'reset_listings_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'reset_listings_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -270,7 +270,7 @@ class ImportController implements ControllerInterface
 
     public static function handleInitImportProcess()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'init_import_process_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'init_import_process_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -289,7 +289,7 @@ class ImportController implements ControllerInterface
 
     public static function handlePauseCustomImport()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'pause_custom_import_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'pause_custom_import_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -307,7 +307,7 @@ class ImportController implements ControllerInterface
 
     public static function handleCancelCustomImport()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cancel_custom_import_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'cancel_custom_import_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -336,7 +336,7 @@ class ImportController implements ControllerInterface
 
     public static function handleCancelFinishedProcesses()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cancel_finished_processes_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'cancel_finished_processes_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -361,7 +361,7 @@ class ImportController implements ControllerInterface
 
     public static function handleBulkImportAction()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'import_bulk_action_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'import_bulk_action_nonce' )) {
             Helper::logData('Invalid nonce', 'bulk-actions-import');
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
@@ -445,7 +445,7 @@ class ImportController implements ControllerInterface
 
     public static function handleDesvinculateWooProduct()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'desvinculate_product_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'desvinculate_product_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -475,7 +475,7 @@ class ImportController implements ControllerInterface
     public static function handleGetMatchAvailableProducts()
     {
 
-        if (!isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'get_match_available_products_nonce')) {
+        if (!isset($_GET['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'get_match_available_products_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }

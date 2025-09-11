@@ -536,7 +536,7 @@ class Helper
 
     public static function handleLoadMeliCategories()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_load_meli_categories_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_load_meli_categories_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -609,7 +609,7 @@ class Helper
 
     public static function handleLoadMeliCategories_OLD()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_load_meli_categories_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_load_meli_categories_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -693,7 +693,7 @@ class Helper
 
     public static function handleUpdateMeliCategory()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_update_meli_category_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_update_meli_category_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }

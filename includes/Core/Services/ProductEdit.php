@@ -898,7 +898,7 @@ class ProductEdit
     {
 
         //VERIFY NONCE
-        if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'woocommerce_save_product')) {
+        if (!isset($_POST['_wpnonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'woocommerce_save_product' )) {
             //wp_die('Nonce verification failed');
         }
 
@@ -1342,7 +1342,7 @@ class ProductEdit
 
     public static function handleImportSingleListing()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_import_single_listing_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_import_single_listing_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -1379,7 +1379,7 @@ class ProductEdit
 
     public static function handleExportSingleListing()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_export_single_listing_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_export_single_listing_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -1474,7 +1474,7 @@ class ProductEdit
 
     public static function handleUnlinkSingleListing()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_unlink_single_listing_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_unlink_single_listing_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             wp_die();
         }
@@ -1528,7 +1528,7 @@ class ProductEdit
 
     public static function handleSaveTemplateData()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'melicon_save_template_data_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_save_template_data_nonce' )) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             wp_die();
         }
