@@ -35,7 +35,7 @@ jQuery(document).ready(function ($) {
                     if (result.isConfirmed) {
                         // Enviar la solicitud AJAX
                         $.ajax({
-                            url: ajaxurl,
+                            url: mcTranslations.admin_ajax_url,
                             type: 'POST',
                             data: {
                                 action: 'melicon_bulk_export_action',
@@ -169,7 +169,7 @@ jQuery(document).ready(function ($) {
             return;
         }
         $.ajax({
-            url: ajaxurl, // URL de AJAX en WordPress
+            url: mcTranslations.admin_ajax_url, // URL de AJAX en WordPress
             method: 'POST',
             data: {
                 action: 'melicon_get_process_progress',
@@ -340,7 +340,7 @@ jQuery(document).ready(function ($) {
             preConfirm: function () {
                 // Realizar la solicitud AJAX si el usuario confirma la acción
                 return $.ajax({
-                    url: ajaxurl,
+                    url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'melicon_cancel_custom_export',
@@ -385,7 +385,7 @@ jQuery(document).ready(function ($) {
             preConfirm: function () {
                 // Realizar la solicitud AJAX si el usuario confirma la desvinculación
                 return $.ajax({
-                    url: ajaxurl,
+                    url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'melicon_desvinculate_listing',
@@ -413,7 +413,7 @@ jQuery(document).ready(function ($) {
         var processId = $(this).data('process-id');
 
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_clean_custom_export_process',

@@ -1,0 +1,27 @@
+    .melicon-image-uploader {
+        position: relative;
+    }
+
+    .melicon-image-uploader .melicon-file-cta {
+        min-height: 180px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .melicon-image-uploader .melicon-image-preview {
+        border: 1px solid #dbdbdb !important;
+    }
+
+    .delete-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 10;
+    }
+
+    .delete-image:hover {
+        cursor: pointer;
+    }

@@ -57,24 +57,3 @@
 
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const copyBtn = document.getElementById('copy-last-json-button');
-    const jsonPre = document.getElementById('meliconnect-json-to-copy');
-
-    if (copyBtn && jsonPre) {
-        copyBtn.addEventListener('click', function () {
-            const text = jsonPre.innerText;
-
-            navigator.clipboard.writeText(text).then(function () {
-                copyBtn.innerText = 'Copied!';
-                setTimeout(() => {
-                    copyBtn.innerText = 'Copy last JSON sent';
-                }, 2000);
-            }).catch(function (err) {
-                alert('Error copying JSON: ' + err);
-            });
-        });
-    }
-});
-</script>

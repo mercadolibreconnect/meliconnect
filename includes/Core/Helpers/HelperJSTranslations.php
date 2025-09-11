@@ -7,6 +7,7 @@ class HelperJSTranslations
     public static function getTranslations()
     {
         return array(
+            'admin_ajax_url' => admin_url('admin-ajax.php'),
             'ajax_settings_nonce' => wp_create_nonce('ajax_settings_nonce'),
             'confirm_message' => esc_html__('Are you sure?', 'meliconnect'),
             'cancel_message'  => esc_html__('Action cancelled', 'meliconnect'),
@@ -15,6 +16,9 @@ class HelperJSTranslations
             'reset_user_listings_body' =>esc_html__('You are going to reset all user listings pre-imported. Are you sure?', 'meliconnect'),
             'confirm'=>esc_html__('Yes, confirm', 'meliconnect'),
             'cancel'=>esc_html__('Cancel', 'meliconnect'),
+            'select_or_upload_media'=>esc_html__('Select or Upload Media', 'meliconnect'),
+            'no_image_selected'=>esc_html__('No image selected', 'meliconnect'),
+
 
             'reset_listings_nonce' => wp_create_nonce('reset_listings_nonce'),
             'error' => esc_html__('Error', 'meliconnect'),
@@ -69,6 +73,9 @@ class HelperJSTranslations
             'melicon_export_single_listing_nonce' => wp_create_nonce('melicon_export_single_listing_nonce'),
             'melicon_unlink_single_listing_nonce' => wp_create_nonce('melicon_unlink_single_listing_nonce'),
             'melicon_save_template_data_nonce' => wp_create_nonce('melicon_save_template_data_nonce'),
+
+            'current_category_id' => isset($form_values['category_id']) ? $form_values['category_id'] : '',
+            'woo_product_id'      => isset($woo_product_id) ? $woo_product_id : '',
 
         );
     }

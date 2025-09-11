@@ -182,9 +182,14 @@ class Initialize
 
         // Registrar permisos personalizados
         $this->registerWPUserRoles();
-        $this->registerStyles();
-        $this->registerScripts();
-        $this->registerMenus();
+
+        add_action('admin_menu', [$this, 'registerMenus']);
+
+        add_action('admin_enqueue_scripts', [$this, 'registerStyles']);
+
+        add_action('admin_enqueue_scripts', [$this, 'registerScripts']);
+
+
         $this->loadHooks();
 
         $this->loadModules();
@@ -250,20 +255,28 @@ class Initialize
     }
 
 
-    private function registerStyles()
-    {
-        wp_enqueue_style(self::$css_pre . 'all-pages', MC_PLUGIN_URL . 'assets/css/all-pages.css', [], '1.0.0');
+     public function registerStyles($hook) {
 
+        wp_enqueue_style(
+            self::$css_pre . 'all-pages',
+            MC_PLUGIN_URL . 'assets/css/all-pages.css',
+            [],
+            '1.0.0'
+        );
+
+        // Solo páginas del plugin
         if ($this->is_plugin_page()) {
             wp_enqueue_style(self::$css_pre . 'bulma-divider-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma-divider.min.css', [], '1.0.1');
             wp_enqueue_style(self::$css_pre . 'plugin-pages', MC_PLUGIN_URL . 'assets/css/plugin-pages.css', [], '1.0.0');
         }
 
+        // Si estás en páginas de WordPress que usa tu plugin
         if ($this->is_wordpress_page_used_by_plugin()) {
             wp_enqueue_style(self::$css_pre . 'wordpress-pages', MC_PLUGIN_URL . 'assets/css/wordpress-pages.css', [], '1.0.0');
         }
 
-        if($this->is_plugin_page() || $this->is_wordpress_page_used_by_plugin()) {
+        // En común para plugin + páginas WP relacionadas
+        if ($this->is_plugin_page() || $this->is_wordpress_page_used_by_plugin()) {
             wp_enqueue_style(self::$css_pre . 'font-awesome-5', MC_PLUGIN_URL . 'assets/css/font-awesome/css/all.min.css', [], '5');
             wp_enqueue_style(self::$css_pre . 'font-awesome-brands', MC_PLUGIN_URL . 'assets/css/font-awesome/css/brands.min.css', [], '5');
             wp_enqueue_style(self::$css_pre . 'font-awesome-solid', MC_PLUGIN_URL . 'assets/css/font-awesome/css/solid.min.css', [], '5');
@@ -272,10 +285,17 @@ class Initialize
             wp_enqueue_style(self::$css_pre . 'select2', MC_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.1.0');
             wp_enqueue_style(self::$css_pre . 'swal-css', MC_PLUGIN_URL . 'assets/css/sweetalert/sweetalert2.min.css', [], '11.4.8', false);
             wp_enqueue_style(self::$css_pre . 'melicon-custom', MC_PLUGIN_URL . 'assets/css/melicon-custom.css', [], '1.0.0');
+
+            /* Connection page */
+            wp_enqueue_style('melicon-connection', MC_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-connection.css', [], '1.0.0');
+
+            /* Setting page */
+            wp_enqueue_style('melicon-setting', MC_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-setting.css', [], '1.0.0');
         }
     }
 
-    public function is_wordpress_page_used_by_plugin()
+
+    protected function is_wordpress_page_used_by_plugin()
     {
         //Load on product edit page
         if (isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit' && get_post_type($_GET['post']) === 'product') {
@@ -288,38 +308,65 @@ class Initialize
         return false;
     }
 
-    private function is_plugin_page()
+    protected function is_plugin_page()
     {
         return isset($_GET['page']) && strpos($_GET['page'], 'meliconnect') !== false;
     }
 
-    private function registerScripts()
+    public function registerScripts($hook)
     {
 
-        if ($this->is_plugin_page() || $this->is_wordpress_page_used_by_plugin()) {
-
-            wp_enqueue_script('melicon-swal-js', MC_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js', ['jquery'], '11.4.8', true);
-            wp_enqueue_script(self::$js_pre . 'select-2', MC_PLUGIN_URL . 'assets/js/select2/select2.min.js', ['jquery'], '1.0.0', true);
-
-            wp_register_script(self::$js_pre . 'general-script', MC_PLUGIN_URL . 'assets/js/melicon-general.js', ['jquery'], '1.0.0', true);
-
-
-            HelperJSTranslations::localizeScript(self::$js_pre . 'general-script');
-            wp_enqueue_script(self::$js_pre . 'general-script');
-        }
-        
-        if ($this->is_plugin_page()) {
-            
-
+        if (!$this->is_plugin_page() && !$this->is_wordpress_page_used_by_plugin()) {
+            return;
         }
 
+         wp_enqueue_script(
+            'melicon-swal-js',
+            MC_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js',
+            ['jquery'],
+            '11.4.8',
+            true
+        );
+
+        wp_enqueue_script(
+            self::$js_pre . 'select-2',
+            MC_PLUGIN_URL . 'assets/js/select2/select2.min.js',
+            ['jquery'],
+            '1.0.0',
+            true
+        );
+
+        wp_register_script(
+            self::$js_pre . 'general-script',
+            MC_PLUGIN_URL . 'assets/js/melicon-general.js',
+            ['jquery'],
+            '1.0.0',
+            true
+        );
+
+        HelperJSTranslations::localizeScript(self::$js_pre . 'general-script');
+        wp_enqueue_script(self::$js_pre . 'general-script');
+
+        /* Connection page */
+        wp_enqueue_script('melicon-connection', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-connection.js', ['jquery'], '1.0.0', true);
+
+        /* Setting page */
+        wp_enqueue_script('melicon-setting', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-setting.js', ['jquery'], '1.0.0', true);
+
+        /* Product edit page */
         if ($this->is_wordpress_page_used_by_plugin()) {
-            //
+            $post_id = absint($_GET['post']); // Sanitizar el ID del post
+
+            // Verifica que el tipo de post sea 'product'
+            if (get_post_type($post_id) === 'product') {
+                wp_enqueue_script('melicon-product-edit-js', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-product-edit.js', ['jquery'], '1.0.0', true);
+            }
         }
     }
 
-    private function registerMenus()
+    public function registerMenus()
     {
+        
 
         add_menu_page(
             esc_html__('MeliConnect', 'meliconnect'), // page_title
@@ -365,29 +412,27 @@ class Initialize
 
     public function renderMainPage()
     {
-        include MC_PLUGIN_ROOT . 'includes/Core/Views/main.php';
+        include plugin_dir_path(__FILE__)  . '/Views/main.php';
     }
 
     public function renderSettingsPage()
     {
-        include MC_PLUGIN_ROOT . 'includes/Core/Views/settings.php';
+        include plugin_dir_path(__FILE__)  . '/Views/settings.php';
     }
 
-    public function renderImporterPage()
+    /* public function renderImporterPage()
     {
-        include MC_PLUGIN_ROOT . 'includes/Core/Views/importer.php';
+        include plugin_dir_path(__FILE__)  .  '/Views/importer.php';
     }
 
     public function renderExporterPage()
     {
-
-
-        include MC_PLUGIN_ROOT . 'includes/Core/Views/exporter.php';
-    }
+        include plugin_dir_path(__FILE__)  . '/Views/exporter.php';
+    } */
 
     public function renderConnectionPage()
     {
-        include MC_PLUGIN_ROOT . 'includes/Core/Views/connection.php';
+        include plugin_dir_path(__FILE__) . '/Views/connection.php';
     }
 
 

@@ -183,31 +183,3 @@
     </section>
 </form>
 
-<script>
-    jQuery(document).ready(function($) {
-        $('#melicon-sync-settings-form').submit(function(e) {
-            e.preventDefault();
-            var formData = new FormData(this); // Collect form data
-
-            formData.append("action", "melicon_save_others_settings");
-
-            $.ajax({
-                type: "POST",
-                url: ajaxurl,
-                data: formData,
-                contentType: false,
-                processData: false,
-                beforeSend: function() {
-                    $('#save-sync-button').addClass('is-loading');
-                },
-                success: function(response) {
-                    location.reload();
-                },
-                error: function(xhr, status, error) {
-                    $('#save-sync-button').removeClass('is-loading');
-                    console.log(xhr.responseText);
-                }
-            });
-        });
-    });
-</script>

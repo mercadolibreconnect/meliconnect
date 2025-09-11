@@ -10,7 +10,7 @@ jQuery(document).ready(function ($) {
         $button.addClass('disabled melicon-is-loading');
 
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_match_listings_with_products',
@@ -50,7 +50,7 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
 
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_clear_matches',
@@ -79,7 +79,7 @@ jQuery(document).ready(function ($) {
         let meliListingId = $(this).data('meli-listing-id');
 
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_clear_selected_products_match',
@@ -106,7 +106,7 @@ jQuery(document).ready(function ($) {
     $('#melicon-importer-delete-finished').on('click', function (e) {
         e.preventDefault();
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_cancel_finished_processes',
@@ -134,7 +134,7 @@ jQuery(document).ready(function ($) {
 
         $.ajax({
             type: "POST",
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             data: formData,
             contentType: false,
             processData: false,
@@ -266,7 +266,7 @@ jQuery(document).ready(function ($) {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: ajaxurl,
+                    url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'melicon_reset_user_listings',
@@ -310,7 +310,7 @@ jQuery(document).ready(function ($) {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: ajaxurl,
+                    url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'melicon_init_import_process',
@@ -351,7 +351,7 @@ jQuery(document).ready(function ($) {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: ajaxurl,
+                    url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'melicon_cancel_custom_import',
@@ -381,7 +381,7 @@ jQuery(document).ready(function ($) {
             return;
         }
         $.ajax({
-            url: ajaxurl, // URL de AJAX en WordPress
+            url: mcTranslations.admin_ajax_url, // URL de AJAX en WordPress
             method: 'POST',
             data: {
                 action: 'melicon_get_process_progress',
@@ -464,7 +464,7 @@ jQuery(document).ready(function ($) {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: ajaxurl,
+                            url: mcTranslations.admin_ajax_url,
                             type: 'POST',
                             data: {
                                 action: 'melicon_bulk_import_action',
@@ -526,7 +526,7 @@ jQuery(document).ready(function ($) {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: ajaxurl,
+                    url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'melicon_desvinculate_woo_product',
@@ -566,7 +566,7 @@ jQuery(document).ready(function ($) {
         }
     
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_apply_match',
@@ -625,7 +625,7 @@ jQuery(document).ready(function ($) {
 
 
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'GET',
             data: {
                 action: 'melicon_get_match_available_products',

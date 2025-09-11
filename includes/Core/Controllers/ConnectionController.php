@@ -14,8 +14,7 @@ class ConnectionController implements ControllerInterface
 
     public function __construct()
     {
-        // Inits hooks or another configurations
-        $this->loadAssets();
+
     }
 
     public function getData()
@@ -27,14 +26,6 @@ class ConnectionController implements ControllerInterface
         return $data;
     }
 
-    public function loadAssets()
-    {
-        /* if (is_page('meliconnect-connection')) { */
-        wp_enqueue_style('melicon-connection', MC_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-connection.css', [], '1.0.0');
-
-        wp_enqueue_script('melicon-connection', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-connection.js', ['jquery'], '1.0.0', true);
-        /* } */
-    }
 
 
     /* START HANDLE AJAX METHODS */ 

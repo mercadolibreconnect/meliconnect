@@ -10,8 +10,7 @@ class SettingController implements ControllerInterface
 {
     public function __construct()
     {
-        // Inits hooks or another configurations
-        $this->loadAssets();
+        wp_enqueue_media();
     }
 
     public function getData()
@@ -21,21 +20,12 @@ class SettingController implements ControllerInterface
         return $data;
     }
 
-    public function loadAssets()
-    {
-        /* if (is_page('meliconnect-settings')) { */
-        wp_enqueue_media();
-
-        wp_enqueue_style('melicon-setting', MC_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-setting.css', [], '1.0.0');
-
-        wp_enqueue_script('melicon-setting', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-setting.js', ['jquery'], '1.0.0', true);
-        /* } */
-    }
 
 
     /* START HANDLE AJAX METHODS */
     public static function handleSettingsGetGeneralHtml()
     {
+
 
         if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'ajax_settings_nonce' ) ) {
             wp_send_json_error( array( 'message' => 'Nonce verification failed.' ) );

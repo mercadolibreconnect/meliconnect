@@ -9,10 +9,6 @@ $notifications = Notification::getNotifications();
 
 ?>
 
-<script>
-   var ajaxurl = "<?php echo esc_url(admin_url('admin-ajax.php')); ?>";
-
-</script>
 
 <div class="meliconnect-admin-page">
     <div class="melicon-app">
@@ -24,7 +20,7 @@ $notifications = Notification::getNotifications();
                         $text = esc_html__('Check the available <strong>documentation</strong>. You can quickly clear up any questions', 'meliconnect');
                         echo wp_kses($text, array('strong' => array()));
                         ?>
-                        <a href="https://documentation.meliconnect.com/" target="_blank" class="text-white">
+                        <a href="https://mercadolibre.meliconnect.com/" target="_blank" class="text-white">
                             <?php esc_html_e('Check now', 'meliconnect'); ?>
                         </a>
                     </div>
@@ -43,7 +39,7 @@ $notifications = Notification::getNotifications();
 
 
                     <div class="header-actions">
-                        <a onclick="toggleSidebar()">
+                        <a class="melicon-sidebar-toggle">
                             <span class="round">
                                 <?php
                                 if (count($notifications) > 0) {
@@ -53,7 +49,7 @@ $notifications = Notification::getNotifications();
                                 <i class="fas fa-bell melicon-notifications"></i> <!-- Reemplazo de notificaciones -->
                             </span>
                         </a>
-                        <a href="https://documentation.meliconnect.com/" target="_blank">
+                        <a href="https://mercadolibre.meliconnect.com/" target="_blank">
                             <span class="round">
                                 <i class="fas fa-question-circle melicon-circle-question-mark"></i> <!-- Reemplazo del signo de interrogación -->
                             </span>
@@ -185,44 +181,3 @@ $notifications = Notification::getNotifications();
 </div>
 
 
-<script>
-    function toggleSidebar() {
-
-        var sidebar = document.getElementById('melicon-sidebar');
-        var sidebarOverlay = document.getElementById('melicon-sidebar-overlay');
-
-        sidebar.classList.toggle('open');
-        sidebarOverlay.classList.toggle('open');
-    }
-
-    function dismissMessage(event, notificationId) {
-        event.preventDefault();
-
-        jQuery.ajax({
-            url: ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'meliconnect_dismiss_message',
-                notificationId: notificationId // ID de notificación a eliminar, all en caso de que sean todas
-            },
-            success: function(response) {
-                console.log(response);
-
-                if (response.status) {
-                    if (response.notification_id == 'all') {
-                        jQuery('.melicon-sidebar-inner-content-item').remove();
-                        jQuery('#melicon-total-notifications').hide();
-                    } else {
-                        jQuery('.melicon-sidebar-inner-content-item[data-notificationId="' + response.notification_id + '"]').remove();
-                        //Se descuenta uno al total de notificaciones
-                        jQuery('#melicon-total-notifications').text(parseInt(jQuery('#melicon-total-notifications').text()) - 1);
-                    }
-
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log(error);
-            }
-        });
-    }
-</script>

@@ -237,13 +237,8 @@ class UserListingsTable extends \WP_List_Table
         $status_class = $item['meli_status'] === 'active' ? 'has-text-success' : 'has-text-danger';
 
 
-        // Crear las columnas usando Bulma
 ?>
-        <style>
-            .wp-list-table .column-meli_listing_id {
-                width: 40%;
-            }
-        </style>
+
         <div class="melicon-columns melicon-is-multiline">
             <!-- Primera Columna -->
             <div class="melicon-column melicon-is-5">

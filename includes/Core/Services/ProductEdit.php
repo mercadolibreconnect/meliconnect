@@ -40,6 +40,7 @@ class ProductEdit
 
     public function __construct()
     {
+        
         add_action('add_meta_boxes', [$this, 'add_meliconnect_meta_box_data']);
         add_action('add_meta_boxes', [$this, 'add_meliconnect_meta_box_actions']);
         add_action('woocommerce_product_options_pricing', [$this, 'meliconnect_add_general_tab_html']);
@@ -59,11 +60,6 @@ class ProductEdit
         add_action('woocommerce_variation_options',  [$this, 'melicon_custom_variation_fields'], 10, 3);
 
 
-
-
-
-
-        $this->loadAssets();
 
         $this->shipping_modes_names = [
             'custom' => esc_html__('Custom', 'meliconnect'),
@@ -138,6 +134,8 @@ class ProductEdit
             'status' => 'active',
         ];
     }
+
+
 
     public function melicon_woocommerce_save_product_variation($variation, $i)
     {
@@ -529,19 +527,7 @@ class ProductEdit
 
 
 
-    public function loadAssets()
-    {
 
-        // Verifica que el parámetro 'post' esté presente en $_GET y que sea un número válido
-        if (isset($_GET['post']) && absint($_GET['post']) > 0) {
-            $post_id = absint($_GET['post']); // Sanitizar el ID del post
-
-            // Verifica que el tipo de post sea 'product'
-            if (get_post_type($post_id) === 'product') {
-                wp_enqueue_script('melicon-product-edit-js', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-product-edit.js', ['jquery'], '1.0.0', true);
-            }
-        }
-    }
 
 
     public function set_product_vars()

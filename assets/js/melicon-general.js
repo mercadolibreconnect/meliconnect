@@ -8,7 +8,7 @@ const MeliconSwal = Swal.mixin({
         confirmButton: 'melicon-button melicon-is-primary',
         cancelButton: 'melicon-button melicon-is-secondary'
     },
-    
+
     buttonsStyling: false,  // Desactiva los estilos predeterminados de los botones
 });
 
@@ -70,3 +70,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+jQuery(document).ready(function () {
+    jQuery('.melicon-sidebar-toggle').on('click', function (e) {
+        e.preventDefault();
+        toggleSidebar();
+    });
+});
+
+function toggleSidebar() {
+
+    var sidebar = document.getElementById('melicon-sidebar');
+    var sidebarOverlay = document.getElementById('melicon-sidebar-overlay');
+
+    sidebar.classList.toggle('open');
+    sidebarOverlay.classList.toggle('open');
+}
+
+function dismissMessage(event, notificationId) {
+    event.preventDefault();
+
+    jQuery.ajax({
+        url: mcTranslations.admin_ajax_url,
+        type: 'POST',
+        data: {
+            action: 'meliconnect_dismiss_message',
+            notificationId: notificationId // ID de notificación a eliminar, all en caso de que sean todas
+        },
+        success: function (response) {
+            console.log(response);
+
+            if (response.status) {
+                if (response.notification_id == 'all') {
+                    jQuery('.melicon-sidebar-inner-content-item').remove();
+                    jQuery('#melicon-total-notifications').hide();
+                } else {
+                    jQuery('.melicon-sidebar-inner-content-item[data-notificationId="' + response.notification_id + '"]').remove();
+                    //Se descuenta uno al total de notificaciones
+                    jQuery('#melicon-total-notifications').text(parseInt(jQuery('#melicon-total-notifications').text()) - 1);
+                }
+
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(error);
+        }
+    });
+}

@@ -3,7 +3,6 @@
 namespace Meliconnect\Meliconnect\Modules\Importer\Controllers;
 
 use Meliconnect\Meliconnect\Core\Helpers\Helper;
-use Meliconnect\Meliconnect\Core\Helpers\HelperJSTranslations;
 use Meliconnect\Meliconnect\Core\Helpers\MeliconMeli;
 use Meliconnect\Meliconnect\Core\Interfaces\ControllerInterface;
 use Meliconnect\Meliconnect\Core\Models\Process;
@@ -16,8 +15,7 @@ class ImportController implements ControllerInterface
 
     public function __construct()
     {
-        // Inits hooks or another configurations
-        $this->loadAssets();
+
     }
 
     public function getData()
@@ -40,17 +38,7 @@ class ImportController implements ControllerInterface
         return $data;
     }
 
-    public function loadAssets()
-    {
-        /* if (is_page('meliconnect-importer')) { */
-        wp_enqueue_style('melicon-importer', MC_PLUGIN_URL . 'includes/Modules/Importer/Assets/Css/melicon-importer.css', [], '1.0.0');
 
-        wp_register_script('melicon-importer-js', MC_PLUGIN_URL . 'includes/Modules/Importer/Assets/Js/melicon-importer.js', ['jquery'], '1.0.0', true);
-        HelperJSTranslations::localizeScript('melicon-importer-js');
-        wp_enqueue_script('melicon-importer-js');
-
-        /* } */
-    }
 
 
     /* START HANDLE AJAX METHODS */

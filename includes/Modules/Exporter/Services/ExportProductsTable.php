@@ -139,11 +139,7 @@ class ExportProductsTable extends \WP_List_Table
         $product_type_class = $type === 'simple' ? 'has-text-link' : 'has-text-success';
 
 ?>
-        <style>
-            .wp-list-table .column-product_id {
-                width: 40%;
-            }
-        </style>
+       
         <div class="melicon-columns melicon-is-multiline">
             <!-- Primera Columna -->
             <div class="melicon-column melicon-is-5">

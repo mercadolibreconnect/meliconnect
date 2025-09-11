@@ -1,7 +1,10 @@
 jQuery(document).ready(function ($) {
 
     var current_category = $('#melicon_general_category_id_input').val();
-    //console.log('current_category', current_category);
+    var current_category_id = $('#melicon_current_category_id').val();
+    var woo_product_id = $('#melicon_woo_product_id').val();
+
+
     showExportErrors();
 
     if (current_category == '') {
@@ -26,7 +29,7 @@ jQuery(document).ready(function ($) {
 
         // Mostrar el contenido correspondiente al tab clicado
 
-        console.log('#' + tabClass + '_product_data');
+        //console.log('#' + tabClass + '_product_data');
         $('#' + tabClass + '_product_data').removeClass('hidden').addClass('block');
     });
 
@@ -56,7 +59,7 @@ jQuery(document).ready(function ($) {
         var seller_id = $('#template\\[seller_meli_id\\]').val();
 
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_load_meli_categories',
@@ -176,7 +179,7 @@ jQuery(document).ready(function ($) {
                     if (category_id) {
 
                         $.ajax({
-                            url: ajaxurl,
+                            url: mcTranslations.admin_ajax_url,
                             type: 'POST',
                             data: {
                                 action: 'melicon_update_meli_category',
@@ -233,7 +236,7 @@ jQuery(document).ready(function ($) {
 
         // Get the selected action (import or export)
         var actionType = $('#meli_sync_action').val();
-        
+
         // Get selected data to sync
         var syncOptions = $('#meli_sync_options').val() || [];
 
@@ -252,7 +255,7 @@ jQuery(document).ready(function ($) {
 
         // Perform the AJAX request
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: ajaxAction,
@@ -261,7 +264,7 @@ jQuery(document).ready(function ($) {
                 meli_listing_id: meli_listing_id,
                 template_id: template_id,
                 seller_id: seller_id,
-                sync_options: syncOptions 
+                sync_options: syncOptions
             },
             success: function (response) {
                 console.log(response);
@@ -274,7 +277,7 @@ jQuery(document).ready(function ($) {
                     MeliconSwal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: response.data.message, 
+                        text: response.data.message,
                         timer: 2000,
                         showConfirmButton: false
                     });
@@ -331,7 +334,7 @@ jQuery(document).ready(function ($) {
         var seller_id = $(this).data('seller-id');
 
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_import_single_listing',
@@ -366,7 +369,7 @@ jQuery(document).ready(function ($) {
         $exportButton.prop('disabled', true);
 
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_export_single_listing',
@@ -430,7 +433,7 @@ jQuery(document).ready(function ($) {
                 });
             }
         });
-    }); 
+    });
 
 
 
@@ -459,7 +462,7 @@ jQuery(document).ready(function ($) {
         console.log(templateData); */
 
         $.ajax({
-            url: ajaxurl,
+            url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'melicon_save_template_data',
@@ -519,7 +522,7 @@ jQuery(document).ready(function ($) {
                 var unlink_type = $('#melicon-desviculate-type-select').val();
 
                 $.ajax({
-                    url: ajaxurl,
+                    url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'melicon_unlink_single_listing',
@@ -549,8 +552,88 @@ jQuery(document).ready(function ($) {
     });
 
 
+    $('#mely_sync_all').on('change', function () {
+        if (this.checked) {
+            $('.select-data-to-sync-field').hide();
+            $('#meli_sync_options').val(null).trigger('change');
+        } else {
+            $('.select-data-to-sync-field').show();
+        }
+    });
+
+    if ($('#mely_sync_all').prop('checked')) {
+        $('.select-data-to-sync-field').hide();
+    }
+
+    setTimeout(function () {
+        $('#meliconnect-loader').hide();
+        $('#meliconnect-box').fadeIn();
+    }, 2000);
+
+    $('#meli_sync_options').select2({
+        placeholder: "Select fields to sync",
+        allowClear: true,
+        closeOnSelect: false,
+        templateResult: function (option) {
+            if (!option.id) {
+                return option.text;
+            }
+
+            // Crear un checkbox dentro del dropdown
+            let $checkbox = $('<input type="checkbox" class="sync-checkbox" value="' + option.id + '"/>');
+
+            // Verificar si el elemento está seleccionado y marcar el checkbox
+            let selectedValues = $('#meli_sync_options').val() || [];
+            if (selectedValues.includes(option.id)) {
+                $checkbox.prop('checked', true);
+            }
+
+            return $('<span>').append($checkbox).append(' ' + option.text);
+        },
+        templateSelection: function (option) {
+            return option.text;
+        }
+    });
+
+    // Evento para actualizar los checkboxes al seleccionar/deseleccionar
+    $('#meli_sync_options').on('select2:select select2:unselect', function () {
+        $('.sync-checkbox').each(function () {
+            let checkbox = $(this);
+            let value = checkbox.val();
+            let selectedValues = $('#meli_sync_options').val() || [];
+            checkbox.prop('checked', selectedValues.includes(value));
+        });
+
+        // Si hay al menos un elemento seleccionado, desmarcar "All Data"
+        if ($(this).val().length > 0) {
+            $('#meli_sync_all').prop('checked', false);
+        }
+    });
+
+    $('#meli_sync_all').on('change', function () {
+        if (this.checked) {
+            $('#meli_sync_options').val(null).trigger('change');
+        }
+    });
 
 
+    /*Copy last JSON sent to mercadolibre for debug purposes */
+    const $copyBtn = $('#copy-last-json-button');
+    const $jsonPre = $('#meliconnect-json-to-copy');
 
+    if ($copyBtn.length && $jsonPre.length) {
+        $copyBtn.on('click', function () {
+            const text = $jsonPre.text();
+
+            navigator.clipboard.writeText(text).then(function () {
+                $copyBtn.text('Copied!');
+                setTimeout(() => {
+                    $copyBtn.text('Copy last JSON sent');
+                }, 2000);
+            }).catch(function (err) {
+                alert('Error copying JSON: ' + err);
+            });
+        });
+    }
 
 });

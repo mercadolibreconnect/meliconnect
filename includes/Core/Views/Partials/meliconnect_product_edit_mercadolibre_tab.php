@@ -277,7 +277,8 @@
     </div>
 </div>
 
-<script>
-    var current_category_id = '<?php echo esc_js($form_values['category_id']); ?>';
-    var woo_product_id = '<?php echo esc_js($woo_product_id); ?>';
-</script>
+<input type="hidden" id="melicon_current_category_id" value="<?php echo esc_attr($form_values['category_id']); ?>">
+<input type="hidden" id="melicon_woo_product_id" value="<?php echo esc_attr($woo_product_id); ?>">
+
+
+
