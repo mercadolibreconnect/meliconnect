@@ -1,22 +1,26 @@
+<?php
+
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
+
+use Meliconnect\Meliconnect\Core\Helpers\Helper;
+use Meliconnect\Meliconnect\Modules\Exporter\Controllers\ExportController;
+
+$exportController = new ExportController();
+$data = $exportController->getData();
+
+
+$headerTitle = esc_html__('Exporter', 'meliconnect');
+
+
+
+include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
+
+?>
 <!-- START MCSYNCAPP -->
 <div id="melicon-page-exporter-main" class="melicon-app">
-    <?php
-
-    use Meliconnect\Meliconnect\Core\Helpers\Helper;
-    use Meliconnect\Meliconnect\Modules\Exporter\Controllers\ExportController;
-
-    $exportController = new ExportController();
-    $data = $exportController->getData();
-
-
-    $headerTitle = esc_html__('Exporter', 'meliconnect');
-
-
-
-    include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
-
-    ?>
-
     <div class="melicon-main">
         <div class="melicon-container">
 
@@ -138,7 +142,7 @@
                                                 $search_value = isset($_GET['search']) ? sanitize_text_field(wp_unslash($_GET['search'])) : '';
                                                 $selected_product_vinculation = isset($_GET['product_vinculation_filter']) ? sanitize_text_field(wp_unslash($_GET['product_vinculation_filter'])) : '';
                                                 $selected_product_type = isset($_GET['product_type_filter']) ? sanitize_text_field(wp_unslash($_GET['product_type_filter'])) : '';
-                                                $per_page = isset( $_REQUEST['export_products_per_page'] ) ? absint( wp_unslash( $_REQUEST['export_products_per_page'] ) ) : 10;
+                                                $per_page = isset($_REQUEST['export_products_per_page']) ? absint(wp_unslash($_REQUEST['export_products_per_page'])) : 10;
                                                 ?>
 
                                                 <div class="melicon-field melicon-has-addons">

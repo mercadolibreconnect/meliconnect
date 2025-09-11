@@ -2,6 +2,9 @@
 
 namespace Meliconnect\Meliconnect\Core;
 
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
 
 /**
  * Class DatabaseManager

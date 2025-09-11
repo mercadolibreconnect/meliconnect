@@ -2,8 +2,9 @@
 
 namespace Meliconnect\Meliconnect\Core\Models;
 
-use Meliconnect\Meliconnect\Core\Helpers\Helper;
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 class Process
 {
     private static $table_name;

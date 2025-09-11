@@ -1,17 +1,19 @@
+<?php
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
+use Meliconnect\Meliconnect\Core\Controllers\ConnectionController;
+
+// Crear una instancia del controlador y obtener los datos
+$connectionController = new ConnectionController();
+$data = $connectionController->getData();
+$headerTitle = esc_html__('Connection', 'meliconnect');
+
+include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
+?>
 <!-- START MCSYNCAPP -->
 <div id="melicon-page-core-connection" class="melicon-app">
-    <?php
-
-    use Meliconnect\Meliconnect\Core\Controllers\ConnectionController;
-
-    // Crear una instancia del controlador y obtener los datos
-    $connectionController = new ConnectionController();
-    $data = $connectionController->getData();
-    $headerTitle = esc_html__('Connection', 'meliconnect');
-
-    include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
-    ?>
-
     <div class="melicon-main">
         <div class="melicon-container">
 
@@ -44,7 +46,7 @@
                                 <div class="melicon-card melicon-column melicon-is-4">
                                     <div class="melicon-card-content">
                                         <div class="melicon-content">
-                                            <p><strong><?php esc_html_e('User:', 'meliconnect'); ?></strong> 
+                                            <p><strong><?php esc_html_e('User:', 'meliconnect'); ?></strong>
                                                 <a href="<?php echo esc_url($user->permalink); ?>" target="_blank">
                                                     <?php echo esc_html($user->nickname); ?>
                                                 </a>
@@ -57,28 +59,28 @@
                                                 <p><strong><?php esc_html_e('Email:', 'meliconnect'); ?></strong> <?php echo esc_html($body->email ?? ''); ?></p>
                                                 <p><strong><?php esc_html_e('Site ID:', 'meliconnect'); ?></strong> <?php echo esc_html(strtoupper($user->site_id ?? '')); ?></p>
                                                 <p>
-                                                    <strong><?php esc_html_e('Connection Token:', 'meliconnect'); ?></strong> 
-                                                    <?php 
-                                                        $truncated_token = !empty($user->api_token) ? substr($user->api_token, 0, 6) . '...' : ''; 
-                                                        echo esc_html($truncated_token); 
+                                                    <strong><?php esc_html_e('Connection Token:', 'meliconnect'); ?></strong>
+                                                    <?php
+                                                    $truncated_token = !empty($user->api_token) ? substr($user->api_token, 0, 6) . '...' : '';
+                                                    echo esc_html($truncated_token);
                                                     ?>
                                                 </p>
                                                 <p><strong><?php esc_html_e('Country:', 'meliconnect'); ?></strong> <?php echo esc_html($user->country ?? ''); ?></p>
                                                 <p><strong><?php esc_html_e('Seller Experience:', 'meliconnect'); ?></strong> <?php echo esc_html($body->seller_experience ?? ''); ?></p>
                                                 <p><strong><?php esc_html_e('Registration Level:', 'meliconnect'); ?></strong> <?php echo esc_html($body->context->registration_level ?? ''); ?></p>
                                                 <p>
-                                                    <strong><?php esc_html_e('Registration Date:', 'meliconnect'); ?></strong> 
-                                                    <?php 
-                                                        if (!empty($body->registration_date)) {
-                                                            $timestamp = strtotime($body->registration_date);
-                                                            if ($timestamp) {
-                                                                echo esc_html(wp_date("d/m/Y", $timestamp));
-                                                            } else {
-                                                                esc_html_e('Invalid date', 'meliconnect');
-                                                            }
+                                                    <strong><?php esc_html_e('Registration Date:', 'meliconnect'); ?></strong>
+                                                    <?php
+                                                    if (!empty($body->registration_date)) {
+                                                        $timestamp = strtotime($body->registration_date);
+                                                        if ($timestamp) {
+                                                            echo esc_html(wp_date("d/m/Y", $timestamp));
                                                         } else {
-                                                            esc_html_e('Not available', 'meliconnect');
+                                                            esc_html_e('Invalid date', 'meliconnect');
                                                         }
+                                                    } else {
+                                                        esc_html_e('Not available', 'meliconnect');
+                                                    }
                                                     ?>
                                                 </p>
                                                 <p><strong><?php esc_html_e('Tags:', 'meliconnect'); ?></strong> <?php echo esc_html(implode(', ', $body->tags ?? [])); ?></p>

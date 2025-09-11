@@ -1,21 +1,24 @@
+<?php
+
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
+use Meliconnect\Meliconnect\Core\Controllers\SettingController;
+
+// Crea una instancia del controlador
+$settingController = new SettingController();
+
+// Obtén los datos necesarios
+$data = $settingController->getData();
+
+$headerTitle = esc_html__('Settings', 'meliconnect');
+
+include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
+
+?>
 <!-- START MCSYNCAPP -->
 <div id="melicon-page-core-settings" class="melicon-app">
-    <?php
-
-    use Meliconnect\Meliconnect\Core\Controllers\SettingController;
-
-    // Crea una instancia del controlador
-    $settingController = new SettingController();
-
-    // Obtén los datos necesarios
-    $data = $settingController->getData();
-
-    $headerTitle = esc_html__('Settings', 'meliconnect');
-
-    include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
-
-    ?>
-
     <div class="melicon-main">
         <div class="melicon-container">
 

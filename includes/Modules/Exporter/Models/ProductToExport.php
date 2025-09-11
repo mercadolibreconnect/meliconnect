@@ -2,6 +2,10 @@
 
 namespace Meliconnect\Meliconnect\Modules\Exporter\Models;
 
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 use Error;
 use Meliconnect\Meliconnect\Core\Helpers\Helper;
 

@@ -2,6 +2,10 @@
 
 namespace Meliconnect\Meliconnect\Core\Services;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
 use Error;
 use Meliconnect\Meliconnect\Core\Helpers\Helper;
 use Meliconnect\Meliconnect\Core\Helpers\MeliconMeli;

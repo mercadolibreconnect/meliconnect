@@ -2,6 +2,10 @@
 
 namespace Meliconnect\Meliconnect\Core\Helpers;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
 class HelperJSTranslations
 {
     public static function getTranslations()

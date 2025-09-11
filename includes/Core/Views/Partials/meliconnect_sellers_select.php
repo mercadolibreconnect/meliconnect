@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 use Meliconnect\Meliconnect\Core\Models\UserConnection;
 
 // Obtén la lista de vendedores

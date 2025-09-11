@@ -2,7 +2,10 @@
 
 namespace Meliconnect\Meliconnect\Modules\Exporter;
 
-use Meliconnect\Meliconnect\Core\Helpers\Helper;
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 use Meliconnect\Meliconnect\Modules\ModuleInterface;
 use Meliconnect\Meliconnect\Core\Helpers\HelperJSTranslations;
 

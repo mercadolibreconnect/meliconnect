@@ -1,3 +1,8 @@
+<?php
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div class="melicon-container">
     <div class="melicon-has-text-centered inside">
         <?php if (!empty($meli_listing_id)): ?>

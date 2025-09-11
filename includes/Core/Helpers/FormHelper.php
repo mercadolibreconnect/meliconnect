@@ -2,7 +2,9 @@
 
 namespace Meliconnect\Meliconnect\Core\Helpers;
 
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 class FormHelper
 {
     public static function print_checkbox($key, $label, $value = '', $check_compare_value = true, $helpText = '')

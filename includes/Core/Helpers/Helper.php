@@ -2,6 +2,10 @@
 
 namespace Meliconnect\Meliconnect\Core\Helpers;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
 use Meliconnect\Meliconnect\Core\Models\Template;
 use Meliconnect\Meliconnect\Core\Models\UserConnection;
 

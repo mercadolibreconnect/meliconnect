@@ -1,4 +1,9 @@
 
+<?php
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div class="options_group">
     <p class="form-field">
         <label class="melicon-selected-category-span">

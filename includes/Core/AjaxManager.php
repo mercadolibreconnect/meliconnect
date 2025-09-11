@@ -2,6 +2,11 @@
 
 namespace Meliconnect\Meliconnect\Core;
 
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
+
 use Meliconnect\Meliconnect\Core\Controllers\SettingController;
 use Meliconnect\Meliconnect\Core\Helpers\Helper;
 use Meliconnect\Meliconnect\Core\Services\ProductEdit;

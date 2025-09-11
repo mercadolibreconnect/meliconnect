@@ -1,8 +1,11 @@
 <?php
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
 
-    $meli_attrs = $data['meli_attrs'] ?? [];
-    $pending_required_attrs_names = $data['pending_required_attrs_names'] ?? [];
-    $instance = $data['instance'] ?? null;
+$meli_attrs = $data['meli_attrs'] ?? [];
+$pending_required_attrs_names = $data['pending_required_attrs_names'] ?? [];
+$instance = $data['instance'] ?? null;
 
 ?>
 
@@ -19,7 +22,7 @@
     <?php endif; ?>
 
     <hr>
-    
+
     <?php if (!empty($meli_attrs) && is_array($meli_attrs)) : ?>
         <p><strong><?php esc_html_e('Mercadolibre Attributes:', 'meliconnect'); ?></strong></p>
         <p><?php esc_html_e('You can create following attributes to update or create in Mercadolibre.', 'meliconnect'); ?></p>
@@ -46,7 +49,7 @@
                 </thead>
                 <tbody>
 
-                    
+
                     <?php foreach ($meli_attrs as $attr) : ?>
                         <tr>
                             <td class="melicon-column-primary">
@@ -56,27 +59,27 @@
                                 <?php endif; ?>
                             </td>
                             <td style="text-align:center; min-width: 100px">
-                               
 
-                                <p><strong><?php esc_html_e('Meli value type: ', 'meliconnect'); ?></strong> 
+
+                                <p><strong><?php esc_html_e('Meli value type: ', 'meliconnect'); ?></strong>
                                     <?php echo esc_html($instance->get_attr_value_type($attr)); ?>
                                 </p>
 
                                 <?php
 
                                 $is_required = in_array($attr->value_type, ['list', 'boolean']);
-                                
+
                                 if (isset($attr->values) && is_array($attr->values) && !empty($attr->values)) {
-                        
+
                                     if ($is_required) {
                                         $label = esc_html__('Required values:', 'meliconnect');
                                     } else {
                                         $label = esc_html__('Suggested values:', 'meliconnect');
                                     }
-                        
-                                    ?> 
-                                        <p><strong><?php echo esc_html($label); ?></strong></p>
-                                    <?php
+
+                                ?>
+                                    <p><strong><?php echo esc_html($label); ?></strong></p>
+                                <?php
 
                                     foreach ($attr->values as $value) {
                                         $value_name = $value->name;

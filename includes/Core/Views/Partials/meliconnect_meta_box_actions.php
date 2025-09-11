@@ -1,3 +1,8 @@
+<?php
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div id="meliconnect-loader" class="melicon-has-text-centered">
     <i class="fas fa-spinner fa-spin fa-2x"></i>
     <p><?php esc_html_e('Loading...', 'meliconnect'); ?></p>
@@ -45,13 +50,12 @@
         </div>
     </div>
 
-    <button id="sync-button" class="melicon-button melicon-is-primary melicon-is-fullwidth" type="button" 
+    <button id="sync-button" class="melicon-button melicon-is-primary melicon-is-fullwidth" type="button"
         data-meli-listing-id="<?php echo esc_attr($meli_listing_id); ?>"
         data-woo-product-id="<?php echo esc_attr($woo_product_id); ?>"
         data-template-id="<?php echo esc_attr($template_id); ?>"
         data-seller-id="<?php echo esc_attr($seller_id); ?>">
         <span class="melicon-icon melicon-is-small"><i class="fas fa-sync-alt"></i></span>
-        <span> <?php esc_html_e('Sync Now', 'meliconnect'); ?> </span> 
+        <span> <?php esc_html_e('Sync Now', 'meliconnect'); ?> </span>
     </button>
 </div>
-

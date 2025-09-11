@@ -1,20 +1,21 @@
+<?php
+
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+use Meliconnect\Meliconnect\Modules\Importer\Controllers\ImportController;
+
+$importController = new ImportController();
+$data = $importController->getData();
+
+
+$headerTitle = esc_html__('Importer', 'meliconnect');
+
+include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
+
+?>
 <!-- START MCSYNCAPP -->
 <div id="melicon-page-importer-main" class="melicon-app">
-    <?php
-
-    use Meliconnect\Meliconnect\Modules\Importer\Controllers\ImportController;
-    use Meliconnect\Meliconnect\Core\Helpers\Helper;
-
-    $importController = new ImportController();
-    $data = $importController->getData();
-
-
-    $headerTitle = esc_html__('Importer', 'meliconnect');
-
-    include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
-
-    ?>
-
     <div class="melicon-main">
         <div class="melicon-container">
             <!-- START FIND MATCH MODAL -->

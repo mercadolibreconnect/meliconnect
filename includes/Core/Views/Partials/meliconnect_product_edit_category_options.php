@@ -1,4 +1,9 @@
 <?php
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
+<?php
 if (!empty($categories)) : ?>
     <option value=""><?php echo esc_html__('Select a category', 'meliconnect'); ?></option>
     <?php foreach ($categories as $category) : ?>

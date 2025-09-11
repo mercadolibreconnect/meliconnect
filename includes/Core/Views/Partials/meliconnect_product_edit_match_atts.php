@@ -1,4 +1,9 @@
 <?php
+
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 // Convertir a array si es objeto, para evitar errores al acceder con []
 if (is_object($find_in_meli_attr)) {
     $find_in_meli_attr = json_decode(json_encode($find_in_meli_attr), true);
@@ -8,7 +13,7 @@ if (is_object($find_in_meli_attr)) {
     <div class="melicon-content">
         <?php if ($find_in_meli_attr): ?>
             <p><strong><?php esc_html_e('Attribute MATCH by name with Meli Attr', 'meliconnect'); ?></strong></p>
-            <p><strong><?php esc_html_e('Meli value type:', 'meliconnect'); ?></strong> 
+            <p><strong><?php esc_html_e('Meli value type:', 'meliconnect'); ?></strong>
                 <?php echo esc_html($instance->get_attr_value_type($find_in_meli_attr)); ?>
             </p>
 
@@ -31,17 +36,17 @@ if (is_object($find_in_meli_attr)) {
                         <p class="melicon-color-error"><strong><?php esc_html_e('The following attribute values cannot be exported:', 'meliconnect'); ?></strong>
                             <?php echo esc_html(implode(', ', $not_exportable_values)); ?>
                         </p>
-                <?php else : ?>
+                    <?php else : ?>
                         <p class="melicon-color-success"><strong><?php esc_html_e('All attribute values can be exported.', 'meliconnect'); ?></strong></p>
-                <?php 
+                <?php
                     endif;
-                endif; 
+                endif;
                 ?>
             <?php endif; ?>
 
-            <input type="hidden" class="melicon-mercadolibre-attr-input" 
-                   name="template[attrs][<?php echo esc_attr($i); ?>]" 
-                   value="<?php echo esc_attr($escaped_attr_value); ?>" />
+            <input type="hidden" class="melicon-mercadolibre-attr-input"
+                name="template[attrs][<?php echo esc_attr($i); ?>]"
+                value="<?php echo esc_attr($escaped_attr_value); ?>" />
 
             <?php if (!empty($attribute_tags_info)) : ?>
                 <?php foreach ($attribute_tags_info as $message) : ?>

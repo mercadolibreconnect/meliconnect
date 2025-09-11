@@ -1,17 +1,12 @@
+<?php
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div id="mercadolibre_product_data" class="melicon-product-edit-meli-tab wc-metaboxes-wrapper panel woocommerce_options_panel hidden">
     <div class="options_group">
         <p class="form-field melicon_general_seller_meli_id_field">
             <?php
-
-            /* echo PHP_EOL . '-------------------- $select_options --------------------' . PHP_EOL;
-            echo '<pre>' . wp_json_encode($select_options) . '</pre>';
-            echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
-
-            echo PHP_EOL . '-------------------- $form_values --------------------' . PHP_EOL;
-            echo '<pre>' . wp_json_encode($form_values) . '</pre>';
-            echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
-
-            wp_die();  */
 
             woocommerce_wp_select(array(
                 'id' => 'template[seller_meli_id]',

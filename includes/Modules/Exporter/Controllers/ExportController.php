@@ -2,6 +2,10 @@
 
 namespace Meliconnect\Meliconnect\Modules\Exporter\Controllers;
 
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 use Meliconnect\Meliconnect\Core\Helpers\Helper;
 use Meliconnect\Meliconnect\Core\Interfaces\ControllerInterface;
 use Meliconnect\Meliconnect\Core\Models\Process;

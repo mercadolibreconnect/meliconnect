@@ -2,6 +2,10 @@
 
 namespace Meliconnect\Meliconnect\Core\Helpers;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
 class HubApi
 {
     private static $_apiUrl = "https://www.meliconnect.com/apicore/";

@@ -1,3 +1,8 @@
+<?php
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div class="melicon-product-edit-general-tab">
     <p class="form-field melicon_general_price_variation_field">
         <label for="melicon_general_price_variation">

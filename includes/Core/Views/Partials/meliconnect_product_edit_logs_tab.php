@@ -1,3 +1,8 @@
+<?php
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div id="meliconnect_logs_product_data" class="panel wc-metaboxes-wrapper hidden" style="display: block;">
     <div class="melicon-container melicon-m-4">
         <?php if(empty($item_export_error) && empty($description_export_error)): ?>

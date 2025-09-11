@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 use Meliconnect\Meliconnect\Core\Models\Notification;
 
 Notification::init();

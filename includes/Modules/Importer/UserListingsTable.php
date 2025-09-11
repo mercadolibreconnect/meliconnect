@@ -2,6 +2,10 @@
 
 namespace Meliconnect\Meliconnect\Modules\Importer;
 
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 use Meliconnect\Meliconnect\Core\Helpers\Helper;
 
 // includes/Core/Controllers/ProductsListTableController.php

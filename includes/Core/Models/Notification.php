@@ -2,6 +2,10 @@
 
 namespace Meliconnect\Meliconnect\Core\Models;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
+
 class Notification
 {
     private static $table_name;
