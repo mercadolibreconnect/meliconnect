@@ -135,11 +135,12 @@
                                         <div class="melicon-columns">
                                             <div class="melicon-column">
                                                 <?php
-                                                $search_value = isset($_GET['search']) ? $_GET['search'] : '';
-                                                $selected_product_vinculation = isset($_GET['product_vinculation_filter']) ? $_GET['product_vinculation_filter'] : '';
-                                                $selected_product_type = isset($_GET['product_type_filter']) ? $_GET['product_type_filter'] : '';
-                                                $per_page = isset($_REQUEST['export_products_per_page']) ? (int) $_REQUEST['export_products_per_page'] : 10;
+                                                $search_value = isset($_GET['search']) ? sanitize_text_field(wp_unslash($_GET['search'])) : '';
+                                                $selected_product_vinculation = isset($_GET['product_vinculation_filter']) ? sanitize_text_field(wp_unslash($_GET['product_vinculation_filter'])) : '';
+                                                $selected_product_type = isset($_GET['product_type_filter']) ? sanitize_text_field(wp_unslash($_GET['product_type_filter'])) : '';
+                                                $per_page = isset($_REQUEST['export_products_per_page']) ? (int) wp_unslash($_REQUEST['export_products_per_page']) : 10;
                                                 ?>
+
                                                 <div class="melicon-field melicon-has-addons">
                                                     <div class="melicon-control">
                                                         <input id="user-search-input" class="melicon-input" type="search" placeholder="<?php esc_html_e('Search By Name, SKU, Meli listing id ...', 'meliconnect'); ?>" name="search" value="<?php echo esc_attr($search_value); ?>">
@@ -223,7 +224,7 @@
                                             </div>
 
                                             <div class="melicon-column melicon-is-2">
-                                            <input type="submit" name="melicon-export-bulk-actions" id="melicon-export-bulk-actions" class=" melicon-button  melicon-is-primary" value="<?php esc_html_e('Apply', 'meliconnect') ?>">
+                                                <input type="submit" name="melicon-export-bulk-actions" id="melicon-export-bulk-actions" class=" melicon-button  melicon-is-primary" value="<?php esc_html_e('Apply', 'meliconnect') ?>">
                                             </div>
                                             <div class="melicon-column melicon-export-selected-items-tag-column" style="display:none">
                                                 <span class="tag melicon-is-success melicon-is-light melicon-is-large">

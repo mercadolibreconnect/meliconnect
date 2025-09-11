@@ -285,13 +285,12 @@
                                         <div class="melicon-columns ">
                                             <div class="melicon-column">
                                                 <?php
-
-                                                $search_value = isset($_GET['search']) ? $_GET['search'] : '';
-                                                $selected_vinculation = isset($_GET['vinculation_filter']) ? $_GET['vinculation_filter'] : '';
-                                                $selected_listing_status = isset($_GET['listing_status_filter']) ? $_GET['listing_status_filter'] : '';
-                                                $selected_template = isset($_GET['template_filter']) ? $_GET['template_filter'] : '';
-                                                $selected_listing_type = isset($_GET['listing_type_filter']) ? $_GET['listing_type_filter'] : '';
-                                                $selected_seller = isset($_GET['seller_filter']) ? $_GET['seller_filter'] : '';
+                                                $search_value           = isset($_GET['search']) ? sanitize_text_field(wp_unslash($_GET['search'])) : '';
+                                                $selected_vinculation   = isset($_GET['vinculation_filter']) ? sanitize_text_field(wp_unslash($_GET['vinculation_filter'])) : '';
+                                                $selected_listing_status = isset($_GET['listing_status_filter']) ? sanitize_text_field(wp_unslash($_GET['listing_status_filter'])) : '';
+                                                $selected_template      = isset($_GET['template_filter']) ? sanitize_text_field(wp_unslash($_GET['template_filter'])) : '';
+                                                $selected_listing_type  = isset($_GET['listing_type_filter']) ? sanitize_text_field(wp_unslash($_GET['listing_type_filter'])) : '';
+                                                $selected_seller        = isset($_GET['seller_filter']) ? sanitize_text_field(wp_unslash($_GET['seller_filter'])) : '';
                                                 ?>
                                                 <div class="melicon-field melicon-has-addons">
                                                     <div class="melicon-control">

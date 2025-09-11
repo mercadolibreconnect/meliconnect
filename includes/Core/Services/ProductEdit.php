@@ -40,7 +40,7 @@ class ProductEdit
 
     public function __construct()
     {
-        
+
         add_action('add_meta_boxes', [$this, 'add_meliconnect_meta_box_data']);
         add_action('add_meta_boxes', [$this, 'add_meliconnect_meta_box_actions']);
         add_action('woocommerce_product_options_pricing', [$this, 'meliconnect_add_general_tab_html']);
@@ -427,7 +427,7 @@ class ProductEdit
             'current_attr_name' => $current_attr_name,
             'current_attr_options' => $current_attr_options,
             'find_in_meli_attr' => $find_in_meli_attr,
-            'escaped_attr_value' => $escaped_attr_value, 
+            'escaped_attr_value' => $escaped_attr_value,
             'attribute_tags_info' => $this->getAttributeTagsInfo($find_in_meli_attr),
         ];
     }
@@ -608,7 +608,7 @@ class ProductEdit
             }
         }
 
-        
+
 
 
         if (!empty($meli) && !empty($seller_data)) {
@@ -661,7 +661,7 @@ class ProductEdit
             // Convertir objetos internos a arrays
             $meli_category_attrs = json_decode(json_encode($meli_category_attrs), true);
         }
-        
+
 
         foreach ($meli_category_attrs as $value) {
             // Verifica si el atributo tiene 'tags'
@@ -898,7 +898,7 @@ class ProductEdit
     {
 
         //VERIFY NONCE
-        if (!isset($_POST['_wpnonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'woocommerce_save_product' )) {
+        if (!isset($_POST['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'woocommerce_save_product')) {
             //wp_die('Nonce verification failed');
         }
 
@@ -956,8 +956,8 @@ class ProductEdit
             $meli_attr = json_decode(json_encode($meli_attr), true);
         }
 
-        return isset($meli_attr['tags']['required']) 
-            || isset($meli_attr['tags']['conditional_required']) 
+        return isset($meli_attr['tags']['required'])
+            || isset($meli_attr['tags']['conditional_required'])
             || (isset($meli_attr['id']) && in_array($meli_attr['id'], ['BRAND', 'MODEL']));
     }
 
@@ -1035,7 +1035,7 @@ class ProductEdit
     }
 
 
-    
+
 
     public function display_attribute_tags_info($attribute)
     {
@@ -1207,7 +1207,7 @@ class ProductEdit
         if (!empty($last_export_time)) {
             $last_export_time = wp_date('d-m-Y H:i:s', $last_export_time);
         }
-        
+
         if (!empty($error_time)) {
             $error_time = wp_date('d-m-Y H:i:s', $error_time);
         }
@@ -1317,7 +1317,7 @@ class ProductEdit
     {
         // Get postmeta values
         $meli_listing_id = get_post_meta($post->ID, 'melicon_meli_listing_id', true);
-        
+
         $meli_permalink = get_post_meta($post->ID, 'melicon_meli_permalink', true);
         $template_id = get_post_meta($post->ID, 'melicon_asoc_template_id', true);
         $seller_id = get_post_meta($post->ID, 'melicon_meli_seller_id', true);
@@ -1342,7 +1342,7 @@ class ProductEdit
 
     public static function handleImportSingleListing()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_import_single_listing_nonce' )) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_import_single_listing_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -1352,11 +1352,13 @@ class ProductEdit
             return;
         }
 
-        $meli_listing_id = isset($_POST['meli_listing_id']) ? sanitize_text_field($_POST['meli_listing_id']) : null;
-        $seller_id = isset($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null;
-        $template_id = isset($_POST['template_id']) ? sanitize_text_field($_POST['template_id']) : null;
-        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field($_POST['woo_product_id']) : null;
-        $sync_options = isset($_POST['sync_options']) ? array_map('sanitize_text_field', (array) $_POST['sync_options']) : null;
+        $meli_listing_id = isset($_POST['meli_listing_id']) ? sanitize_text_field(wp_unslash($_POST['meli_listing_id'])) : null;
+        $seller_id = isset($_POST['seller_id']) ? sanitize_text_field(wp_unslash($_POST['seller_id'])) : null;
+        $template_id = isset($_POST['template_id']) ? sanitize_text_field(wp_unslash($_POST['template_id'])) : null;
+        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field(wp_unslash($_POST['woo_product_id'])) : null;
+        $sync_options = isset($_POST['sync_options'])
+            ? array_map('sanitize_text_field', (array) wp_unslash($_POST['sync_options']))
+            : null;
 
 
 
@@ -1379,7 +1381,7 @@ class ProductEdit
 
     public static function handleExportSingleListing()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_export_single_listing_nonce' )) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_export_single_listing_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -1389,11 +1391,13 @@ class ProductEdit
             return;
         }
 
-        $meli_listing_id = isset($_POST['meli_listing_id']) ? sanitize_text_field($_POST['meli_listing_id']) : null;
-        $seller_id = isset($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null;
-        $template_id = isset($_POST['template_id']) ? sanitize_text_field($_POST['template_id']) : null;
-        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field($_POST['woo_product_id']) : null;
-        $sync_options = isset($_POST['sync_options']) ? array_map('sanitize_text_field', (array) $_POST['sync_options']) : null;
+        $meli_listing_id = isset($_POST['meli_listing_id']) ? sanitize_text_field(wp_unslash($_POST['meli_listing_id'])) : null;
+        $seller_id = isset($_POST['seller_id']) ? sanitize_text_field(wp_unslash($_POST['seller_id'])) : null;
+        $template_id = isset($_POST['template_id']) ? sanitize_text_field(wp_unslash($_POST['template_id'])) : null;
+        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field(wp_unslash($_POST['woo_product_id'])) : null;
+        $sync_options = isset($_POST['sync_options'])
+            ? array_map('sanitize_text_field', (array) wp_unslash($_POST['sync_options']))
+            : null;
 
 
         if (empty($seller_id) || empty($woo_product_id) || empty($template_id)) {
@@ -1474,7 +1478,7 @@ class ProductEdit
 
     public static function handleUnlinkSingleListing()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_unlink_single_listing_nonce' )) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_unlink_single_listing_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             wp_die();
         }
@@ -1486,8 +1490,8 @@ class ProductEdit
         }
 
         // Sanitiza y valida los datos
-        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field($_POST['woo_product_id']) : null;
-        $unlink_type = isset($_POST['unlink_type']) ? sanitize_text_field($_POST['unlink_type']) : null;
+        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field(wp_unslash($_POST['woo_product_id'])) : null;
+        $unlink_type = isset($_POST['unlink_type']) ? sanitize_text_field(wp_unslash($_POST['unlink_type'])) : null;
 
         if (empty($woo_product_id) || empty($unlink_type)) {
             wp_send_json_error(['message' => esc_html__('Invalid data', 'meliconnect')]);
@@ -1528,7 +1532,7 @@ class ProductEdit
 
     public static function handleSaveTemplateData()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_save_template_data_nonce' )) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_save_template_data_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             wp_die();
         }
@@ -1538,16 +1542,17 @@ class ProductEdit
             wp_die();
         }
 
-        $templateDataJSON = isset($_POST['templateData']) ? $_POST['templateData'] : null;
-        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field($_POST['woo_product_id']) : null;
-        $woo_product_title = isset($_POST['woo_product_title']) ? sanitize_text_field($_POST['woo_product_title']) : null;
+        $templateDataJSON = isset($_POST['templateData']) ? sanitize_textarea_field(wp_unslash($_POST['templateData'])) : null;
+
+        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field(wp_unslash($_POST['woo_product_id'])) : null;
+        $woo_product_title = isset($_POST['woo_product_title']) ? sanitize_text_field(wp_unslash($_POST['woo_product_title'])) : null;
 
         if (empty($templateDataJSON) || empty($woo_product_id) || empty($woo_product_title)) {
             wp_send_json_error(['message' => esc_html__('Invalid data', 'meliconnect')]);
             wp_die();
         }
 
-        $template_data = json_decode(stripslashes($templateDataJSON), true);
+        $template_data = json_decode($templateDataJSON, true);
 
         if (json_last_error() === JSON_ERROR_NONE) {
 

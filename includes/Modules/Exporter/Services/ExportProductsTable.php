@@ -61,13 +61,12 @@ class ExportProductsTable extends \WP_List_Table
             $offset = ($page_number - 1) * $per_page;
             $query_params[] = $per_page;
             $query_params[] = $offset;
-    
+
             return $wpdb->get_results(
                 $wpdb->prepare("SELECT * FROM {$table_name} {$where_sql} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d", $query_params),
                 ARRAY_A
             );
         }
-
     }
 
     // Prepare the items for the table to display
@@ -139,7 +138,7 @@ class ExportProductsTable extends \WP_List_Table
         $product_type_class = $type === 'simple' ? 'has-text-link' : 'has-text-success';
 
 ?>
-       
+
         <div class="melicon-columns melicon-is-multiline">
             <!-- Primera Columna -->
             <div class="melicon-column melicon-is-5">
@@ -332,9 +331,9 @@ class ExportProductsTable extends \WP_List_Table
         $query_params = [];
 
         $filters = [
-            'search' => isset($_REQUEST['search']) ? $_REQUEST['search'] : '',
-            'vinculation' => isset($_REQUEST['product_vinculation_filter']) ? $_REQUEST['product_vinculation_filter'] : '',
-            'listing_type' => isset($_REQUEST['product_type_filter']) ? $_REQUEST['product_type_filter'] : '',
+            'search'       => isset($_REQUEST['search']) ? sanitize_text_field(wp_unslash($_REQUEST['search'])) : '',
+            'vinculation'  => isset($_REQUEST['product_vinculation_filter']) ? sanitize_text_field(wp_unslash($_REQUEST['product_vinculation_filter'])) : '',
+            'listing_type' => isset($_REQUEST['product_type_filter']) ? sanitize_text_field(wp_unslash($_REQUEST['product_type_filter'])) : '',
         ];
 
 

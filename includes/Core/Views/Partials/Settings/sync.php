@@ -61,16 +61,21 @@
                             <div class="melicon-column melicon-is-9">
                                 <div class="melicon-content">
                                     <?php
-                                    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+                                    // Detectar si HTTPS está activo
+                                    $https  = isset($_SERVER['HTTPS']) ? sanitize_text_field(wp_unslash($_SERVER['HTTPS'])) : '';
+                                    $scheme = (! empty($https) && strtolower($https) !== 'off') ? 'https' : 'http';
 
-                                    // Obtener el nombre del host
-                                    $host = $_SERVER['HTTP_HOST'];
+                                    // Obtener el nombre del host de forma segura
+                                    $host_raw = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+                                    $host     = wp_parse_url('//' . $host_raw, PHP_URL_HOST); // asegura un host válido
 
                                     // Construir la URL base
                                     $sync_url = $scheme . '://' . $host;
                                     ?>
-                                    <strong><?php esc_html_e('External automatic synchronization URL (custom):', 'meliconnect'); ?></strong><code><?php echo esc_url($sync_url); ?>/wp-json/meliconnect/v1/cronexternal/sync</code>
+                                    <strong><?php esc_html_e('External automatic synchronization URL (custom):', 'meliconnect'); ?></strong>
+                                    <code><?php echo esc_url($sync_url); ?>/wp-json/meliconnect/v1/cronexternal/sync</code>
                                 </div>
+
                             </div>
                             <div class="melicon-column melicon-is-3">
                                 <div class="melicon-field  melicon-is-grouped melicon-is-grouped-right">
@@ -182,4 +187,3 @@
         </div>
     </section>
 </form>
-

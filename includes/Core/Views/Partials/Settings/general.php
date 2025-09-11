@@ -126,15 +126,18 @@
                 <div class="melicon-column melicon-is-9">
                     <div class="melicon-content">
                         <?php
-                        $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+                        // Detectar HTTPS correctamente
+                        $https  = isset($_SERVER['HTTPS']) ? sanitize_text_field(wp_unslash($_SERVER['HTTPS'])) : '';
+                        $scheme = (! empty($https) && strtolower($https) !== 'off') ? 'https' : 'http';
 
-                        // Obtener el nombre del host
-                        $host = $_SERVER['HTTP_HOST'];
+                        // Obtener el nombre del host (sanitizado)
+                        $host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
 
                         // Construir la URL base
                         $sync_url = $scheme . '://' . $host;
                         ?>
-                        <strong><?php esc_html_e('External automatic synchronization URL (custom):', 'meliconnect'); ?></strong> <code><?php echo esc_url($sync_url); ?>/wp-json/meliconnect/v1/cronexternal/export-import</code>
+                        <strong><?php esc_html_e('External automatic synchronization URL (custom):', 'meliconnect'); ?></strong>
+                        <code><?php echo esc_url($sync_url); ?>/wp-json/meliconnect/v1/cronexternal/export-import</code>
                     </div>
                 </div>
                 <div class="melicon-column melicon-is-3">
@@ -162,4 +165,3 @@
     </div>
 
 </form>
-

@@ -51,7 +51,12 @@ class ExportController implements ControllerInterface
             return;
         }
 
-        $process_id = $_POST['process_id'];
+        $process_id = isset($_POST['process_id']) ? sanitize_text_field(wp_unslash($_POST['process_id'])) : null;
+
+        if (! $process_id) {
+            wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
+            return;
+        }
 
         update_option('custom_export_cancel_requested', true);
 
@@ -80,8 +85,8 @@ class ExportController implements ControllerInterface
             return;
         }
 
-        $selected_ids = isset($_POST['products_ids']) ? sanitize_text_field($_POST['products_ids']) : '';
-        $action = isset($_POST['action_to_do']) ? sanitize_text_field($_POST['action_to_do']) : '';
+        $selected_ids = isset($_POST['products_ids']) ? sanitize_text_field(wp_unslash($_POST['products_ids'])) : '';
+        $action = isset($_POST['action_to_do']) ? sanitize_text_field(wp_unslash($_POST['action_to_do'])) : '';
 
         if (!$selected_ids || !$action || $action == -1) {
             Helper::logData('Invalid data: missing selected_ids or action', 'bulk-actions-export');
@@ -207,7 +212,7 @@ class ExportController implements ControllerInterface
             return;
         }
 
-        $wooProductId = isset($_POST['wooProductId']) ? sanitize_text_field($_POST['wooProductId']) : '';
+        $wooProductId = isset($_POST['wooProductId']) ? sanitize_text_field(wp_unslash($_POST['wooProductId'])) : '';
 
         if (!$wooProductId ) {
             wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));
@@ -231,7 +236,7 @@ class ExportController implements ControllerInterface
             return;
         }
         
-        $process_id = isset($_POST['processId']) ? sanitize_text_field($_POST['processId']) : '';
+        $process_id = isset($_POST['processId']) ? sanitize_text_field(wp_unslash($_POST['processId'])) : '';
 
         if (!$process_id) {
             wp_send_json_error(esc_html__('Invalid data', 'meliconnect'));

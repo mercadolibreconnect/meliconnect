@@ -69,7 +69,6 @@ class Initialize
 
             // Limpiar las notificaciones después de mostrarlas
             delete_option('melicon_pending_connection_notifications');
-
         }
     }
 
@@ -255,7 +254,8 @@ class Initialize
     }
 
 
-     public function registerStyles($hook) {
+    public function registerStyles($hook)
+    {
 
         wp_enqueue_style(
             self::$css_pre . 'all-pages',
@@ -297,10 +297,13 @@ class Initialize
 
     protected function is_wordpress_page_used_by_plugin()
     {
-        //Load on product edit page
-        if (isset($_GET['post']) && isset($_GET['action']) && $_GET['action'] === 'edit' && get_post_type($_GET['post']) === 'product') {
-
-            if (!$this->is_plugin_page()) {
+        // Load on product edit page
+        if (
+            isset($_GET['post'], $_GET['action'])
+            && sanitize_text_field(wp_unslash($_GET['action'])) === 'edit'
+            && get_post_type(absint(wp_unslash($_GET['post']))) === 'product'
+        ) {
+            if (! $this->is_plugin_page()) {
                 return true;
             }
         }
@@ -310,7 +313,13 @@ class Initialize
 
     protected function is_plugin_page()
     {
-        return isset($_GET['page']) && strpos($_GET['page'], 'meliconnect') !== false;
+        if ( ! isset( $_GET['page'] ) ) {
+            return false;
+        }
+
+        $page = sanitize_text_field( wp_unslash( $_GET['page'] ) );
+
+        return strpos( $page, 'meliconnect' ) !== false;
     }
 
     public function registerScripts($hook)
@@ -320,7 +329,7 @@ class Initialize
             return;
         }
 
-         wp_enqueue_script(
+        wp_enqueue_script(
             'melicon-swal-js',
             MC_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js',
             ['jquery'],
@@ -366,7 +375,7 @@ class Initialize
 
     public function registerMenus()
     {
-        
+
 
         add_menu_page(
             esc_html__('MeliConnect', 'meliconnect'), // page_title

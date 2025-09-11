@@ -30,12 +30,13 @@ class Helper
         return '<span class="melicon-tag tag ' . $class . '"> ' . $name . '</span>';
     }
 
-    public static function get_active_product_id_by_sku($sku){
+    public static function get_active_product_id_by_sku($sku)
+    {
 
-        if(empty($sku)){
+        if (empty($sku)) {
             return null;
         }
-        
+
         global $wpdb;
 
         $product_id = $wpdb->get_var($wpdb->prepare("
@@ -47,7 +48,7 @@ class Helper
             AND p.post_status = 'publish'
             LIMIT 1
         ", $sku));
-    
+
         return $product_id ? (int) $product_id : null;
     }
 
@@ -85,13 +86,15 @@ class Helper
         return $messageBox;
     }
 
+
     public static function getDomainName()
     {
         // Verificar si HTTPS está habilitado
-        $scheme = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) === 'on') ? 'https' : 'http';
+        $https = isset($_SERVER['HTTPS']) ? sanitize_text_field(wp_unslash($_SERVER['HTTPS'])) : '';
+        $scheme = (! empty($https) && strtolower($https) === 'on') ? 'https' : 'http';
 
         // Obtener solo el dominio sin rutas adicionales
-        $host = $_SERVER['HTTP_HOST'] ?? '';
+        $host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
 
         // Construir y devolver la URL base
         return "$scheme://$host";
@@ -415,7 +418,7 @@ class Helper
                 "SELECT DISTINCT post_parent 
                  FROM {$wpdb->posts}
                  WHERE post_type = 'product_variation'
-                 AND post_parent IN ($placeholders)", 
+                 AND post_parent IN ($placeholders)",
                 ...$product_ids
             )
         );
@@ -507,7 +510,8 @@ class Helper
         return false;
     }
 
-    public static function load_partial($template_path, $data = [], $once = true, $print = true) {
+    public static function load_partial($template_path, $data = [], $once = true, $print = true)
+    {
         $full_path = MC_PLUGIN_ROOT . $template_path;
 
         if (!file_exists($full_path)) {
@@ -536,13 +540,13 @@ class Helper
 
     public static function handleLoadMeliCategories()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_load_meli_categories_nonce' )) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_load_meli_categories_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
-        $category_id = isset($_POST['category_id']) ? sanitize_text_field($_POST['category_id']) : null;
-        $seller_id = isset($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null;
+        $category_id = isset($_POST['category_id']) ? sanitize_text_field(wp_unslash($_POST['category_id'])) : null;
+        $seller_id = isset($_POST['seller_id']) ? sanitize_text_field(wp_unslash($_POST['seller_id'])) : null;
 
         if (empty($seller_id)) {
             wp_send_json_error(['message' => 'Seller ID is required']);
@@ -592,8 +596,8 @@ class Helper
         $options = Helper::load_partial('includes/Core/Views/Partials/meliconnect_product_edit_category_options.php', ['categories' => $categories], true, false);
 
         // Cargar la vista y obtener el HTML generado
-        $path_from_route_html = Helper::load_partial('includes/Core/Views/Partials/meliconnect_product_edit_category_path.php', $data, true,false);
-        
+        $path_from_route_html = Helper::load_partial('includes/Core/Views/Partials/meliconnect_product_edit_category_path.php', $data, true, false);
+
 
         // Responder con JSON
         wp_send_json_success([
@@ -609,13 +613,13 @@ class Helper
 
     public static function handleLoadMeliCategories_OLD()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_load_meli_categories_nonce' )) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_load_meli_categories_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
-        $category_id = isset($_POST['category_id']) ? sanitize_text_field($_POST['category_id']) : null;
-        $seller_id = isset($_POST['seller_id']) ? sanitize_text_field($_POST['seller_id']) : null;
+        $category_id = isset($_POST['category_id']) ? sanitize_text_field(wp_unslash($_POST['category_id'])) : null;
+        $seller_id = isset($_POST['seller_id']) ? sanitize_text_field(wp_unslash($_POST['seller_id'])) : null;
 
         if (empty($seller_id)) {
             wp_send_json_error(['message' => 'Seller ID is required']);
@@ -693,17 +697,17 @@ class Helper
 
     public static function handleUpdateMeliCategory()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'melicon_update_meli_category_nonce' )) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_update_meli_category_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
 
-        $category_id = isset($_POST['category_id']) ? sanitize_text_field($_POST['category_id']) : null;
-        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field($_POST['woo_product_id']) : null;
-        $product_title = isset($_POST['product_title']) ? sanitize_text_field($_POST['product_title']) : null;
-        $seller_meli_id = isset($_POST['seller_meli_id']) ? sanitize_text_field($_POST['seller_meli_id']) : null;
-        $category_tree = isset($_POST['category_tree']) ? sanitize_text_field($_POST['category_tree']) : null;
-        $category_name = isset($_POST['category_name']) ? sanitize_text_field($_POST['category_name']) : null;
+        $category_id = isset($_POST['category_id']) ? sanitize_text_field(wp_unslash($_POST['category_id'])) : null;
+        $woo_product_id = isset($_POST['woo_product_id']) ? sanitize_text_field(wp_unslash($_POST['woo_product_id'])) : null;
+        $product_title = isset($_POST['product_title']) ? sanitize_text_field(wp_unslash($_POST['product_title'])) : null;
+        $seller_meli_id = isset($_POST['seller_meli_id']) ? sanitize_text_field(wp_unslash($_POST['seller_meli_id'])) : null;
+        $category_tree = isset($_POST['category_tree']) ? sanitize_text_field(wp_unslash($_POST['category_tree'])) : null;
+        $category_name = isset($_POST['category_name']) ? sanitize_text_field(wp_unslash($_POST['category_name'])) : null;
 
         if (empty($category_id) || empty($woo_product_id)) {
             wp_send_json_error(['message' => 'Category ID or product ID is required']);

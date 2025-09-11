@@ -51,11 +51,11 @@ class UserListingsTable extends \WP_List_Table
         $query_params = [];
 
         $filters = [
-            'search' => isset($_REQUEST['search']) ? $_REQUEST['search'] : '',
-            'vinculation' => isset($_REQUEST['vinculation_filter']) ? $_REQUEST['vinculation_filter'] : '',
-            'listing_type' => isset($_REQUEST['listing_type_filter']) ? $_REQUEST['listing_type_filter'] : '',
-            'seller_id' => isset($_REQUEST['seller_filter']) ? $_REQUEST['seller_filter'] : '',
-            'status' => isset($_REQUEST['listing_status_filter']) ? $_REQUEST['listing_status_filter'] : '',
+            'search'      => isset($_REQUEST['search']) ? sanitize_text_field(wp_unslash($_REQUEST['search'])) : '',
+            'vinculation' => isset($_REQUEST['vinculation_filter']) ? sanitize_text_field(wp_unslash($_REQUEST['vinculation_filter'])) : '',
+            'listing_type' => isset($_REQUEST['listing_type_filter']) ? sanitize_text_field(wp_unslash($_REQUEST['listing_type_filter'])) : '',
+            'seller_id'   => isset($_REQUEST['seller_filter']) ? sanitize_text_field(wp_unslash($_REQUEST['seller_filter'])) : '',
+            'status'      => isset($_REQUEST['listing_status_filter']) ? sanitize_text_field(wp_unslash($_REQUEST['listing_status_filter'])) : '',
         ];
 
 
@@ -90,10 +90,10 @@ class UserListingsTable extends \WP_List_Table
         }
 
         if (!empty($filters['status']) && $filters['status'] != 'all') {
-            if($filters['status'] == 'active'){
+            if ($filters['status'] == 'active') {
                 $where_clauses[] = "meli_status = %s";
                 $query_params[] = 'active';
-            }else{
+            } else {
                 $where_clauses[] = "meli_status != %s";
                 $query_params[] = 'active';
             }
@@ -119,10 +119,10 @@ class UserListingsTable extends \WP_List_Table
 
         // Nombre de la tabla (seguro con $wpdb->prefix)
         $table_name = $wpdb->prefix . 'melicon_user_listings_to_import';
-    
+
         // Construir las cláusulas WHERE y los parámetros de consulta
         list($where_sql, $query_params) = self::build_filters_query($filters);
-    
+
         // Ejecutar la consulta directamente con prepare si hay parámetros
         return !empty($query_params)
             ? (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$table_name} {$where_sql}", $query_params))
@@ -224,7 +224,7 @@ class UserListingsTable extends \WP_List_Table
                 ];
         };
 
-        return '<div style="text-align: center;">' .  $text . $subText . $this->row_actions($actions). '</div>';
+        return '<div style="text-align: center;">' .  $text . $subText . $this->row_actions($actions) . '</div>';
     }
 
 
@@ -250,7 +250,7 @@ class UserListingsTable extends \WP_List_Table
                 <strong><?php esc_html_e('Status', 'meliconnect'); ?>:</strong>
                 <span class="melicon-color-text <?php echo esc_attr($status_class); ?>"> <?php echo esc_html($item['meli_status']); ?></span>
                 <br>
-                <strong><?php esc_html_e('Product Type', 'meliconnect'); ?>:</strong> 
+                <strong><?php esc_html_e('Product Type', 'meliconnect'); ?>:</strong>
                 <span class="melicon-color-text <?php echo esc_attr($product_type_class); ?>"> <?php echo esc_html($item['meli_product_type']); ?></span>
                 <strong><?php esc_html_e('Listing Type', 'meliconnect'); ?>:</strong> <?php echo esc_html($meli_response['listing_type_id']); ?>
             </div>
@@ -267,51 +267,57 @@ class UserListingsTable extends \WP_List_Table
 
     public function column_has_template_vinculation($item)
     {
+        $text = $item['vinculated_template_id']
+            ? Helper::meliconnectPrintTag(esc_html__('Using template', 'meliconnect'), 'melicon-is-warning')
+            : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'melicon-is-danger');
 
-        $text = $item['vinculated_template_id'] ? Helper::meliconnectPrintTag(esc_html__('Using template', 'meliconnect'), 'melicon-is-warning') : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'melicon-is-danger');
+        $actions = [];
 
-        /* $product_type = isset($item['product_type']) ? $item['product_type'] : 'simple'; // Valor predeterminado a 'simple'
-        $product_type = esc_sql($product_type); */
+        if (! empty($item['vinculated_template_id'])) {
+            $url = add_query_arg(
+                [
+                    'page'    => isset($_REQUEST['page']) ? sanitize_key(wp_unslash($_REQUEST['page'])) : '',
+                    'action'  => 'delete',
+                    'listing' => absint($item['id']),
+                ],
+                admin_url('admin.php')
+            );
 
-        $category_id = '';
-
-        // Construir acciones para productos vinculados
-        if ($item['vinculated_template_id']) {
-            $actions = [
-                'delete-vinculation' => sprintf(
-                    '<a class="melicon-delete-template-vinculation" data-listing-id="' . $item['meli_listing_id'] . '" data-template-id="' . $item['vinculated_template_id'] . '" href="?page=%s&action=%s&listing=%s">' . esc_html__('Desvinculate', 'meliconnect') . '</a>',
-                    esc_attr($_REQUEST['page']),
-                    'delete',
-                    absint($item['id'])
-                )
-            ];
+            $actions['delete-vinculation'] = sprintf(
+                '<a class="melicon-delete-template-vinculation" data-listing-id="%s" data-template-id="%s" href="%s">%s</a>',
+                esc_attr($item['meli_listing_id']),
+                esc_attr($item['vinculated_template_id']),
+                esc_url($url),
+                esc_html__('Desvinculate', 'meliconnect')
+            );
         } else {
-            $actions = [
-                //'find-a-match' => '<a class="melicon-find-template-to-match" data-category-id="' . $category_id . '" data-listing-id="' . $item['meli_listing_id'] . '" >' . esc_html__('Find match', 'meliconnect') . '</a>',
-            ];
+            // Si en algún momento querés habilitar el "Find match"
+            // podés construirlo de forma similar con add_query_arg y esc_url().
+            $actions = [];
         }
 
         return $text . $this->row_actions($actions);
     }
+
 
     public function column_import_status($item)
     {
         switch ($item['import_status']) {
 
             case 'processing':
-                $html= Helper::meliconnectPrintTag(esc_html__('Processing', 'meliconnect'), 'melicon-is-info');
+                $html = Helper::meliconnectPrintTag(esc_html__('Processing', 'meliconnect'), 'melicon-is-info');
                 break;
             case 'paused':
-                $html= Helper::meliconnectPrintTag(esc_html__('Paused', 'meliconnect'), 'melicon-is-secondary');
+                $html = Helper::meliconnectPrintTag(esc_html__('Paused', 'meliconnect'), 'melicon-is-secondary');
                 break;
             case 'failed':
-                $html= Helper::meliconnectPrintTag(esc_html__('Failed', 'meliconnect'), 'melicon-is-danger');
+                $html = Helper::meliconnectPrintTag(esc_html__('Failed', 'meliconnect'), 'melicon-is-danger');
                 break;
             case 'finished':
-                $html= Helper::meliconnectPrintTag(esc_html__('Imported', 'meliconnect'), 'melicon-is-success');
+                $html = Helper::meliconnectPrintTag(esc_html__('Imported', 'meliconnect'), 'melicon-is-success');
                 break;
             default:
-                $html= Helper::meliconnectPrintTag(esc_html__('Pending', 'meliconnect'), 'melicon-is-warning');
+                $html = Helper::meliconnectPrintTag(esc_html__('Pending', 'meliconnect'), 'melicon-is-warning');
                 break;
         }
 
@@ -333,9 +339,9 @@ class UserListingsTable extends \WP_List_Table
             /* 'meli_user_id' => esc_html__('User ID', 'meliconnect'),
             'meli_product_type' => esc_html__('Product Type', 'meliconnect'),
             'meli_status' => esc_html__('Meli Status', 'meliconnect'), */
-            'has_product_vinculation' => '<div style="text-align: center; font-weight: bold">' . esc_html__('Woo Product', 'meliconnect'). '</div>',
+            'has_product_vinculation' => '<div style="text-align: center; font-weight: bold">' . esc_html__('Woo Product', 'meliconnect') . '</div>',
             /* 'has_template_vinculation' => esc_html__('Meliconnect Template', 'meliconnect'), */
-            'import_status' =>'<div style="text-align: center; font-weight: bold">' . esc_html__('Import Status', 'meliconnect') . '</div>',
+            'import_status' => '<div style="text-align: center; font-weight: bold">' . esc_html__('Import Status', 'meliconnect') . '</div>',
         ];
 
         return $columns;
@@ -358,20 +364,20 @@ class UserListingsTable extends \WP_List_Table
 
     public function prepare_items()
     {
-        $columns = $this->get_columns();
-        $hidden = array('meli_user_id');
+        $columns  = $this->get_columns();
+        $hidden   = array('meli_user_id');
         $sortable = $this->get_sortable_columns();
         $this->_column_headers = array($columns, $hidden, $sortable);
 
-        $per_page = $this->get_items_per_page('user_listings_per_page', 10);
+        $per_page     = $this->get_items_per_page('user_listings_per_page', 10);
         $current_page = $this->get_pagenum();
 
-        // Recoger los filtros de la solicitud
+        // Recoger los filtros de la solicitud con sanitización
         $filters = [
-            'search' => isset($_REQUEST['search']) ? $_REQUEST['search'] : '',
-            'vinculation' => isset($_REQUEST['vinculation_filter']) ? $_REQUEST['vinculation_filter'] : '',
-            'listing_type' => isset($_REQUEST['listing_type_filter']) ? $_REQUEST['listing_type_filter'] : '',
-            'seller_id' => isset($_REQUEST['seller_filter']) ? $_REQUEST['seller_filter'] : '',
+            'search'       => isset($_REQUEST['search']) ? sanitize_text_field(wp_unslash($_REQUEST['search'])) : '',
+            'vinculation'  => isset($_REQUEST['vinculation_filter']) ? sanitize_key(wp_unslash($_REQUEST['vinculation_filter'])) : '',
+            'listing_type' => isset($_REQUEST['listing_type_filter']) ? sanitize_key(wp_unslash($_REQUEST['listing_type_filter'])) : '',
+            'seller_id'    => isset($_REQUEST['seller_filter']) ? sanitize_text_field(wp_unslash($_REQUEST['seller_filter'])) : '',
         ];
 
         // Obtener el conteo total basado en los filtros
@@ -380,11 +386,12 @@ class UserListingsTable extends \WP_List_Table
         // Configurar la paginación
         $this->set_pagination_args([
             'total_items' => $total_items,
-            'per_page' => $per_page,
+            'per_page'    => $per_page,
         ]);
 
-        $orderby = !empty($_REQUEST['orderby']) ? sanitize_key($_REQUEST['orderby']) : 'meli_listing_title';
-        $order = !empty($_REQUEST['order']) ? sanitize_key($_REQUEST['order']) : 'asc';
+        // Ordenar resultados
+        $orderby = ! empty($_REQUEST['orderby']) ? sanitize_key(wp_unslash($_REQUEST['orderby'])) : 'meli_listing_title';
+        $order   = ! empty($_REQUEST['order']) ? sanitize_key(wp_unslash($_REQUEST['order'])) : 'asc';
 
         $this->items = self::get_user_listings($per_page, $current_page, $filters, $orderby, $order);
     }
