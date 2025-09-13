@@ -129,7 +129,7 @@ This plugin relies on external services to function correctly.
 == FAQ ==
 = How can I view logs of plugin processes? =
 - Go to **WooCommerce → Status → Logs**
-- Look for logs starting with **melicon-**
+- Look for logs starting with **meliconnect-**
 - Logs detail all plugin operations for monitoring and debugging
 
 == Changelog ==

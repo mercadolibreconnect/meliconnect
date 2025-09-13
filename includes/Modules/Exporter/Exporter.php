@@ -41,14 +41,14 @@ class Exporter implements ModuleInterface
 
     public function registerModuleStyles($hook)
     {
-        wp_enqueue_style('melicon-exporter', MELICONNECT_PLUGIN_URL . 'includes/Modules/Exporter/Assets/Css/melicon-exporter.css', [], '1.0.0');
+        wp_enqueue_style('meliconnect-exporter', MELICONNECT_PLUGIN_URL . 'includes/Modules/Exporter/Assets/Css/meliconnect-exporter.css', [], '1.0.0');
     }
 
     public function registerModuleScripts($hook)
     {
-        wp_register_script('melicon-exporter-js', MELICONNECT_PLUGIN_URL . 'includes/Modules/Exporter/Assets/Js/melicon-exporter.js', ['jquery'], '1.0.0', true);
+        wp_register_script('meliconnect-exporter-js', MELICONNECT_PLUGIN_URL . 'includes/Modules/Exporter/Assets/Js/meliconnect-exporter.js', ['jquery'], '1.0.0', true);
 
-        HelperJSTranslations::localizeScript('melicon-exporter-js');
-        wp_enqueue_script('melicon-exporter-js');
+        HelperJSTranslations::localizeScript('meliconnect-exporter-js');
+        wp_enqueue_script('meliconnect-exporter-js');
     }
 }

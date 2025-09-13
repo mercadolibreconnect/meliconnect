@@ -36,7 +36,7 @@ class WooCommerceProductCreationService
             if ($product_data['type'] === 'simple') {
                 if (!$woo_product) {
 
-                    if (isset($import_settings['melicon_import_type']) && $import_settings['melicon_import_type'] == 'onlyUpdate') {
+                    if (isset($import_settings['meliconnect_import_type']) && $import_settings['meliconnect_import_type'] == 'onlyUpdate') {
                         Helper::logData('Product not found. Skipping creation process by setiings.', 'custom-import');
                         continue;
                     }
@@ -48,7 +48,7 @@ class WooCommerceProductCreationService
             } elseif ($product_data['type'] === 'variable') {
                 if (!$woo_product) {
 
-                    if (isset($import_settings['melicon_import_type']) && $import_settings['melicon_import_type'] == 'onlyUpdate') {
+                    if (isset($import_settings['meliconnect_import_type']) && $import_settings['meliconnect_import_type'] == 'onlyUpdate') {
                         Helper::logData('Product not found. Skipping creation process by setiings.', 'custom-import');
                         continue;
                     }
@@ -75,7 +75,7 @@ class WooCommerceProductCreationService
             if ($template_id) {
                 Template::deleteCreateTemplatesMetasFromMeliListing($template_id, $meliListingData);
 
-                $product_data['extra_data']['postmetas']['melicon_asoc_template_id'] = $template_id;
+                $product_data['extra_data']['postmetas']['meliconnect_asoc_template_id'] = $template_id;
             } else {
                 Helper::logData('Error creating template for product: ' . $woo_product->get_id(), 'custom-import');
                 return false;
@@ -344,7 +344,7 @@ class WooCommerceProductCreationService
             $variation->save();
 
             // Guardar el variation_id como postmeta
-            update_post_meta($variation->get_id(), 'melicon_meli_asoc_variation_id', $variation_id);
+            update_post_meta($variation->get_id(), 'meliconnect_meli_asoc_variation_id', $variation_id);
 
             $this->setNonVariableAttributes($variation, $variation_data['non_variable_attrs']);
         }
@@ -413,7 +413,7 @@ class WooCommerceProductCreationService
         $args = [
             'post_type'   => 'product_variation',
             'post_status' => 'any',
-            'meta_key'    => 'melicon_meli_asoc_variation_id',
+            'meta_key'    => 'meliconnect_meli_asoc_variation_id',
             'meta_value'  => $variation_id,
             'posts_per_page' => 1,
             'post_parent' => $product_id
@@ -601,8 +601,8 @@ class WooCommerceProductCreationService
             return;
         }
 
-        // Verificar si la imagen ya existe en la galería de medios usando el meta `melicon_meli_image_id`
-        $attachment_id = $this->attachment_exists_by_meta('melicon_meli_image_id', $image_id);
+        // Verificar si la imagen ya existe en la galería de medios usando el meta `meliconnect_meli_image_id`
+        $attachment_id = $this->attachment_exists_by_meta('meliconnect_meli_image_id', $image_id);
 
         if (!$attachment_id) {
             Helper::logData('Image not exists', 'custom-import');
@@ -612,8 +612,8 @@ class WooCommerceProductCreationService
 
             if ($attachment_id) {
                 // Agregar los metadatos de la imagen al adjunto
-                update_post_meta($attachment_id, 'melicon_meli_image_id', $image_id, true);
-                update_post_meta($attachment_id, 'melicon_meli_image_url', $image_url, true);
+                update_post_meta($attachment_id, 'meliconnect_meli_image_id', $image_id, true);
+                update_post_meta($attachment_id, 'meliconnect_meli_image_url', $image_url, true);
 
                 Helper::logData('Image uploaded and meta added: ' . $attachment_id, 'custom-import');
             } else {
@@ -745,7 +745,7 @@ class WooCommerceProductCreationService
     private function create_or_update_gallery_images($post_id, $gallery_images_data)
     {
         $gallery_ids = [];
-        $meli_seller_id = get_post_meta($post_id, 'melicon_meli_seller_id', true);
+        $meli_seller_id = get_post_meta($post_id, 'meliconnect_meli_seller_id', true);
 
         foreach ($gallery_images_data as $image_data) {
             // Extraer el ID de la imagen
@@ -759,8 +759,8 @@ class WooCommerceProductCreationService
                 continue;
             }
 
-            // Verificar si la imagen ya existe en la galería de medios usando el meta `melicon_meli_image_id`
-            $attachment_id = $this->attachment_exists_by_meta('melicon_meli_image_id', $image_id);
+            // Verificar si la imagen ya existe en la galería de medios usando el meta `meliconnect_meli_image_id`
+            $attachment_id = $this->attachment_exists_by_meta('meliconnect_meli_image_id', $image_id);
 
             if (!$attachment_id) {
                 // Subir la imagen si no existe
@@ -768,9 +768,9 @@ class WooCommerceProductCreationService
 
                 if ($attachment_id) {
                     // Agregar los metadatos de la imagen al adjunto
-                    update_post_meta($attachment_id, 'melicon_meli_image_id', $image_id, true);
-                    update_post_meta($attachment_id, 'melicon_meli_image_url', $image_url, true);
-                    update_post_meta($attachment_id, 'melicon_meli_image_seller_id', $meli_seller_id, true);
+                    update_post_meta($attachment_id, 'meliconnect_meli_image_id', $image_id, true);
+                    update_post_meta($attachment_id, 'meliconnect_meli_image_url', $image_url, true);
+                    update_post_meta($attachment_id, 'meliconnect_meli_image_seller_id', $meli_seller_id, true);
                 } else {
                     Helper::logData('Failed to upload image for image ID: ' . $image_id, 'custom-import');
                     continue;
@@ -839,7 +839,7 @@ class WooCommerceProductCreationService
         }
 
         // Asociar el ID de MercadoLibre como un term meta en la categoría
-        $meta_key = 'melicon_meli_category_id';
+        $meta_key = 'meliconnect_meli_category_id';
         $meta_value = $category['id'];
         update_term_meta($categoryId, $meta_key, $meta_value);
 

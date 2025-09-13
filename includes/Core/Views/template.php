@@ -18,21 +18,21 @@ include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 
 ?>
 <!-- START MCSYNCAPP -->
-<div id="melicon-page-core-settings" class="melicon-app">
-    <div class="melicon-main">
-        <div class="melicon-container">
+<div id="meliconnect-page-core-settings" class="meliconnect-app">
+    <div class="meliconnect-main">
+        <div class="meliconnect-container">
 
-            <div class="melicon-postbox melicon-intro melicon-level">
-                <div class="melicon-level-left">
+            <div class="meliconnect-postbox meliconnect-intro meliconnect-level">
+                <div class="meliconnect-level-left">
                 </div>
-                <div class="melicon-level-right">
+                <div class="meliconnect-level-right">
                 </div>
             </div>
 
-            <div id="melicon-settings-container" class="melicon-container melicon-settings-container melicon-overflow-x">
-                <div id="sync-hub-settings-spinner" class="melicon-card">
-                    <div class="melicon-columns">
-                        <div class="melicon-column melicon-is-12">
+            <div id="meliconnect-settings-container" class="meliconnect-container meliconnect-settings-container meliconnect-overflow-x">
+                <div id="sync-hub-settings-spinner" class="meliconnect-card">
+                    <div class="meliconnect-columns">
+                        <div class="meliconnect-column meliconnect-is-12">
                             <p><i class="fa fa-spinner fa-spin" style="font-size:20px;"></i> <?php esc_html_e('Loading settings', 'meliconnect'); ?> ...</p>
                         </div>
                     </div>

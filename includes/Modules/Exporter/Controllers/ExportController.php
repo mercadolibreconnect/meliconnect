@@ -31,7 +31,7 @@ class ExportController implements ControllerInterface
             'execution_time' => Process::calculateExecutionTime($process),
             'products_to_export_count' => ProductToExport::count_products_to_export(),
             'woo_total_active_products' => Helper::get_woo_active_products_count(),
-            'woo_total_vinculated_products' => count(Helper::getProductsWithMeta('melicon_meli_listing_id')),
+            'woo_total_vinculated_products' => count(Helper::getProductsWithMeta('meliconnect_meli_listing_id')),
         ];
 
         return $data;
@@ -69,7 +69,7 @@ class ExportController implements ControllerInterface
         Process::cancelProcess($process_id);
 
         //unlock custom export process cron
-        delete_option('melicon_custom_export_lock');
+        delete_option('meliconnect_custom_export_lock');
 
         wp_send_json_success();
     }
@@ -189,7 +189,7 @@ class ExportController implements ControllerInterface
             ];
         }
 
-        // Registrar el proceso inicial en la tabla wp_melicon_processes
+        // Registrar el proceso inicial en la tabla wp_meliconnect_processes
         $process_id = Process::createProcess('custom-export', $formatedItems);
 
         // Si no se puede crear el proceso, detener el proceso
@@ -257,7 +257,7 @@ class ExportController implements ControllerInterface
         ProductToExport::update_product_to_export_status('all', 'pending', '');
 
         //unlock custom import process cron
-        delete_option('melicon_custom_export_lock');
+        delete_option('meliconnect_custom_export_lock');
 
         wp_send_json_success();
     }

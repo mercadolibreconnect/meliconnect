@@ -1,13 +1,13 @@
-:not(.melicon-app) a {
+:not(.meliconnect-app) a {
     color: #2271b1;
   }
 
-  :not(.melicon-app) strong, :not(.melicon-app) b {
+  :not(.meliconnect-app) strong, :not(.meliconnect-app) b {
     font-weight:600;
     color:#000000;
   }
 
-  :not(.melicon-app) table{
+  :not(.meliconnect-app) table{
     border-collapse: unset;
   }
 

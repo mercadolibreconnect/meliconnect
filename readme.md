@@ -113,6 +113,6 @@ Automatic import and export cannot run simultaneously.
 ### How can I view logs to understand what the plugin is doing?
 - The plugin uses WooCommerce’s default logging system.
 - Go to **WooCommerce → Status → Logs**.
-- Look for logs starting with **melicon-**.
+- Look for logs starting with **meliconnect-**.
 - These logs provide detailed information about plugin operations for debugging.
 

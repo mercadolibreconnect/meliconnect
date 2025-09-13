@@ -7,13 +7,13 @@ jQuery(document).ready(function ($) {
         let match_by = $(this).data('match-by');
         let $button = $(this);
 
-        $button.addClass('disabled melicon-is-loading');
+        $button.addClass('disabled meliconnect-is-loading');
 
         $.ajax({
             url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
-                action: 'melicon_match_listings_with_products',
+                action: 'meliconnect_match_listings_with_products',
                 match_by: match_by,
                 nonce: mcTranslations.match_listings_with_products_nonce
             },
@@ -40,7 +40,7 @@ jQuery(document).ready(function ($) {
             },
             complete: function () {
                 // Remover las clases 'disabled' e 'is-loading' cuando la solicitud AJAX termine
-                $button.removeClass('disabled melicon-is-loading');
+                $button.removeClass('disabled meliconnect-is-loading');
             }
         });
         
@@ -53,7 +53,7 @@ jQuery(document).ready(function ($) {
             url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
-                action: 'melicon_clear_matches',
+                action: 'meliconnect_clear_matches',
                 nonce: mcTranslations.clear_all_matches_nonce
             },
             success: function (response) {
@@ -74,7 +74,7 @@ jQuery(document).ready(function ($) {
 
     
 
-    $('.melicon-clear-product-match').on('click', function (e) {
+    $('.meliconnect-clear-product-match').on('click', function (e) {
         e.preventDefault();
         let meliListingId = $(this).data('meli-listing-id');
 
@@ -82,7 +82,7 @@ jQuery(document).ready(function ($) {
             url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
-                action: 'melicon_clear_selected_products_match',
+                action: 'meliconnect_clear_selected_products_match',
                 meli_listings_ids: meliListingId,
                 nonce: mcTranslations.clear_selected_matches_nonce
             },
@@ -99,17 +99,17 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $('#melicon-importer-view-logs').on('click', function () {
-        window.open('/wp-admin/admin.php?page=wc-status&tab=logs&source=melicon-custom-import&orderby=created&order=asc', '_blank');
+    $('#meliconnect-importer-view-logs').on('click', function () {
+        window.open('/wp-admin/admin.php?page=wc-status&tab=logs&source=meliconnect-custom-import&orderby=created&order=asc', '_blank');
     });
 
-    $('#melicon-importer-delete-finished').on('click', function (e) {
+    $('#meliconnect-importer-delete-finished').on('click', function (e) {
         e.preventDefault();
         $.ajax({
             url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
-                action: 'melicon_cancel_finished_processes',
+                action: 'meliconnect_cancel_finished_processes',
                 nonce: mcTranslations.cancel_finished_processes_nonce
             },
             success: function (response) {
@@ -125,11 +125,11 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $('#melicon-get-meli-user-listings').submit(function (e) {
+    $('#meliconnect-get-meli-user-listings').submit(function (e) {
         e.preventDefault();
         var formData = new FormData(this);
 
-        formData.append("action", "melicon_get_meli_user_listings");
+        formData.append("action", "meliconnect_get_meli_user_listings");
         formData.append("nonce", mcTranslations.get_listings_nonce);
 
         $.ajax({
@@ -139,7 +139,7 @@ jQuery(document).ready(function ($) {
             contentType: false,
             processData: false,
             beforeSend: function () {
-                $('#melicon-get-meli-user-listings-button').addClass('is-loading');
+                $('#meliconnect-get-meli-user-listings-button').addClass('is-loading');
             },
             success: function (response) {
                 // Mostrar mensaje de éxito con SweetAlert
@@ -153,7 +153,7 @@ jQuery(document).ready(function ($) {
                     location.reload(); // Recargar la página tras el cierre de la alerta
                 });
         
-                $('#melicon-get-meli-user-listings-button').removeClass('is-loading');
+                $('#meliconnect-get-meli-user-listings-button').removeClass('is-loading');
             },
             error: function (xhr, status, error) {
                 // Manejar error con SweetAlert
@@ -163,7 +163,7 @@ jQuery(document).ready(function ($) {
                     text: error || mcTranslations.default_error_message
                 });
         
-                $('#melicon-get-meli-user-listings-button').removeClass('is-loading');
+                $('#meliconnect-get-meli-user-listings-button').removeClass('is-loading');
             }
         });
         
@@ -197,7 +197,7 @@ jQuery(document).ready(function ($) {
         let savedIds = localStorage.getItem(storageKey);
         let selectedCount = savedIds ? savedIds.split(',').length : 0;
         $('#selected-items-count').text(selectedCount);
-        $('.melicon-import-selected-items-tag-column').toggle(selectedCount > 0);
+        $('.meliconnect-import-selected-items-tag-column').toggle(selectedCount > 0);
     }
 
     // Cargar los IDs seleccionados del localStorage al cargar la página
@@ -237,7 +237,7 @@ jQuery(document).ready(function ($) {
         saveSelectedIds(currentValues);
     });
 
-    $('#melicon-clear-selected-items').on('click', function () {
+    $('#meliconnect-clear-selected-items').on('click', function () {
         clearSelectedItems();
     });
 
@@ -249,7 +249,7 @@ jQuery(document).ready(function ($) {
 
     /* END functions to select items table */
 
-    $('#melicon-reset-meli-user-listings-button').on('click', function (e) {
+    $('#meliconnect-reset-meli-user-listings-button').on('click', function (e) {
         e.preventDefault();
     
         MeliconSwal.fire({
@@ -260,8 +260,8 @@ jQuery(document).ready(function ($) {
             confirmButtonText: mcTranslations.confirm,
             cancelButtonText: mcTranslations.cancel,
             customClass: {
-                confirmButton: 'melicon-button melicon-is-primary',
-                cancelButton: 'melicon-button melicon-is-secondary'
+                confirmButton: 'meliconnect-button meliconnect-is-primary',
+                cancelButton: 'meliconnect-button meliconnect-is-secondary'
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -269,7 +269,7 @@ jQuery(document).ready(function ($) {
                     url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
-                        action: 'melicon_reset_user_listings',
+                        action: 'meliconnect_reset_user_listings',
                         nonce: mcTranslations.reset_listings_nonce
                     },
                     success: function (response) {
@@ -291,7 +291,7 @@ jQuery(document).ready(function ($) {
 
     
 
-    $('#melicon-process-import-button').on('click', function (e) {
+    $('#meliconnect-process-import-button').on('click', function (e) {
         e.preventDefault();
     
         clearSelectedItems();
@@ -304,8 +304,8 @@ jQuery(document).ready(function ($) {
             confirmButtonText: mcTranslations.confirm,
             cancelButtonText: mcTranslations.cancel,
             customClass: {
-                confirmButton: 'melicon-button melicon-is-primary',
-                cancelButton: 'melicon-button melicon-is-secondary'
+                confirmButton: 'meliconnect-button meliconnect-is-primary',
+                cancelButton: 'meliconnect-button meliconnect-is-secondary'
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -313,7 +313,7 @@ jQuery(document).ready(function ($) {
                     url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
-                        action: 'melicon_init_import_process',
+                        action: 'meliconnect_init_import_process',
                         nonce: mcTranslations.init_import_process_nonce
                     },
                     success: function (response) {
@@ -332,7 +332,7 @@ jQuery(document).ready(function ($) {
     });
     
 
-    $('#melicon-importer-cancel-process').on('click', function (e) {
+    $('#meliconnect-importer-cancel-process').on('click', function (e) {
         e.preventDefault();
     
         var processId = $(this).data('process-id');
@@ -345,8 +345,8 @@ jQuery(document).ready(function ($) {
             confirmButtonText: mcTranslations.confirm,
             cancelButtonText: mcTranslations.cancel,
             customClass: {
-                confirmButton: 'melicon-button melicon-is-primary',
-                cancelButton: 'melicon-button melicon-is-secondary'
+                confirmButton: 'meliconnect-button meliconnect-is-primary',
+                cancelButton: 'meliconnect-button meliconnect-is-secondary'
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -354,7 +354,7 @@ jQuery(document).ready(function ($) {
                     url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
-                        action: 'melicon_cancel_custom_import',
+                        action: 'meliconnect_cancel_custom_import',
                         nonce: mcTranslations.cancel_custom_import_nonce,
                         process_id: processId
                     },
@@ -375,7 +375,7 @@ jQuery(document).ready(function ($) {
     
 
     function updateProgress() {
-        var processId = $('#melicon-process-id-hidden').val();
+        var processId = $('#meliconnect-process-id-hidden').val();
 
         if (!processId) {
             return;
@@ -384,7 +384,7 @@ jQuery(document).ready(function ($) {
             url: mcTranslations.admin_ajax_url, // URL de AJAX en WordPress
             method: 'POST',
             data: {
-                action: 'melicon_get_process_progress',
+                action: 'meliconnect_get_process_progress',
                 nonce: mcTranslations.get_process_progress_nonce,
                 process_id: processId
             },
@@ -394,14 +394,14 @@ jQuery(document).ready(function ($) {
 
                     // Si el proceso está terminado
                     if (data.status === "finished") {
-                        $('#melicon-process-progress-bar')
+                        $('#meliconnect-process-progress-bar')
                             .attr('value', 100)
                             .text(100 + '%')
                             .removeClass('is-info')
                             .addClass('is-success'); // Cambiar la clase CSS
 
-                        $('#melicon-process-progress').text(100 + '%');
-                        $('#melicon-process-text-title').text(mcTranslations.process_finished);
+                        $('#meliconnect-process-progress').text(100 + '%');
+                        $('#meliconnect-process-text-title').text(mcTranslations.process_finished);
 
                         // Recargar la página
                         setTimeout(function () {
@@ -409,19 +409,19 @@ jQuery(document).ready(function ($) {
                         }, 1000); // Esperar un segundo antes de recargar
                     } else {
                         // Actualizar la barra de progreso normalmente
-                        $('#melicon-process-progress-bar')
+                        $('#meliconnect-process-progress-bar')
                             .attr('value', data.progress_value)
                             .text(data.progress_value + '%');
 
-                        $('#melicon-process-progress').text(data.progress_value + '%');
+                        $('#meliconnect-process-progress').text(data.progress_value + '%');
                     }
 
                     // Actualizar otros datos en la UI
-                    $('#melicon-process-executed').text(data.executed);
-                    $('#melicon-process-total').text(data.total);
-                    $('#melicon-process-total-success').text(data.total_success);
-                    $('#melicon-process-total-fails').text(data.total_fails);
-                    $('#melicon-process-execution-time').text(data.execution_time);
+                    $('#meliconnect-process-executed').text(data.executed);
+                    $('#meliconnect-process-total').text(data.total);
+                    $('#meliconnect-process-total-success').text(data.total_success);
+                    $('#meliconnect-process-total-fails').text(data.total_fails);
+                    $('#meliconnect-process-execution-time').text(data.execution_time);
                 } else {
                     console.error('Error retrieving process data:', response.data.message);
                 }
@@ -432,7 +432,7 @@ jQuery(document).ready(function ($) {
     setInterval(updateProgress, 5000);
 
 
-    $('#melicon-import-bulk-actions-form').on('submit', function (e) {
+    $('#meliconnect-import-bulk-actions-form').on('submit', function (e) {
         e.preventDefault();
     
         // Obtener los IDs seleccionados desde localStorage
@@ -458,8 +458,8 @@ jQuery(document).ready(function ($) {
                     confirmButtonText: mcTranslations.confirm,
                     cancelButtonText: mcTranslations.cancel,
                     customClass: {
-                        confirmButton: 'melicon-button melicon-is-primary',
-                        cancelButton: 'melicon-button melicon-is-secondary'
+                        confirmButton: 'meliconnect-button meliconnect-is-primary',
+                        cancelButton: 'meliconnect-button meliconnect-is-secondary'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -467,7 +467,7 @@ jQuery(document).ready(function ($) {
                             url: mcTranslations.admin_ajax_url,
                             type: 'POST',
                             data: {
-                                action: 'melicon_bulk_import_action',
+                                action: 'meliconnect_bulk_import_action',
                                 action_to_do: selectedAction,
                                 meli_listing_ids: selectedIds,
                                 nonce: mcTranslations.import_bulk_action_nonce
@@ -505,7 +505,7 @@ jQuery(document).ready(function ($) {
     });
     
 
-    $('.melicon-delete-product-vinculation').on('click', function (e) {
+    $('.meliconnect-delete-product-vinculation').on('click', function (e) {
         e.preventDefault();
     
         var productType = $(this).data('product-type');
@@ -520,8 +520,8 @@ jQuery(document).ready(function ($) {
             confirmButtonText: mcTranslations.confirm,
             cancelButtonText: mcTranslations.cancel,
             customClass: {
-                confirmButton: 'melicon-button melicon-is-primary',
-                cancelButton: 'melicon-button melicon-is-secondary'
+                confirmButton: 'meliconnect-button meliconnect-is-primary',
+                cancelButton: 'meliconnect-button meliconnect-is-secondary'
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -529,7 +529,7 @@ jQuery(document).ready(function ($) {
                     url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
-                        action: 'melicon_desvinculate_woo_product',
+                        action: 'meliconnect_desvinculate_woo_product',
                         nonce: mcTranslations.desvinculate_product_nonce,
                         wooProductId: wooProductId,
                         meliListingId: meliListingId,
@@ -550,11 +550,11 @@ jQuery(document).ready(function ($) {
     });
     
 
-    $('#melicon-apply-match-button').on('click', function (e) {
+    $('#meliconnect-apply-match-button').on('click', function (e) {
         e.preventDefault();
     
-        var woo_product_id = $('#melicon-match-select-products-select').val();
-        var user_listing_id = $("#melicon-match-modal_user-listing-id").val();
+        var woo_product_id = $('#meliconnect-match-select-products-select').val();
+        var user_listing_id = $("#meliconnect-match-modal_user-listing-id").val();
     
         if (!woo_product_id || !user_listing_id) {
             MeliconSwal.fire({
@@ -569,7 +569,7 @@ jQuery(document).ready(function ($) {
             url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
-                action: 'melicon_apply_match',
+                action: 'meliconnect_apply_match',
                 nonce: mcTranslations.apply_match_nonce,
                 user_listing_id: user_listing_id,
                 woo_product_id: woo_product_id
@@ -589,7 +589,7 @@ jQuery(document).ready(function ($) {
     
 
 
-    $('.melicon-find-product-to-match').on('click', function (e) {
+    $('.meliconnect-find-product-to-match').on('click', function (e) {
         e.preventDefault();
 
         // Obtener datos del botón
@@ -603,10 +603,10 @@ jQuery(document).ready(function ($) {
         var availableQuantity = $(this).data('available-quantity');
 
 
-        $('#melicon-meli-listing-title-to-match').text(listingTitle);
+        $('#meliconnect-meli-listing-title-to-match').text(listingTitle);
 
         // Mostrar el "loading" inicial en la primera columna
-        var $listingInfo = $('#melicon-meli-listing-data-to-match');
+        var $listingInfo = $('#meliconnect-meli-listing-data-to-match');
 
         // Simular la carga de datos (podrías reemplazar esto con una llamada AJAX si lo necesitas)
         var listingContent = `
@@ -621,27 +621,27 @@ jQuery(document).ready(function ($) {
         // Reemplazar el "loading" con la información del listing
         $listingInfo.html(listingContent);
 
-        $("#melicon-match-modal_user-listing-id").val(userListingId);
+        $("#meliconnect-match-modal_user-listing-id").val(userListingId);
 
 
         $.ajax({
             url: mcTranslations.admin_ajax_url,
             type: 'GET',
             data: {
-                action: 'melicon_get_match_available_products',
+                action: 'meliconnect_get_match_available_products',
                 nonce: mcTranslations.get_match_available_products_nonce,
                 productType: listingType,
             },
             success: function (response) {
                 if (response.success) {
-                    $('#melicon-match-select-products-select').html(response.data.options);
-                    $('#melicon-match-select-products-select').select2({
-                        dropdownParent: $("#melicon-find-match-modal")
+                    $('#meliconnect-match-select-products-select').html(response.data.options);
+                    $('#meliconnect-match-select-products-select').select2({
+                        dropdownParent: $("#meliconnect-find-match-modal")
                     });
 
-                    $('#melicon-match-product-select-container').show();
+                    $('#meliconnect-match-product-select-container').show();
 
-                    $('#melicon-match-select-products-select').on('select2:select', function (e) {
+                    $('#meliconnect-match-select-products-select').on('select2:select', function (e) {
                         var data = e.params.data;
                         var detailsHtml = `
                             <p><strong>ID:</strong> ${data.id}</p>
@@ -651,7 +651,7 @@ jQuery(document).ready(function ($) {
                             <p><strong>Price:</strong> ${data.element.dataset.price}</p>
                             <p><strong>Stock:</strong> ${data.element.dataset.stock}</p>
                         `;
-                        $('#melicon-matched-product-details').html(detailsHtml);
+                        $('#meliconnect-matched-product-details').html(detailsHtml);
                     });
                     console.log('Products found:', response.data.options);
 
@@ -660,7 +660,7 @@ jQuery(document).ready(function ($) {
                 }
             },
             error: function (xhr, status, error) {
-                console.log('Error on melicon_get_match_available_products :', error);
+                console.log('Error on meliconnect_get_match_available_products :', error);
             }
         });
     });

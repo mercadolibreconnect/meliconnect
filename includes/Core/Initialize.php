@@ -26,8 +26,8 @@ class Initialize
      * @var ModuleInterface[]
      */
     public static $modules = [];
-    public static $css_pre = 'melicon-';
-    public static $js_pre  = 'melicon-';
+    public static $css_pre = 'meliconnect-';
+    public static $js_pre  = 'meliconnect-';
 
 
     public function __construct()
@@ -58,21 +58,21 @@ class Initialize
 
     public function showAdminNotices()
     {
-        //update_option('melicon_pending_connection_notifications', 'It works!');
-        $pending_connections = get_option('melicon_pending_connection_notifications', []);
+        //update_option('meliconnect_pending_connection_notifications', 'It works!');
+        $pending_connections = get_option('meliconnect_pending_connection_notifications', []);
 
 
         if (!empty($pending_connections)) {
 
 
-            echo '<div class="melicon-notification melicon-is-link">
+            echo '<div class="meliconnect-notification meliconnect-is-link">
                     <button class="delete"></button>
                     ' . esc_html($pending_connections) . '
                 </div>';
 
 
             // Limpiar las notificaciones después de mostrarlas
-            delete_option('melicon_pending_connection_notifications');
+            delete_option('meliconnect_pending_connection_notifications');
         }
     }
 
@@ -90,65 +90,65 @@ class Initialize
     {
         // Options with default values
         $options = [
-            'melicon_general_image_attachment_ids' => [],
-            'melicon_general_description_template' => '',
-            'melicon_general_sync_type' => 'deactive',
-            'melicon_general_sync_items_batch' => 10,
-            'melicon_general_sync_frecuency_minutes' => 10,
-            'melicon_general_sync_method' => 'wordpress',
+            'meliconnect_general_image_attachment_ids' => [],
+            'meliconnect_general_description_template' => '',
+            'meliconnect_general_sync_type' => 'deactive',
+            'meliconnect_general_sync_items_batch' => 10,
+            'meliconnect_general_sync_frecuency_minutes' => 10,
+            'meliconnect_general_sync_method' => 'wordpress',
 
-            'melicon_export_is_disabled' => false,
-            'melicon_export_title' => 'always',
-            'melicon_export_stock' => 'always',
-            'melicon_export_price' => 'regular_price',
-            'melicon_export_images' => 'always',
-            'melicon_export_sku' => 'always',
-            'melicon_export_product_attributes' => 'always',
-            'melicon_export_ml_status' => 'always',
-            'melicon_export_variations' => 'always',
-            'melicon_export_description' => 'always',
-            'melicon_export_description_to' => 'description',
-            'melicon_export_type' => 'createAndUpdate',
-            'melicon_export_finalize_ml' => 'none',
-            'melicon_export_state_paused' => false,
-            'melicon_export_state_closed' => false,
+            'meliconnect_export_is_disabled' => false,
+            'meliconnect_export_title' => 'always',
+            'meliconnect_export_stock' => 'always',
+            'meliconnect_export_price' => 'regular_price',
+            'meliconnect_export_images' => 'always',
+            'meliconnect_export_sku' => 'always',
+            'meliconnect_export_product_attributes' => 'always',
+            'meliconnect_export_ml_status' => 'always',
+            'meliconnect_export_variations' => 'always',
+            'meliconnect_export_description' => 'always',
+            'meliconnect_export_description_to' => 'description',
+            'meliconnect_export_type' => 'createAndUpdate',
+            'meliconnect_export_finalize_ml' => 'none',
+            'meliconnect_export_state_paused' => false,
+            'meliconnect_export_state_closed' => false,
 
 
-            'melicon_import_is_disabled' => false,
-            'melicon_import_title' => 'always',
-            'melicon_import_stock' => 'always',
-            'melicon_import_price' => 'always',
-            'melicon_import_images' => 'always',
-            'melicon_import_sku' => 'always',
-            'melicon_import_categories' => 'always',
-            'melicon_import_product_attributes' => 'always',
-            'melicon_import_ml_status' => 'always',
-            'melicon_import_variations' => 'always',
-            'melicon_import_variations_as' => 'always',
-            'melicon_import_description' => 'always',
-            'melicon_import_description_to' => 'description',
-            'melicon_import_type' => 'createAndUpdate',
-            'melicon_import_price_variation_operand' => 'sum',
-            'melicon_import_price_variation_amount' => 0,
-            'melicon_import_price_variation_type' => 'percent',
-            'melicon_import_stock_variation_operand' => 'sum',
-            'melicon_import_stock_variation_amount' => 0,
-            'melicon_import_stock_variation_type' => 'units',
-            'melicon_import_state_paused' => false,
-            'melicon_import_state_closed' => false,
-            'melicon_import_by_sku' => false,
-            'melicon_import_attrs' => false,
+            'meliconnect_import_is_disabled' => false,
+            'meliconnect_import_title' => 'always',
+            'meliconnect_import_stock' => 'always',
+            'meliconnect_import_price' => 'always',
+            'meliconnect_import_images' => 'always',
+            'meliconnect_import_sku' => 'always',
+            'meliconnect_import_categories' => 'always',
+            'meliconnect_import_product_attributes' => 'always',
+            'meliconnect_import_ml_status' => 'always',
+            'meliconnect_import_variations' => 'always',
+            'meliconnect_import_variations_as' => 'always',
+            'meliconnect_import_description' => 'always',
+            'meliconnect_import_description_to' => 'description',
+            'meliconnect_import_type' => 'createAndUpdate',
+            'meliconnect_import_price_variation_operand' => 'sum',
+            'meliconnect_import_price_variation_amount' => 0,
+            'meliconnect_import_price_variation_type' => 'percent',
+            'meliconnect_import_stock_variation_operand' => 'sum',
+            'meliconnect_import_stock_variation_amount' => 0,
+            'meliconnect_import_stock_variation_type' => 'units',
+            'meliconnect_import_state_paused' => false,
+            'meliconnect_import_state_closed' => false,
+            'meliconnect_import_by_sku' => false,
+            'meliconnect_import_attrs' => false,
 
-            'melicon_sync_cron_status' => 'deactive',
-            'melicon_sync_cron_items_batch' => 10,
-            'melicon_sync_cron_frecuency_minutes' => 10,
-            'melicon_sync_cron_method' => 'wordpress',
-            'melicon_sync_stock_woo_to_meli' => false,
-            'melicon_sync_price_woo_to_meli' => false,
-            'melicon_sync_status_woo_to_meli' => false,
-            'melicon_sync_stock_meli_to_woo' => false,
-            'melicon_sync_price_meli_to_woo' => false,
-            'melicon_sync_variations_price_meli_to_woo' => false,
+            'meliconnect_sync_cron_status' => 'deactive',
+            'meliconnect_sync_cron_items_batch' => 10,
+            'meliconnect_sync_cron_frecuency_minutes' => 10,
+            'meliconnect_sync_cron_method' => 'wordpress',
+            'meliconnect_sync_stock_woo_to_meli' => false,
+            'meliconnect_sync_price_woo_to_meli' => false,
+            'meliconnect_sync_status_woo_to_meli' => false,
+            'meliconnect_sync_stock_meli_to_woo' => false,
+            'meliconnect_sync_price_meli_to_woo' => false,
+            'meliconnect_sync_variations_price_meli_to_woo' => false,
         ];
 
 
@@ -288,13 +288,13 @@ class Initialize
             wp_enqueue_style(self::$css_pre . 'bulma-switch-css', MELICONNECT_PLUGIN_URL . 'assets/css/bulma/bulma-switch.min.css', [], '1.0.1');
             wp_enqueue_style(self::$css_pre . 'select2', MELICONNECT_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.1.0');
             wp_enqueue_style(self::$css_pre . 'swal-css', MELICONNECT_PLUGIN_URL . 'assets/css/sweetalert/sweetalert2.min.css', [], '11.4.8', false);
-            wp_enqueue_style(self::$css_pre . 'melicon-custom', MELICONNECT_PLUGIN_URL . 'assets/css/melicon-custom.css', [], '1.0.0');
+            wp_enqueue_style(self::$css_pre . 'meliconnect-custom', MELICONNECT_PLUGIN_URL . 'assets/css/meliconnect-custom.css', [], '1.0.0');
 
             /* Connection page */
-            wp_enqueue_style('melicon-connection', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-connection.css', [], '1.0.0');
+            wp_enqueue_style('meliconnect-connection', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Css/meliconnect-connection.css', [], '1.0.0');
 
             /* Setting page */
-            wp_enqueue_style('melicon-setting', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-setting.css', [], '1.0.0');
+            wp_enqueue_style('meliconnect-setting', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Css/meliconnect-setting.css', [], '1.0.0');
         }
     }
 
@@ -334,7 +334,7 @@ class Initialize
         }
 
         wp_enqueue_script(
-            'melicon-swal-js',
+            'meliconnect-swal-js',
             MELICONNECT_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js',
             ['jquery'],
             '11.4.8',
@@ -351,7 +351,7 @@ class Initialize
 
         wp_register_script(
             self::$js_pre . 'general-script',
-            MELICONNECT_PLUGIN_URL . 'assets/js/melicon-general.js',
+            MELICONNECT_PLUGIN_URL . 'assets/js/meliconnect-general.js',
             ['jquery'],
             '1.0.0',
             true
@@ -361,10 +361,10 @@ class Initialize
         wp_enqueue_script(self::$js_pre . 'general-script');
 
         /* Connection page */
-        wp_enqueue_script('melicon-connection', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-connection.js', ['jquery'], '1.0.0', true);
+        wp_enqueue_script('meliconnect-connection', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Js/meliconnect-connection.js', ['jquery'], '1.0.0', true);
 
         /* Setting page */
-        wp_enqueue_script('melicon-setting', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-setting.js', ['jquery'], '1.0.0', true);
+        wp_enqueue_script('meliconnect-setting', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Js/meliconnect-setting.js', ['jquery'], '1.0.0', true);
 
         /* Product edit page */
         if ($this->is_wordpress_page_used_by_plugin()) {
@@ -372,7 +372,7 @@ class Initialize
 
             // Verifica que el tipo de post sea 'product'
             if (get_post_type($post_id) === 'product') {
-                wp_enqueue_script('melicon-product-edit-js', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-product-edit.js', ['jquery'], '1.0.0', true);
+                wp_enqueue_script('meliconnect-product-edit-js', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Js/meliconnect-product-edit.js', ['jquery'], '1.0.0', true);
             }
         }
     }

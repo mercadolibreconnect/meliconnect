@@ -11,7 +11,7 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 global $wpdb;
 
 // Prefijo de tablas personalizado
-$prefix = $wpdb->prefix . 'melicon_';
+$prefix = $wpdb->prefix . 'meliconnect_';
 
 // Listado de tablas personalizadas del plugin
 $tables = [
@@ -28,5 +28,5 @@ foreach ($tables as $table) {
     $wpdb->query("DROP TABLE IF EXISTS {$prefix}{$table}");
 }
 
-// Eliminar todas las opciones que comiencen con 'meliconnect_' o 'melicon_'
-$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE 'meliconnect_%' OR option_name LIKE 'melicon_%'");
+// Eliminar todas las opciones que comiencen con 'meliconnect_' o 'meliconnect_'
+$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE 'meliconnect_%' OR option_name LIKE 'meliconnect_%'");

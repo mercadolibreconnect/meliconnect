@@ -31,7 +31,7 @@ class Helper
 
     public static function meliconnectPrintTag($name, $class)
     {
-        return '<span class="melicon-tag tag ' . $class . '"> ' . $name . '</span>';
+        return '<span class="meliconnect-tag tag ' . $class . '"> ' . $name . '</span>';
     }
 
     public static function get_active_product_id_by_sku($sku)
@@ -81,7 +81,7 @@ class Helper
         $deleteButton = $canDelete ? '<button class="delete"></button>' : '';
 
         $messageBox = sprintf(
-            '<div class="melicon-notification %s">%s%s</div>',
+            '<div class="meliconnect-notification %s">%s%s</div>',
             $alertClass,
             $deleteButton,
             $escapedText
@@ -112,26 +112,26 @@ class Helper
 
         switch ($type) {
             case 'general':
-                $prefix = 'melicon_general';
+                $prefix = 'meliconnect_general';
                 break;
             case 'export':
-                $prefix = 'melicon_export';
+                $prefix = 'meliconnect_export';
                 break;
             case 'import':
-                $prefix = 'melicon_import';
+                $prefix = 'meliconnect_import';
                 break;
             case 'sync':
-                $prefix = 'melicon_sync';
+                $prefix = 'meliconnect_sync';
                 break;
             default:
-                $prefix = 'melicon_';
+                $prefix = 'meliconnect_';
                 break;
         }
 
         if ($type === 'all') {
             // Consulta sin datos dinámicos, manejada directamente
             $results = $wpdb->get_results(
-                "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'melicon_%'",
+                "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'meliconnect_%'",
                 ARRAY_A
             );
         } else {
@@ -151,10 +151,10 @@ class Helper
             }
         }
 
-        // Agregar 'melicon_general_sync_type' si el tipo es 'export' o 'import'
+        // Agregar 'meliconnect_general_sync_type' si el tipo es 'export' o 'import'
         if ($type === 'export' || $type === 'import') {
-            $general_sync_type = get_option('melicon_general_sync_type');
-            $options['melicon_general_sync_type'] = maybe_unserialize($general_sync_type);
+            $general_sync_type = get_option('meliconnect_general_sync_type');
+            $options['meliconnect_general_sync_type'] = maybe_unserialize($general_sync_type);
         }
 
         return $options;
@@ -195,8 +195,8 @@ class Helper
             $output .= '<p>' . esc_html($seller->nickname) . '</p>';
             $output .= '<input type="hidden" name="' . esc_attr($selectName) . '" value="' . esc_attr($seller->user_id) . '">';
         } else {
-            $output .= '<div class="melicon-control">';
-            $output .= '<div class="melicon-select">';
+            $output .= '<div class="meliconnect-control">';
+            $output .= '<div class="meliconnect-select">';
             $output .= '<select name="' . esc_attr($selectName) . '">';
 
             if ($addAll) {
@@ -220,7 +220,7 @@ class Helper
     public static function logData($data, $log_name = 'errors')
     {
         $logger = new \WC_Logger();
-        $context = array('source' => 'melicon-' . $log_name);
+        $context = array('source' => 'meliconnect-' . $log_name);
 
         if (is_array($data) || is_object($data)) {
             $data = wp_json_encode($data, JSON_PRETTY_PRINT);
@@ -293,7 +293,7 @@ class Helper
     public static function unlinkProduct($woo_product_id)
     {
         // Delete product template
-        /* $template_id = get_post_meta($woo_product_id, 'melicon_asoc_template_id', true); */
+        /* $template_id = get_post_meta($woo_product_id, 'meliconnect_asoc_template_id', true); */
 
 
         /* if (!empty($template_id)) {
@@ -303,20 +303,20 @@ class Helper
 
         // Lista de metakeys a eliminar
         $meta_keys = [
-            'melicon_meli_listing_id',
-            'melicon_meli_permalink',
-            'melicon_meli_listing_type_id',
-            /* 'melicon_meli_category_id', */
-            'melicon_meli_status',
-            'melicon_meli_sub_status',
-            'melicon_meli_site_id',
-            'melicon_meli_catalog_product_id',
-            'melicon_meli_domain_id',
-            'melicon_meli_channels',
-            'melicon_meli_sold_quantity',
-            'melicon_meli_shipping_mode',
-            /* 'melicon_asoc_template_id' */
-            /* 'melicon_meli_seller_id', */
+            'meliconnect_meli_listing_id',
+            'meliconnect_meli_permalink',
+            'meliconnect_meli_listing_type_id',
+            /* 'meliconnect_meli_category_id', */
+            'meliconnect_meli_status',
+            'meliconnect_meli_sub_status',
+            'meliconnect_meli_site_id',
+            'meliconnect_meli_catalog_product_id',
+            'meliconnect_meli_domain_id',
+            'meliconnect_meli_channels',
+            'meliconnect_meli_sold_quantity',
+            'meliconnect_meli_shipping_mode',
+            /* 'meliconnect_asoc_template_id' */
+            /* 'meliconnect_meli_seller_id', */
         ];
 
         foreach ($meta_keys as $meta_key) {
@@ -397,10 +397,10 @@ class Helper
             FROM {$wpdb->posts} p
             LEFT JOIN {$wpdb->postmeta} pm_sku ON p.ID = pm_sku.post_id AND pm_sku.meta_key = '_sku'
             LEFT JOIN {$wpdb->postmeta} pm_gtin ON p.ID = pm_gtin.post_id AND pm_gtin.meta_key = '_global_unique_id'
-            LEFT JOIN {$wpdb->postmeta} pm_asoc_template ON p.ID = pm_asoc_template.post_id AND pm_asoc_template.meta_key = 'melicon_asoc_template_id'
-            LEFT JOIN {$wpdb->postmeta} pm_asoc_listing ON p.ID = pm_asoc_listing.post_id AND pm_asoc_listing.meta_key = 'melicon_meli_listing_id'
-            LEFT JOIN {$wpdb->postmeta} pm_listing_permalink ON p.ID = pm_listing_permalink.post_id AND pm_listing_permalink.meta_key = 'melicon_meli_permalink'
-            LEFT JOIN {$wpdb->postmeta} pm_listing_seller_id ON p.ID = pm_listing_seller_id.post_id AND pm_listing_seller_id.meta_key = 'melicon_meli_seller_id'
+            LEFT JOIN {$wpdb->postmeta} pm_asoc_template ON p.ID = pm_asoc_template.post_id AND pm_asoc_template.meta_key = 'meliconnect_asoc_template_id'
+            LEFT JOIN {$wpdb->postmeta} pm_asoc_listing ON p.ID = pm_asoc_listing.post_id AND pm_asoc_listing.meta_key = 'meliconnect_meli_listing_id'
+            LEFT JOIN {$wpdb->postmeta} pm_listing_permalink ON p.ID = pm_listing_permalink.post_id AND pm_listing_permalink.meta_key = 'meliconnect_meli_permalink'
+            LEFT JOIN {$wpdb->postmeta} pm_listing_seller_id ON p.ID = pm_listing_seller_id.post_id AND pm_listing_seller_id.meta_key = 'meliconnect_meli_seller_id'
             WHERE p.post_type = 'product'
             AND p.post_status = 'publish'",
             ARRAY_A
@@ -477,8 +477,8 @@ class Helper
     public static function change_meli_listing_status($product_id, $status)
     {
         // Obtener IDs asociados
-        $asoc_listing = get_post_meta($product_id, 'melicon_meli_listing_id', true);
-        $seller_id = get_post_meta($product_id, 'melicon_meli_seller_id', true);
+        $asoc_listing = get_post_meta($product_id, 'meliconnect_meli_listing_id', true);
+        $seller_id = get_post_meta($product_id, 'meliconnect_meli_seller_id', true);
 
         // Validar si los datos requeridos están presentes
         if (!$asoc_listing || !$seller_id) {
@@ -544,7 +544,7 @@ class Helper
 
     public static function handleLoadMeliCategories()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_load_meli_categories_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'meliconnect_load_meli_categories_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -617,7 +617,7 @@ class Helper
 
     public static function handleLoadMeliCategories_OLD()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_load_meli_categories_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'meliconnect_load_meli_categories_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -672,18 +672,18 @@ class Helper
             $options = NULL;
         }
 
-        $path_from_route_html = '<div class="options_group"><p class="form-field"><label class="melicon-selected-category-span">' . esc_html__('Category Root', 'meliconnect') . ': </label>';
+        $path_from_route_html = '<div class="options_group"><p class="form-field"><label class="meliconnect-selected-category-span">' . esc_html__('Category Root', 'meliconnect') . ': </label>';
 
         // Generar HTML para path_from_root
-        $path_from_route_html .= '<nav class="description melicon-is-inline-block melicon-category-path melicon-breadcrumb melicon-has-succeeds-separator melicon-ml-4" aria-label="breadcrumbs"><ul>';
+        $path_from_route_html .= '<nav class="description meliconnect-is-inline-block meliconnect-category-path meliconnect-breadcrumb meliconnect-has-succeeds-separator meliconnect-ml-4" aria-label="breadcrumbs"><ul>';
 
 
         foreach ($path_from_root as $parent) {
-            $path_from_route_html .= '<li><a href="/" class="melicon-category-link" data-category-id="' . esc_attr($parent->id) . '">' . esc_html($parent->name) . '</a></li>';
+            $path_from_route_html .= '<li><a href="/" class="meliconnect-category-link" data-category-id="' . esc_attr($parent->id) . '">' . esc_html($parent->name) . '</a></li>';
         }
 
         if (!empty($path_from_root)) {
-            $path_from_route_html .= '<li><a href="" class="melicon-category-link" data-category-id="0"><i class="fa fa-times melicon-ml-2" aria-hidden="true"></i></a></li>';
+            $path_from_route_html .= '<li><a href="" class="meliconnect-category-link" data-category-id="0"><i class="fa fa-times meliconnect-ml-2" aria-hidden="true"></i></a></li>';
         }
 
         $path_from_route_html .= '</ul></nav></p></div>';
@@ -701,7 +701,7 @@ class Helper
 
     public static function handleUpdateMeliCategory()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'melicon_update_meli_category_nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'meliconnect_update_meli_category_nonce')) {
             wp_send_json_error(esc_html__('Invalid nonce', 'meliconnect'));
             return;
         }
@@ -718,7 +718,7 @@ class Helper
             wp_die();
         }
 
-        $template_id = get_post_meta($woo_product_id, 'melicon_asoc_template_id', true);
+        $template_id = get_post_meta($woo_product_id, 'meliconnect_asoc_template_id', true);
 
         if (empty($template_id)) {
 
@@ -741,9 +741,9 @@ class Helper
                 wp_die();
             }
 
-            update_post_meta($woo_product_id, 'melicon_asoc_template_id', $template_id);
-            update_post_meta($woo_product_id, 'melicon_meli_seller_id', $seller_meli_id);
-            update_post_meta($woo_product_id, 'melicon_meli_category_id', $category_id);
+            update_post_meta($woo_product_id, 'meliconnect_asoc_template_id', $template_id);
+            update_post_meta($woo_product_id, 'meliconnect_meli_seller_id', $seller_meli_id);
+            update_post_meta($woo_product_id, 'meliconnect_meli_category_id', $category_id);
 
             wp_send_json_success(['message' => 'Template created successfully', 'template_id' => $template_id]);
             wp_die();

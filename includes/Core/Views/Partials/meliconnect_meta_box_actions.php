@@ -3,25 +3,25 @@ if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 ?>
-<div id="meliconnect-loader" class="melicon-has-text-centered">
+<div id="meliconnect-loader" class="meliconnect-has-text-centered">
     <i class="fas fa-spinner fa-spin fa-2x"></i>
     <p><?php esc_html_e('Loading...', 'meliconnect'); ?></p>
 </div>
 
 <div id="meliconnect-box" style="display: none;">
-    <div class="melicon-field">
+    <div class="meliconnect-field">
         <input id="mely_sync_all"
             type="checkbox"
             name="mely_sync_all"
-            class="switch melicon-is-rounded is-warning"
+            class="switch meliconnect-is-rounded is-warning"
             checked>
-        <label for="mely_sync_all" class="melicon-label"><?php esc_html_e('Sync All Data', 'meliconnect'); ?></label>
+        <label for="mely_sync_all" class="meliconnect-label"><?php esc_html_e('Sync All Data', 'meliconnect'); ?></label>
     </div>
 
 
-    <div class="melicon-field select-data-to-sync-field">
-        <label class="melicon-label"><?php esc_html_e('Select Data to Sync', 'meliconnect'); ?></label>
-        <div class="melicon-control">
+    <div class="meliconnect-field select-data-to-sync-field">
+        <label class="meliconnect-label"><?php esc_html_e('Select Data to Sync', 'meliconnect'); ?></label>
+        <div class="meliconnect-control">
             <select id="meli_sync_options" multiple style="width:100%">
                 <option value="title"><?php esc_html_e('Title', 'meliconnect'); ?></option>
                 <option value="sku"><?php esc_html_e('SKU', 'meliconnect'); ?></option>
@@ -38,10 +38,10 @@ if (! defined('ABSPATH')) {
         </div>
     </div>
 
-    <div class="melicon-field">
-        <label class="melicon-label"><?php esc_html_e('Action', 'meliconnect'); ?></label>
-        <div class="melicon-control">
-            <div class="melicon-select">
+    <div class="meliconnect-field">
+        <label class="meliconnect-label"><?php esc_html_e('Action', 'meliconnect'); ?></label>
+        <div class="meliconnect-control">
+            <div class="meliconnect-select">
                 <select id="meli_sync_action">
                     <option value="export"><?php esc_html_e('Export to MercadoLibre', 'meliconnect'); ?></option>
                     <option value="import"><?php esc_html_e('Import from MercadoLibre', 'meliconnect'); ?></option>
@@ -50,12 +50,12 @@ if (! defined('ABSPATH')) {
         </div>
     </div>
 
-    <button id="sync-button" class="melicon-button melicon-is-primary melicon-is-fullwidth" type="button"
+    <button id="sync-button" class="meliconnect-button meliconnect-is-primary meliconnect-is-fullwidth" type="button"
         data-meli-listing-id="<?php echo esc_attr($meli_listing_id); ?>"
         data-woo-product-id="<?php echo esc_attr($woo_product_id); ?>"
         data-template-id="<?php echo esc_attr($template_id); ?>"
         data-seller-id="<?php echo esc_attr($seller_id); ?>">
-        <span class="melicon-icon melicon-is-small"><i class="fas fa-sync-alt"></i></span>
+        <span class="meliconnect-icon meliconnect-is-small"><i class="fas fa-sync-alt"></i></span>
         <span> <?php esc_html_e('Sync Now', 'meliconnect'); ?> </span>
     </button>
 </div>

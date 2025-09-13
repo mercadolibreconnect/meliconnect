@@ -20,7 +20,7 @@ class DatabaseManager
     public function __construct()
     {
         global $wpdb;
-        $this->prefix = $wpdb->prefix . 'melicon_';
+        $this->prefix = $wpdb->prefix . 'meliconnect_';
         $this->charset_collate = $wpdb->get_charset_collate();
     }
 

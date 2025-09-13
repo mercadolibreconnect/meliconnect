@@ -22,25 +22,25 @@ use Meliconnect\Meliconnect\Modules\Importer\Services\WooCommerceProductCreation
 class CronManager
 {
 
-    private $last_export_import_timestamp_option = 'melicon_last_export_import_timestamp';
-    private $last_sync_timestamp_option = 'melicon_last_sync_timestamp';
+    private $last_export_import_timestamp_option = 'meliconnect_last_export_import_timestamp';
+    private $last_sync_timestamp_option = 'meliconnect_last_sync_timestamp';
 
     private $interval = 'every_minute';
 
-    private $import_hook = 'melicon_process_import_tasks_event';
-    private $import_lock_option_name = 'melicon_import_lock';
+    private $import_hook = 'meliconnect_process_import_tasks_event';
+    private $import_lock_option_name = 'meliconnect_import_lock';
 
-    private $export_hook = 'melicon_process_export_tasks_event';
-    private $export_lock_option_name = 'melicon_export_lock';
+    private $export_hook = 'meliconnect_process_export_tasks_event';
+    private $export_lock_option_name = 'meliconnect_export_lock';
 
-    private $sync_hook = 'melicon_process_sync_tasks_event';
-    private $sync_lock_option_name = 'melicon_sync_lock';
+    private $sync_hook = 'meliconnect_process_sync_tasks_event';
+    private $sync_lock_option_name = 'meliconnect_sync_lock';
 
-    private $import_custom_hook = 'melicon_process_user_custom_import';
-    private $custom_import_lock_option_name = 'melicon_custom_import_lock';
+    private $import_custom_hook = 'meliconnect_process_user_custom_import';
+    private $custom_import_lock_option_name = 'meliconnect_custom_import_lock';
 
-    private $export_custom_hook = 'melicon_process_user_custom_export';
-    private $custom_export_lock_option_name = 'melicon_custom_export_lock';
+    private $export_custom_hook = 'meliconnect_process_user_custom_export';
+    private $custom_export_lock_option_name = 'meliconnect_custom_export_lock';
 
 
 
@@ -71,13 +71,13 @@ class CronManager
 
     public function registerCrons()
     {
-        if (isset($this->settings['melicon_import_is_disabled']) && $this->settings['melicon_import_is_disabled'] === 'true') {
+        if (isset($this->settings['meliconnect_import_is_disabled']) && $this->settings['meliconnect_import_is_disabled'] === 'true') {
             Helper::logData('Import cron not registered because it is disabled.', 'cron_generals');
         } else {
             $this->scheduleCronEvent($this->import_hook, 'Import cron registered.');
         }
 
-        if (isset($this->settings['melicon_export_is_disabled']) && $this->settings['melicon_export_is_disabled'] === 'true') {
+        if (isset($this->settings['meliconnect_export_is_disabled']) && $this->settings['meliconnect_export_is_disabled'] === 'true') {
             //Helper::logData('Export cron not registered because it is disabled.', 'cron_generals');
         } else {
             $this->scheduleCronEvent($this->export_hook, 'Export cron registered.');
@@ -329,10 +329,10 @@ class CronManager
         switch ($taskType) {
             case 'import':
             case 'export':
-                $isActive = $this->settings['melicon_general_sync_type'] == $taskType &&  $this->settings['melicon_' . $taskType . '_is_disabled'] != 'true' && $this->settings['melicon_general_sync_method'] === 'wordpress';
+                $isActive = $this->settings['meliconnect_general_sync_type'] == $taskType &&  $this->settings['meliconnect_' . $taskType . '_is_disabled'] != 'true' && $this->settings['meliconnect_general_sync_method'] === 'wordpress';
                 break;
             case 'sync':
-                $isActive = $this->settings['melicon_sync_cron_status'] === 'active' && $this->settings['melicon_sync_cron_method'] === 'wordpress';
+                $isActive = $this->settings['meliconnect_sync_cron_status'] === 'active' && $this->settings['meliconnect_sync_cron_method'] === 'wordpress';
                 break;
         }
 
@@ -343,7 +343,7 @@ class CronManager
             $time_difference_minutes = ($current_time - $last_export_timestamp) / 60;
 
 
-            if ($time_difference_minutes >= $this->settings['melicon_general_sync_frecuency_minutes'] || $last_export_timestamp == 0) {
+            if ($time_difference_minutes >= $this->settings['meliconnect_general_sync_frecuency_minutes'] || $last_export_timestamp == 0) {
                 Helper::logData('Last export timestamp: ' . $last_export_timestamp, $logPrefix);
                 Helper::logData('Current time: ' . $current_time, $logPrefix);
                 Helper::logData('Difference: ' . $time_difference_minutes, $logPrefix);
@@ -373,13 +373,13 @@ class CronManager
             //Helper::logData('La sincronización ' . $taskType . ' NO se encuentra activa.', $logPrefix);
 
             /* Helper::logData('Export/import options ', $logPrefix);
-            Helper::logData('melicon_' . $taskType . '_is_disabled: ' . $this->settings['melicon_' . $taskType . '_is_disabled'], $logPrefix);
-            Helper::logData('melicon_general_sync_type: ' . $this->settings['melicon_general_sync_type'], $logPrefix);
-            Helper::logData('melicon_general_sync_method: ' . $this->settings['melicon_general_sync_method'], $logPrefix);
+            Helper::logData('meliconnect_' . $taskType . '_is_disabled: ' . $this->settings['meliconnect_' . $taskType . '_is_disabled'], $logPrefix);
+            Helper::logData('meliconnect_general_sync_type: ' . $this->settings['meliconnect_general_sync_type'], $logPrefix);
+            Helper::logData('meliconnect_general_sync_method: ' . $this->settings['meliconnect_general_sync_method'], $logPrefix);
 
             Helper::logData('Sync options ', $logPrefix);
-            Helper::logData('melicon_sync_cron_status: ' . $this->settings['melicon_sync_cron_status'], $logPrefix);
-            Helper::logData('melicon_sync_cron_method: ' . $this->settings['melicon_sync_cron_method'], $logPrefix); */
+            Helper::logData('meliconnect_sync_cron_status: ' . $this->settings['meliconnect_sync_cron_status'], $logPrefix);
+            Helper::logData('meliconnect_sync_cron_method: ' . $this->settings['meliconnect_sync_cron_method'], $logPrefix); */
         }
     }
 
@@ -427,7 +427,7 @@ class CronManager
     private function get_pending_items_to_process($taskType)
     {
         //Get total items per batch. used in automatic export, import and sync
-        $total_items_per_batch = ($taskType == 'sync') ? $this->settings['melicon_sync_cron_items_batch'] : $this->settings['melicon_general_sync_items_batch'];
+        $total_items_per_batch = ($taskType == 'sync') ? $this->settings['meliconnect_sync_cron_items_batch'] : $this->settings['meliconnect_general_sync_items_batch'];
 
         $current_items_to_process = [];
 

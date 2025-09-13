@@ -1,15 +1,15 @@
 jQuery(document).ready(function ($) {
 
-    var current_category = $('#melicon_general_category_id_input').val();
-    var current_category_id = $('#melicon_current_category_id').val();
-    var woo_product_id = $('#melicon_woo_product_id').val();
+    var current_category = $('#meliconnect_general_category_id_input').val();
+    var current_category_id = $('#meliconnect_current_category_id').val();
+    var woo_product_id = $('#meliconnect_woo_product_id').val();
 
 
     showExportErrors();
 
     if (current_category == '') {
-        $('.melicon_hide_if_change_category').hide();
-        $('.melicon_show_if_change_category').show();
+        $('.meliconnect_hide_if_change_category').hide();
+        $('.meliconnect_show_if_change_category').show();
     }
 
     $('.wc-tabs li a').on('click', function (e) {
@@ -62,36 +62,36 @@ jQuery(document).ready(function ($) {
             url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
-                action: 'melicon_load_meli_categories',
+                action: 'meliconnect_load_meli_categories',
                 category_id: category_id,
                 seller_id: seller_id,
-                nonce: mcTranslations.melicon_load_meli_categories_nonce
+                nonce: mcTranslations.meliconnect_load_meli_categories_nonce
             },
             success: function (response) {
                 if (response.success) {
 
                     if (response.data.options !== null && response.data.options.trim() !== '') {
                         // Destruir la instancia anterior de Select2
-                        $('#melicon_general_category_id').select2('destroy');
+                        $('#meliconnect_general_category_id').select2('destroy');
 
                         // Actualizar el <select> con las nuevas opciones
-                        $('#melicon_general_category_id').html(response.data.options);
+                        $('#meliconnect_general_category_id').html(response.data.options);
 
-                        initializeCategorySelect2($('#melicon_general_category_id'));
+                        initializeCategorySelect2($('#meliconnect_general_category_id'));
 
-                        $('#melicon_general_category_id_input').val('');
+                        $('#meliconnect_general_category_id_input').val('');
 
                     } else {
-                        $('.melicon_general_category_id_field').hide();
+                        $('.meliconnect_general_category_id_field').hide();
 
-                        $('#melicon_general_category_id_input').val(category_id).trigger('change');
+                        $('#meliconnect_general_category_id_input').val(category_id).trigger('change');
                     }
 
                     // Actualizar el árbol de subcategorías
                     $('#subcategory-tree-container').html(response.data.path_from_route_html);
 
                     $('#subcategory-tree-input').val(JSON.stringify(response.data.path_from_route_json));
-                    $('#melicon-category-name-input').val(response.data.category_name);
+                    $('#meliconnect-category-name-input').val(response.data.category_name);
 
                 } else {
                     console.error(response.data.message);
@@ -105,7 +105,7 @@ jQuery(document).ready(function ($) {
     loadCategories(current_category_id);
 
     // Manejar la selección de la primera categoría para cargar subcategorías
-    $('#melicon_general_category_id').change(function () {
+    $('#meliconnect_general_category_id').change(function () {
         var selectedCategory = $(this).val();
         if (selectedCategory) {
             loadCategories(selectedCategory);
@@ -116,36 +116,36 @@ jQuery(document).ready(function ($) {
     //When changes seller reload categories
     $('body').on('change', '#template\\[seller_meli_id\\]', function (e) {
         loadCategories(0);
-        $('.melicon_general_category_id_field').show();
+        $('.meliconnect_general_category_id_field').show();
     });
 
-    $('body').on('click', '.melicon-category-link', function (e) {
+    $('body').on('click', '.meliconnect-category-link', function (e) {
         e.preventDefault();
 
         var category_id = $(this).data('category-id');
 
         loadCategories(category_id);
 
-        $('.melicon_general_category_id_field').show();
-        $('.melicon_hide_if_change_category').hide();
+        $('.meliconnect_general_category_id_field').show();
+        $('.meliconnect_hide_if_change_category').hide();
     });
 
 
 
-    $('body').on('change', '#melicon_general_category_id_input', function (e) {
+    $('body').on('change', '#meliconnect_general_category_id_input', function (e) {
 
         var newCategoryId = $(this).val();
         var product_title = $('#title').val();
         var seller_meli_id = $('#template\\[seller_meli_id\\]').val();
         var category_tree = $('#subcategory-tree-input').val();
-        var category_name = $('#melicon-category-name-input').val();
+        var category_name = $('#meliconnect-category-name-input').val();
 
 
         if (current_category_id !== newCategoryId) {
             // Only if selected category is different from the current category
-            $('#melicon-update-category-button-container').show();
-            $('.melicon_hide_if_change_category').hide();
-            $('.melicon_show_if_change_category').show();
+            $('#meliconnect-update-category-button-container').show();
+            $('.meliconnect_hide_if_change_category').hide();
+            $('.meliconnect_show_if_change_category').show();
 
             var meliconSwalTitle, meliconSwalText;
 
@@ -170,20 +170,20 @@ jQuery(document).ready(function ($) {
                 confirmButtonText: meliconSwalConfirmButtonText,
                 cancelButtonText: meliconSwalCancelButtonText,
                 customClass: {
-                    confirmButton: 'melicon-button melicon-is-primary',
-                    cancelButton: 'melicon-button melicon-is-secondary'
+                    confirmButton: 'meliconnect-button meliconnect-is-primary',
+                    cancelButton: 'meliconnect-button meliconnect-is-secondary'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var category_id = $('#melicon_general_category_id_input').val();
+                    var category_id = $('#meliconnect_general_category_id_input').val();
                     if (category_id) {
 
                         $.ajax({
                             url: mcTranslations.admin_ajax_url,
                             type: 'POST',
                             data: {
-                                action: 'melicon_update_meli_category',
-                                nonce: mcTranslations.melicon_update_meli_category_nonce,
+                                action: 'meliconnect_update_meli_category',
+                                nonce: mcTranslations.meliconnect_update_meli_category_nonce,
                                 category_id: category_id,
                                 woo_product_id: woo_product_id,
                                 product_title: product_title,
@@ -215,16 +215,16 @@ jQuery(document).ready(function ($) {
                     $(this).val(current_category_id);
 
                     loadCategories(current_category_id);
-                    $('.melicon_hide_if_change_category').show();
-                    $('.melicon_show_if_change_category').hide();
+                    $('.meliconnect_hide_if_change_category').show();
+                    $('.meliconnect_show_if_change_category').hide();
                 }
             });
         }
 
         if (current_category_id === newCategoryId && current_category_id !== '') {
-            $('#melicon-update-category-button-container').hide();
-            $('.melicon_hide_if_change_category').show();
-            $('.melicon_show_if_change_category').hide();
+            $('#meliconnect-update-category-button-container').hide();
+            $('.meliconnect_hide_if_change_category').show();
+            $('.meliconnect_show_if_change_category').hide();
         }
 
     });
@@ -250,8 +250,8 @@ jQuery(document).ready(function ($) {
         $(this).prop('disabled', true);
 
         // Define the correct action for AJAX
-        var ajaxAction = actionType === 'import' ? 'melicon_import_single_listing' : 'melicon_export_single_listing';
-        var ajaxNonce = actionType === 'import' ? mcTranslations.melicon_import_single_listing_nonce : mcTranslations.melicon_export_single_listing_nonce;
+        var ajaxAction = actionType === 'import' ? 'meliconnect_import_single_listing' : 'meliconnect_export_single_listing';
+        var ajaxNonce = actionType === 'import' ? mcTranslations.meliconnect_import_single_listing_nonce : mcTranslations.meliconnect_export_single_listing_nonce;
 
         // Perform the AJAX request
         $.ajax({
@@ -296,8 +296,8 @@ jQuery(document).ready(function ($) {
                         confirmButtonText: 'Reload Page',
                         cancelButtonText: 'Maybe Later',
                         customClass: {
-                            confirmButton: 'melicon-button melicon-is-primary',
-                            cancelButton: 'melicon-button melicon-is-secondary'
+                            confirmButton: 'meliconnect-button meliconnect-is-primary',
+                            cancelButton: 'meliconnect-button meliconnect-is-secondary'
                         }
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -325,7 +325,7 @@ jQuery(document).ready(function ($) {
     });
 
 
-    /* $('body').on('click', '#melicon_import_meli', function (e) {
+    /* $('body').on('click', '#meliconnect_import_meli', function (e) {
         e.preventDefault();
 
         var woo_product_id = $(this).data('woo-product-id');
@@ -337,8 +337,8 @@ jQuery(document).ready(function ($) {
             url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
-                action: 'melicon_import_single_listing',
-                nonce: mcTranslations.melicon_import_single_listing_nonce,
+                action: 'meliconnect_import_single_listing',
+                nonce: mcTranslations.meliconnect_import_single_listing_nonce,
                 woo_product_id: woo_product_id,
                 meli_listing_id: meli_listing_id,
                 template_id: template_id,
@@ -356,7 +356,7 @@ jQuery(document).ready(function ($) {
     });
     */
 
-    $('body').on('click', '#melicon_export_meli', function (e) {
+    $('body').on('click', '#meliconnect_export_meli', function (e) {
         e.preventDefault();
 
         var $exportButton = $(this); // Almacena el botón en una variable
@@ -372,8 +372,8 @@ jQuery(document).ready(function ($) {
             url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
-                action: 'melicon_export_single_listing',
-                nonce: mcTranslations.melicon_export_single_listing_nonce,
+                action: 'meliconnect_export_single_listing',
+                nonce: mcTranslations.meliconnect_export_single_listing_nonce,
                 woo_product_id: woo_product_id,
                 meli_listing_id: meli_listing_id,
                 template_id: template_id,
@@ -437,7 +437,7 @@ jQuery(document).ready(function ($) {
 
 
 
-    $('body').on('click', '#melicon_save_template_button', function (e) {
+    $('body').on('click', '#meliconnect_save_template_button', function (e) {
         e.preventDefault();
 
         // Crear un objeto para almacenar los valores
@@ -465,8 +465,8 @@ jQuery(document).ready(function ($) {
             url: mcTranslations.admin_ajax_url,
             type: 'POST',
             data: {
-                action: 'melicon_save_template_data',
-                nonce: mcTranslations.melicon_save_template_data_nonce,
+                action: 'meliconnect_save_template_data',
+                nonce: mcTranslations.meliconnect_save_template_data_nonce,
                 templateData: JSON.stringify(templateData),
                 woo_product_id: woo_product_id,
                 woo_product_title: $('#title').val(),
@@ -490,7 +490,7 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $('body').on('click', '#melicon_create_template_button', function (e) {
+    $('body').on('click', '#meliconnect_create_template_button', function (e) {
         e.preventDefault();
 
         $('.mercadolibre_tab a').trigger('click');
@@ -501,7 +501,7 @@ jQuery(document).ready(function ($) {
 
     });
 
-    $('body').on('click', '#melicon_unlink_meli_listing', function (e) {
+    $('body').on('click', '#meliconnect_unlink_meli_listing', function (e) {
         e.preventDefault();
 
         MeliconSwal.fire({
@@ -513,20 +513,20 @@ jQuery(document).ready(function ($) {
             confirmButtonText: 'Desvincular',
             cancelButtonText: 'Cancelar',
             customClass: {
-                confirmButton: 'melicon-button melicon-is-primary',
-                cancelButton: 'melicon-button melicon-is-secondary'
+                confirmButton: 'meliconnect-button meliconnect-is-primary',
+                cancelButton: 'meliconnect-button meliconnect-is-secondary'
             }
         }).then((result) => {
             if (result.isConfirmed) {
                 var woo_product_id = $(this).data('woo-product-id');
-                var unlink_type = $('#melicon-desviculate-type-select').val();
+                var unlink_type = $('#meliconnect-desviculate-type-select').val();
 
                 $.ajax({
                     url: mcTranslations.admin_ajax_url,
                     type: 'POST',
                     data: {
-                        action: 'melicon_unlink_single_listing',
-                        nonce: mcTranslations.melicon_unlink_single_listing_nonce,
+                        action: 'meliconnect_unlink_single_listing',
+                        nonce: mcTranslations.meliconnect_unlink_single_listing_nonce,
                         woo_product_id: woo_product_id,
                         unlink_type: unlink_type
                     },

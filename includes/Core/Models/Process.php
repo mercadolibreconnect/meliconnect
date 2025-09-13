@@ -13,7 +13,7 @@ class Process
     public static function init()
     {
         global $wpdb;
-        self::$table_name = $wpdb->prefix . "melicon_processes";
+        self::$table_name = $wpdb->prefix . "meliconnect_processes";
     }
 
 

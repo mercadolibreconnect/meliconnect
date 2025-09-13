@@ -18,7 +18,7 @@ class UserListingToImport
     {
         global $wpdb;
 
-        self::$table_name = $wpdb->prefix . "melicon_user_listings_to_import";
+        self::$table_name = $wpdb->prefix . "meliconnect_user_listings_to_import";
     }
 
     public static function create_or_skip_meli_user_listings_ids_to_import($meli_user, $meli_user_listings_ids)
@@ -68,8 +68,8 @@ class UserListingToImport
 
         $table_name = self::$table_name;
 
-        $vinculated_products = Helper::getPostsWithMetaArray('melicon_meli_listing_id');
-        $vinculated_templates = Helper::getPostsWithMetaArray('melicon_meli_template_id');
+        $vinculated_products = Helper::getPostsWithMetaArray('meliconnect_meli_listing_id');
+        $vinculated_templates = Helper::getPostsWithMetaArray('meliconnect_meli_template_id');
 
         //Helper::logData('vinculated_products: ' . wp_json_encode($vinculated_products));
 
@@ -268,15 +268,15 @@ class UserListingToImport
         $postmeta_results = $wpdb->get_results($wpdb->prepare("
             SELECT post_id, meta_value
             FROM {$wpdb->postmeta}
-            WHERE meta_key = 'melicon_meli_listing_id'
+            WHERE meta_key = 'meliconnect_meli_listing_id'
             AND meta_value IN ($placeholders)
         ", ...$meliListingIds));
 
         if (!empty($postmeta_results)) {
             foreach ($postmeta_results as $postmeta) {
-                // Actualizamos la tabla wp_melicon_user_listings_to_import con el post_id correspondiente
+                // Actualizamos la tabla wp_meliconnect_user_listings_to_import con el post_id correspondiente
                 $wpdb->update(
-                    'wp_melicon_user_listings_to_import',
+                    'wp_meliconnect_user_listings_to_import',
                     array('vinculated_product_id' => $postmeta->post_id),
                     array('meli_listing_id' => $postmeta->meta_value),
                     array('%d'),  // Formato de vinculated_product_id
@@ -291,7 +291,7 @@ class UserListingToImport
         global $wpdb;
 
         // Definir la tabla
-        $table_name = $wpdb->prefix . 'melicon_user_listings_to_import';
+        $table_name = $wpdb->prefix . 'meliconnect_user_listings_to_import';
 
         // Manejar un solo valor de meli_listing_id convirtiéndolo en un array
         if (!is_array($meli_listing_ids) && $meli_listing_ids !== 'all') {

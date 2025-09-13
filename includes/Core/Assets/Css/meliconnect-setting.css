@@ -1,8 +1,8 @@
-    .melicon-image-uploader {
+    .meliconnect-image-uploader {
         position: relative;
     }
 
-    .melicon-image-uploader .melicon-file-cta {
+    .meliconnect-image-uploader .meliconnect-file-cta {
         min-height: 180px !important;
         display: flex;
         align-items: center;
@@ -11,7 +11,7 @@
         overflow: hidden;
     }
 
-    .melicon-image-uploader .melicon-image-preview {
+    .meliconnect-image-uploader .meliconnect-image-preview {
         border: 1px solid #dbdbdb !important;
     }
 

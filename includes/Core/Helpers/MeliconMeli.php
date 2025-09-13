@@ -431,7 +431,7 @@ class MeliconMeli
             }
 
             // Guardar el 'picture_id' devuelto por MercadoLibre como un meta dato del adjunto
-            update_post_meta($attachment_id, 'melicon_meli_image_id', $json->id);
+            update_post_meta($attachment_id, 'meliconnect_meli_image_id', $json->id);
 
             // Retornar el 'picture_id' para confirmar la carga exitosa
             return $json->id;

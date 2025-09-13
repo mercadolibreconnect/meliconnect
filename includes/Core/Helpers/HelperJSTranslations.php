@@ -71,12 +71,12 @@ class HelperJSTranslations
             'copy_to_clipboard_success' => esc_html__('Successfully copied to clipboard', 'meliconnect'),
             'default_error_message' => esc_html__('Something went wrong', 'meliconnect'),
 
-            'melicon_load_meli_categories_nonce' => wp_create_nonce('melicon_load_meli_categories_nonce'),
-            'melicon_update_meli_category_nonce' => wp_create_nonce('melicon_update_meli_category_nonce'),
-            'melicon_import_single_listing_nonce' => wp_create_nonce('melicon_import_single_listing_nonce'),
-            'melicon_export_single_listing_nonce' => wp_create_nonce('melicon_export_single_listing_nonce'),
-            'melicon_unlink_single_listing_nonce' => wp_create_nonce('melicon_unlink_single_listing_nonce'),
-            'melicon_save_template_data_nonce' => wp_create_nonce('melicon_save_template_data_nonce'),
+            'meliconnect_load_meli_categories_nonce' => wp_create_nonce('meliconnect_load_meli_categories_nonce'),
+            'meliconnect_update_meli_category_nonce' => wp_create_nonce('meliconnect_update_meli_category_nonce'),
+            'meliconnect_import_single_listing_nonce' => wp_create_nonce('meliconnect_import_single_listing_nonce'),
+            'meliconnect_export_single_listing_nonce' => wp_create_nonce('meliconnect_export_single_listing_nonce'),
+            'meliconnect_unlink_single_listing_nonce' => wp_create_nonce('meliconnect_unlink_single_listing_nonce'),
+            'meliconnect_save_template_data_nonce' => wp_create_nonce('meliconnect_save_template_data_nonce'),
 
             'current_category_id' => isset($form_values['category_id']) ? $form_values['category_id'] : '',
             'woo_product_id'      => isset($woo_product_id) ? $woo_product_id : '',

@@ -18,7 +18,7 @@ class UserConnection
     {
         global $wpdb;
 
-        self::$table_name = $wpdb->prefix . "melicon_user_connection";
+        self::$table_name = $wpdb->prefix . "meliconnect_user_connection";
     }
 
     public static function getAllUsers()
@@ -96,7 +96,7 @@ class UserConnection
         
         
 
-        // Insertar cada usuario recibido en la tabla `wp_melicon_user_connection`
+        // Insertar cada usuario recibido en la tabla `wp_meliconnect_user_connection`
         foreach ($users_in_domain as $user) {
 
             if (is_null($user['access_token']) && is_null($user['user_id'])) {
@@ -153,10 +153,10 @@ class UserConnection
         if ($pending_count > 0) {
             $message = "You have {$pending_count} connections pending vinculation to MercadoLibre in hub.";
             Helper::logData($message, 'users_in_domain');
-            update_option('melicon_pending_connection_notifications', $message);
+            update_option('meliconnect_pending_connection_notifications', $message);
         } else {
             // Eliminar el mensaje si no hay conexiones pendientes
-            delete_option('melicon_pending_connection_notifications');
+            delete_option('meliconnect_pending_connection_notifications');
         }
 
         // Responder con el estado de la acción

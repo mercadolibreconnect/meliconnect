@@ -116,20 +116,20 @@ class SettingController implements ControllerInterface
         }
 
         // Converts to an array and filter empty values
-        $general_image_attachment_ids = array_map('intval', array_filter((array) $data['melicon_general_image_attachment_ids']));
-        $general_description_template = sanitize_text_field($data['melicon_general_description_template']);
-        $general_sync_type = sanitize_text_field($data['melicon_general_sync_type']);
-        $general_sync_items_batch = intval($data['melicon_general_sync_items_batch']);
-        $general_sync_frecuency_minutes = intval($data['melicon_general_sync_frecuency_minutes']);
-        $general_sync_method = sanitize_text_field($data['melicon_general_sync_method']);
+        $general_image_attachment_ids = array_map('intval', array_filter((array) $data['meliconnect_general_image_attachment_ids']));
+        $general_description_template = sanitize_text_field($data['meliconnect_general_description_template']);
+        $general_sync_type = sanitize_text_field($data['meliconnect_general_sync_type']);
+        $general_sync_items_batch = intval($data['meliconnect_general_sync_items_batch']);
+        $general_sync_frecuency_minutes = intval($data['meliconnect_general_sync_frecuency_minutes']);
+        $general_sync_method = sanitize_text_field($data['meliconnect_general_sync_method']);
 
         // Guarda los datos en las opciones de WooCommerce
-        update_option('melicon_general_image_attachment_ids', $general_image_attachment_ids);
-        update_option('melicon_general_description_template', $general_description_template);
-        update_option('melicon_general_sync_type', $general_sync_type);
-        update_option('melicon_general_sync_items_batch', $general_sync_items_batch);
-        update_option('melicon_general_sync_frecuency_minutes', $general_sync_frecuency_minutes);
-        update_option('melicon_general_sync_method', $general_sync_method);
+        update_option('meliconnect_general_image_attachment_ids', $general_image_attachment_ids);
+        update_option('meliconnect_general_description_template', $general_description_template);
+        update_option('meliconnect_general_sync_type', $general_sync_type);
+        update_option('meliconnect_general_sync_items_batch', $general_sync_items_batch);
+        update_option('meliconnect_general_sync_frecuency_minutes', $general_sync_frecuency_minutes);
+        update_option('meliconnect_general_sync_method', $general_sync_method);
 
         // Envía una respuesta de éxito
         wp_send_json_success('esc_html__(Settings saved successfully , meliconnect)');
@@ -197,12 +197,12 @@ class SettingController implements ControllerInterface
             ];
         }
 
-        echo '<div class="melicon-columns">
-            <div class="melicon-column melicon-$&">
-                <label for="' . esc_attr($key) . '" class="melicon-label">' . esc_html($label) . '</label>
+        echo '<div class="meliconnect-columns">
+            <div class="meliconnect-column meliconnect-$&">
+                <label for="' . esc_attr($key) . '" class="meliconnect-label">' . esc_html($label) . '</label>
             </div>
-            <div class="melicon-column melicon-is-8">
-                <div class="melicon-select melicon-is-fullwidth">
+            <div class="meliconnect-column meliconnect-is-8">
+                <div class="meliconnect-select meliconnect-is-fullwidth">
                     <select name="' . esc_attr($key) . '" id="' . esc_attr($key) . '">';
 
         foreach ($options as $option_key => $option_value) {

@@ -1,8 +1,8 @@
-#melicon-importer-table {
+#meliconnect-importer-table {
     position: relative;
 }
 
-#melicon-import-table-overlay {
+#meliconnect-import-table-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -22,11 +22,11 @@
     /* No permitir interacción */
 }
 
-#melicon-import-table-overlay.active {
+#meliconnect-import-table-overlay.active {
     display: flex;
     /* Muestra el overlay */
 }
 
-#melicon-importer-table .wp-list-table .column-meli_listing_id {
+#meliconnect-importer-table .wp-list-table .column-meli_listing_id {
     width: 40%;
 }

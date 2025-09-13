@@ -13,7 +13,7 @@ class Notification
     // Este método se llama automáticamente cuando se accede por primera vez a la clase
     public static function init() {
         global $wpdb;
-        self::$table_name = $wpdb->prefix . "melicon_notifications";
+        self::$table_name = $wpdb->prefix . "meliconnect_notifications";
     }
 
     public static function getNotifications() {

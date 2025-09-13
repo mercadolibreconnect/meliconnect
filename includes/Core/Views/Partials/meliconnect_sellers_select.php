@@ -23,8 +23,8 @@ $sellerSelectAddAll = isset($sellerSelectAddAll) ? $sellerSelectAddAll : false;
         echo '<input type="hidden" name="' . esc_attr($selectName) . '" value="' . esc_attr($seller->user_id) . '">';
     ?>
 <?php else: ?>
-    <div class="melicon-control">
-        <div class="melicon-select">
+    <div class="meliconnect-control">
+        <div class="meliconnect-select">
             <select name="<?php echo esc_attr($selectName); ?>">
                 <?php if ($sellerSelectAddAll): ?>
                     <option value="all" <?php selected($selected_seller, 'all'); ?>>

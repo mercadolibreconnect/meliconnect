@@ -18,7 +18,7 @@ class ProductToExport
     {
         global $wpdb;
 
-        self::$table_name = $wpdb->prefix . "melicon_products_to_export";
+        self::$table_name = $wpdb->prefix . "meliconnect_products_to_export";
     }
 
 

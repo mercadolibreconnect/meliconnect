@@ -58,7 +58,7 @@ class ProductDataFacade
             foreach ($woo_products_ids as $woo_product_id) {
 
                 //$template_id = Template::createUpdateTemplateFromMeliListing('product', $woo_product_id, $meli_listing_data['data']);
-                $template_id = get_post_meta($woo_product_id, 'melicon_asoc_template_id', true);
+                $template_id = get_post_meta($woo_product_id, 'meliconnect_asoc_template_id', true);
 
                 if($template_id) {
                     //Deletes and Creates template attributes

@@ -1,23 +1,23 @@
 jQuery(document).ready(function ($) {
     // Function to change the active content and adjust the active state of the tabs
     function setActiveTab(tabId) {
-        var $tabs = $('#melicon-settings-tabs li');
+        var $tabs = $('#meliconnect-settings-tabs li');
         var $targetTab = $tabs.filter('[data-tab="' + tabId + '"]');
-        var selectAction = 'melicon_settings_get_general_html';
+        var selectAction = 'meliconnect_settings_get_general_html';
 
         // Define the content based on the tab ID
         switch (tabId) {
             case "general":
-                selectAction = 'melicon_settings_get_general_html';
+                selectAction = 'meliconnect_settings_get_general_html';
                 break;
             case "export":
-                selectAction = 'melicon_settings_get_export_html';
+                selectAction = 'meliconnect_settings_get_export_html';
                 break;
             case "import":
-                selectAction = 'melicon_settings_get_import_html';
+                selectAction = 'meliconnect_settings_get_import_html';
                 break;
             case "synchronizer":
-                selectAction = 'melicon_settings_get_sync_html';
+                selectAction = 'meliconnect_settings_get_sync_html';
                 break;
             default:
                 console.error("Unknown Tab ID: ", tabId);
@@ -38,8 +38,8 @@ jQuery(document).ready(function ($) {
                 // Insert the obtained HTML content into the tab container
                 $('#tab-content').html(response);
 
-                $tabs.removeClass('melicon-is-active');
-                $targetTab.addClass('melicon-is-active');
+                $tabs.removeClass('meliconnect-is-active');
+                $targetTab.addClass('meliconnect-is-active');
 
                 switch (tabId) {
                     case 'export':
@@ -71,7 +71,7 @@ jQuery(document).ready(function ($) {
     }
 
     // Click handler for the tabs
-    $('#melicon-settings-tabs li').click(function () {
+    $('#meliconnect-settings-tabs li').click(function () {
         var tabId = $(this).data('tab');
         window.location.hash = tabId; // Update the hash in the URL
         setActiveTab(tabId);
@@ -80,7 +80,7 @@ jQuery(document).ready(function ($) {
 
     // Check if there is a hash in the URL when the page loads and show the corresponding tab
     var currentTab = window.location.hash.replace('#', '') || 'general'; // 'general' as fallback
-    if ($('#melicon-settings-tabs li[data-tab="' + currentTab + '"]').length) {
+    if ($('#meliconnect-settings-tabs li[data-tab="' + currentTab + '"]').length) {
         setActiveTab(currentTab);
     } else {
         setActiveTab('general'); // Fallback to 'general' if the hash does not match any tab
@@ -107,18 +107,18 @@ function initGeneralSettings() {
                 multiple: false // Permitir la selección de una sola imagen
             }).on('select', function () {
                 var attachment = custom_uploader.state().get('selection').first().toJSON();
-                button.closest('.melicon-image-uploader').find('.image_attachment_id').val(attachment.id); // Actualiza el input oculto con el ID de la imagen
-                button.closest('.melicon-image-uploader').find('.image-name').text(attachment.name); // Muestra el nombre de la imagen seleccionada
+                button.closest('.meliconnect-image-uploader').find('.image_attachment_id').val(attachment.id); // Actualiza el input oculto con el ID de la imagen
+                button.closest('.meliconnect-image-uploader').find('.image-name').text(attachment.name); // Muestra el nombre de la imagen seleccionada
 
-                button.closest('.melicon-image-uploader').find('.melicon-file-cta').hide();
-                button.closest('.melicon-image-uploader').find('.delete-image').show();
+                button.closest('.meliconnect-image-uploader').find('.meliconnect-file-cta').hide();
+                button.closest('.meliconnect-image-uploader').find('.delete-image').show();
                 // Actualiza el src del elemento img con la URL de la imagen seleccionada y muestra la imagen
-                button.closest('.melicon-image-uploader').find('.melicon-image-preview').attr('src', attachment.url).show();
+                button.closest('.meliconnect-image-uploader').find('.meliconnect-image-preview').attr('src', attachment.url).show();
             }).open();
         });
         $('.insert-tag').click(function () {
             var tag = $(this).data('tag');
-            var textarea = $('textarea[name="melicon_general_description_template"]');
+            var textarea = $('textarea[name="meliconnect_general_description_template"]');
             var cursorPos = textarea.prop('selectionStart');
             var v = textarea.val();
             var textBefore = v.substring(0, cursorPos);
@@ -128,11 +128,11 @@ function initGeneralSettings() {
         });
 
         // Manejador del evento click para el botón de eliminar
-        $('.melicon-image-uploader').on('click', '.delete-image', function () {
-            var uploader = $(this).closest('.melicon-image-uploader');
+        $('.meliconnect-image-uploader').on('click', '.delete-image', function () {
+            var uploader = $(this).closest('.meliconnect-image-uploader');
 
             // Restablece el preview y oculta la imagen y el botón de eliminar
-            uploader.find('.melicon-image-preview').attr('src', '').hide();
+            uploader.find('.meliconnect-image-preview').attr('src', '').hide();
             $(this).hide();
 
             // Opcional: restablecer el input file o cualquier otro estado necesario
@@ -140,14 +140,14 @@ function initGeneralSettings() {
             uploader.find('.image-name').text(mcTranslations.no_image_selected);
 
             // Muestra de nuevo el span .file-cta si se desea
-            uploader.find('.melicon-file-cta').show();
+            uploader.find('.meliconnect-file-cta').show();
         });
 
-        $('#melicon-general-settings-form').submit(function (e) {
+        $('#meliconnect-general-settings-form').submit(function (e) {
             e.preventDefault();
             var formData = new FormData(this); // Recolecta los datos del formulario
 
-            formData.append("action", "melicon_save_general_settings");
+            formData.append("action", "meliconnect_save_general_settings");
             formData.append("nonce", mcTranslations.ajax_settings_nonce);
 
             $.ajax({
@@ -175,19 +175,19 @@ function initGeneralSettings() {
 function initExportSettings() {
     function toggleExportSettings(isDisabled) {
         if (isDisabled) {
-            jQuery('#melicon-export-settings-melicon-columns input, #melicon-export-settings-melicon-columns select, #melicon-export-settings-melicon-columns textarea').prop('disabled', true);
+            jQuery('#meliconnect-export-settings-meliconnect-columns input, #meliconnect-export-settings-meliconnect-columns select, #meliconnect-export-settings-meliconnect-columns textarea').prop('disabled', true);
         } else {
-            jQuery('#melicon-export-settings-melicon-columns input, #melicon-export-settings-melicon-columns select, #melicon-export-settings-melicon-columns textarea').prop('disabled', false);
+            jQuery('#meliconnect-export-settings-meliconnect-columns input, #meliconnect-export-settings-meliconnect-columns select, #meliconnect-export-settings-meliconnect-columns textarea').prop('disabled', false);
         }
     }
 
-    toggleExportSettings(jQuery('#melicon_export_is_disabled').prop('checked'));
+    toggleExportSettings(jQuery('#meliconnect_export_is_disabled').prop('checked'));
 
-    jQuery('#melicon-export-settings-form').off('submit').on('submit', function (e) {
+    jQuery('#meliconnect-export-settings-form').off('submit').on('submit', function (e) {
         e.preventDefault();
         var formData = new FormData(this);
 
-        formData.append("action", "melicon_save_others_settings");
+        formData.append("action", "meliconnect_save_others_settings");
         formData.append("nonce", mcTranslations.ajax_settings_nonce);
 
         jQuery.ajax({
@@ -209,7 +209,7 @@ function initExportSettings() {
         });
     });
 
-    jQuery('#melicon_export_is_disabled').off('change').on('change', function (e) {
+    jQuery('#meliconnect_export_is_disabled').off('change').on('change', function (e) {
         var checkbox = jQuery(this);
         e.preventDefault();
 
@@ -224,8 +224,8 @@ function initExportSettings() {
                 confirmButtonText: mcTranslations.confirm,
                 cancelButtonText: mcTranslations.cancel,
                 customClass: {
-                    confirmButton: 'melicon-button melicon-is-primary',
-                    cancelButton: 'melicon-button melicon-is-secondary'
+                    confirmButton: 'meliconnect-button meliconnect-is-primary',
+                    cancelButton: 'meliconnect-button meliconnect-is-secondary'
                 }
 
             }).then((result) => {
@@ -244,21 +244,21 @@ function initImportSettings() {
 
         function toggleImportSettings(isDisabled) {
             if (isDisabled) {
-                $('#melicon-import-settings-melicon-columns input, #melicon-import-settings-melicon-columns select, #melicon-import-settings-melicon-columns textarea').prop('disabled', true);
+                $('#meliconnect-import-settings-meliconnect-columns input, #meliconnect-import-settings-meliconnect-columns select, #meliconnect-import-settings-meliconnect-columns textarea').prop('disabled', true);
             } else {
-                $('#melicon-import-settings-melicon-columns input, #melicon-import-settings-melicon-columns select, #melicon-import-settings-melicon-columns textarea').prop('disabled', false);
+                $('#meliconnect-import-settings-meliconnect-columns input, #meliconnect-import-settings-meliconnect-columns select, #meliconnect-import-settings-meliconnect-columns textarea').prop('disabled', false);
             }
         }
 
         // Inicializar según el estado actual del checkbox
-        toggleImportSettings($('#melicon_import_is_disabled').prop('checked'));
+        toggleImportSettings($('#meliconnect_import_is_disabled').prop('checked'));
 
         // Manejo del submit del formulario
-        $('#melicon-import-settings-form').submit(function (e) {
+        $('#meliconnect-import-settings-form').submit(function (e) {
             e.preventDefault();
             var formData = new FormData(this);
 
-            formData.append("action", "melicon_save_others_settings");
+            formData.append("action", "meliconnect_save_others_settings");
             formData.append("nonce", mcTranslations.ajax_settings_nonce);
 
             $.ajax({
@@ -281,7 +281,7 @@ function initImportSettings() {
         });
 
         // Manejo del cambio en el checkbox de deshabilitar importación
-        $('#melicon_import_is_disabled').on('change', function (e) {
+        $('#meliconnect_import_is_disabled').on('change', function (e) {
             var checkbox = $(this);
 
             e.preventDefault();
@@ -297,8 +297,8 @@ function initImportSettings() {
                     confirmButtonText: mcTranslations.confirm,
                     cancelButtonText: mcTranslations.cancel,
                     customClass: {
-                        confirmButton: 'melicon-button melicon-is-primary',
-                        cancelButton: 'melicon-button melicon-is-secondary'
+                        confirmButton: 'meliconnect-button meliconnect-is-primary',
+                        cancelButton: 'meliconnect-button meliconnect-is-secondary'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -314,11 +314,11 @@ function initImportSettings() {
 
 function initSyncSettings() {
     jQuery(document).ready(function ($) {
-        $('#melicon-sync-settings-form').submit(function (e) {
+        $('#meliconnect-sync-settings-form').submit(function (e) {
             e.preventDefault();
             var formData = new FormData(this);
 
-            formData.append("action", "melicon_save_others_settings");
+            formData.append("action", "meliconnect_save_others_settings");
             formData.append("nonce", mcTranslations.ajax_settings_nonce);
 
             $.ajax({

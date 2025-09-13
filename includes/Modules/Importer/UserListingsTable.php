@@ -32,7 +32,7 @@ class UserListingsTable extends \WP_List_Table
     public static function get_user_listings($per_page, $page_number, $filters = [], $orderby = 'meli_listing_title', $order = 'asc')
     {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'melicon_user_listings_to_import';
+        $table_name = $wpdb->prefix . 'meliconnect_user_listings_to_import';
 
         // Construir las cláusulas WHERE y los parámetros de consulta
         list($where_sql, $query_params) = self::build_filters_query($filters);
@@ -122,7 +122,7 @@ class UserListingsTable extends \WP_List_Table
         global $wpdb;
 
         // Nombre de la tabla (seguro con $wpdb->prefix)
-        $table_name = $wpdb->prefix . 'melicon_user_listings_to_import';
+        $table_name = $wpdb->prefix . 'meliconnect_user_listings_to_import';
 
         // Construir las cláusulas WHERE y los parámetros de consulta
         list($where_sql, $query_params) = self::build_filters_query($filters);
@@ -164,8 +164,8 @@ class UserListingsTable extends \WP_List_Table
     public function column_has_product_vinculation($item)
     {
         $text = $item['vinculated_product_id']
-            ? Helper::meliconnectPrintTag(esc_html__('To update', 'meliconnect'), 'melicon-is-warning')
-            : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'melicon-is-danger');
+            ? Helper::meliconnectPrintTag(esc_html__('To update', 'meliconnect'), 'meliconnect-is-warning')
+            : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'meliconnect-is-danger');
 
         $subText = '';
 
@@ -178,7 +178,7 @@ class UserListingsTable extends \WP_List_Table
 
             foreach ($matchMessages as $key => $message) {
                 if (!empty($item[$key])) {
-                    $subText .= '<p class="mt-2">' . Helper::meliconnectPrintTag($message, ' melicon-is-link melicon-is-light') . '</p>';
+                    $subText .= '<p class="mt-2">' . Helper::meliconnectPrintTag($message, ' meliconnect-is-link meliconnect-is-light') . '</p>';
                 }
             }
         }
@@ -191,7 +191,7 @@ class UserListingsTable extends \WP_List_Table
             // Si hay coincidencia, mostrar solo la opción "Clear Match"
             $actions = [
                 'clear-match' => sprintf(
-                    '<a href="#" class="melicon-clear-product-match" data-meli-listing-id="%s">' . esc_html__('Clear Match', 'meliconnect') . '</a>',
+                    '<a href="#" class="meliconnect-clear-product-match" data-meli-listing-id="%s">' . esc_html__('Clear Match', 'meliconnect') . '</a>',
                     esc_attr($item['meli_listing_id'])
                 )
             ];
@@ -200,11 +200,11 @@ class UserListingsTable extends \WP_List_Table
                 ? [
                     'view' => sprintf('<a href="%s" target="_blank">' . esc_html__('View', 'meliconnect') . '</a>', esc_url(get_permalink($item['vinculated_product_id']))),
                     'edit' => sprintf('<a href="%s" target="_blank">' . esc_html__('Edit', 'meliconnect') . '</a>', esc_url(get_edit_post_link($item['vinculated_product_id']))),
-                    'delete-vinculation' => sprintf('<a href="#" class="melicon-delete-product-vinculation" data-product-type="%s" data-woo-product-id="%d" data-meli-listing-id="%s">' . esc_html__('Desvinculate', 'meliconnect') . '</a>', esc_attr($product_type), esc_attr($item['vinculated_product_id']), esc_attr($item['meli_listing_id']))
+                    'delete-vinculation' => sprintf('<a href="#" class="meliconnect-delete-product-vinculation" data-product-type="%s" data-woo-product-id="%d" data-meli-listing-id="%s">' . esc_html__('Desvinculate', 'meliconnect') . '</a>', esc_attr($product_type), esc_attr($item['vinculated_product_id']), esc_attr($item['meli_listing_id']))
                 ]
                 : [
                     'find-a-match' => sprintf(
-                        '<a href="#" class="melicon-find-product-to-match melicon-js-modal-trigger" 
+                        '<a href="#" class="meliconnect-find-product-to-match meliconnect-js-modal-trigger" 
                     data-user-listing-id ="%s"
                     data-product-type="%s"  
                     data-listing-id="%s"
@@ -214,7 +214,7 @@ class UserListingsTable extends \WP_List_Table
                     data-meli-status="%s" 
                     data-price="%s" 
                     data-available-quantity="%s" 
-                    data-target="melicon-find-match-modal">' . esc_html__('Find match', 'meliconnect') . '</a>',
+                    data-target="meliconnect-find-match-modal">' . esc_html__('Find match', 'meliconnect') . '</a>',
                         esc_attr($item['id']),
                         esc_attr($product_type),
                         esc_attr($item['meli_listing_id']),
@@ -243,24 +243,24 @@ class UserListingsTable extends \WP_List_Table
 
 ?>
 
-        <div class="melicon-columns melicon-is-multiline">
+        <div class="meliconnect-columns meliconnect-is-multiline">
             <!-- Primera Columna -->
-            <div class="melicon-column melicon-is-5">
+            <div class="meliconnect-column meliconnect-is-5">
                 <strong><?php esc_html_e('ID', 'meliconnect'); ?>:</strong> <?php echo esc_html($item['meli_listing_id']); ?><br>
                 <strong><?php esc_html_e('User ID', 'meliconnect'); ?>:</strong> <?php echo esc_html($item['meli_user_id']); ?><br>
                 <?php if (!empty($item['meli_sku'])): ?>
                     <strong><?php esc_html_e('SKU', 'meliconnect'); ?>:</strong> <?php echo esc_html($item['meli_sku']); ?>
                 <?php endif; ?>
                 <strong><?php esc_html_e('Status', 'meliconnect'); ?>:</strong>
-                <span class="melicon-color-text <?php echo esc_attr($status_class); ?>"> <?php echo esc_html($item['meli_status']); ?></span>
+                <span class="meliconnect-color-text <?php echo esc_attr($status_class); ?>"> <?php echo esc_html($item['meli_status']); ?></span>
                 <br>
                 <strong><?php esc_html_e('Product Type', 'meliconnect'); ?>:</strong>
-                <span class="melicon-color-text <?php echo esc_attr($product_type_class); ?>"> <?php echo esc_html($item['meli_product_type']); ?></span>
+                <span class="meliconnect-color-text <?php echo esc_attr($product_type_class); ?>"> <?php echo esc_html($item['meli_product_type']); ?></span>
                 <strong><?php esc_html_e('Listing Type', 'meliconnect'); ?>:</strong> <?php echo esc_html($meli_response['listing_type_id']); ?>
             </div>
 
             <!-- Segunda Columna -->
-            <div class="melicon-column melicon-is-6">
+            <div class="meliconnect-column meliconnect-is-6">
                 <strong><?php esc_html_e('Price', 'meliconnect'); ?>:</strong> <?php echo esc_html($meli_response['price']); ?><br>
                 <strong><?php esc_html_e('Sold Quantity', 'meliconnect'); ?>:</strong> <?php echo esc_html($meli_response['sold_quantity']); ?><br>
                 <strong><?php esc_html_e('Available Quantity', 'meliconnect'); ?>:</strong> <?php echo esc_html($meli_response['available_quantity']); ?>
@@ -272,8 +272,8 @@ class UserListingsTable extends \WP_List_Table
     public function column_has_template_vinculation($item)
     {
         $text = $item['vinculated_template_id']
-            ? Helper::meliconnectPrintTag(esc_html__('Using template', 'meliconnect'), 'melicon-is-warning')
-            : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'melicon-is-danger');
+            ? Helper::meliconnectPrintTag(esc_html__('Using template', 'meliconnect'), 'meliconnect-is-warning')
+            : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'meliconnect-is-danger');
 
         $actions = [];
 
@@ -288,7 +288,7 @@ class UserListingsTable extends \WP_List_Table
             );
 
             $actions['delete-vinculation'] = sprintf(
-                '<a class="melicon-delete-template-vinculation" data-listing-id="%s" data-template-id="%s" href="%s">%s</a>',
+                '<a class="meliconnect-delete-template-vinculation" data-listing-id="%s" data-template-id="%s" href="%s">%s</a>',
                 esc_attr($item['meli_listing_id']),
                 esc_attr($item['vinculated_template_id']),
                 esc_url($url),
@@ -309,19 +309,19 @@ class UserListingsTable extends \WP_List_Table
         switch ($item['import_status']) {
 
             case 'processing':
-                $html = Helper::meliconnectPrintTag(esc_html__('Processing', 'meliconnect'), 'melicon-is-info');
+                $html = Helper::meliconnectPrintTag(esc_html__('Processing', 'meliconnect'), 'meliconnect-is-info');
                 break;
             case 'paused':
-                $html = Helper::meliconnectPrintTag(esc_html__('Paused', 'meliconnect'), 'melicon-is-secondary');
+                $html = Helper::meliconnectPrintTag(esc_html__('Paused', 'meliconnect'), 'meliconnect-is-secondary');
                 break;
             case 'failed':
-                $html = Helper::meliconnectPrintTag(esc_html__('Failed', 'meliconnect'), 'melicon-is-danger');
+                $html = Helper::meliconnectPrintTag(esc_html__('Failed', 'meliconnect'), 'meliconnect-is-danger');
                 break;
             case 'finished':
-                $html = Helper::meliconnectPrintTag(esc_html__('Imported', 'meliconnect'), 'melicon-is-success');
+                $html = Helper::meliconnectPrintTag(esc_html__('Imported', 'meliconnect'), 'meliconnect-is-success');
                 break;
             default:
-                $html = Helper::meliconnectPrintTag(esc_html__('Pending', 'meliconnect'), 'melicon-is-warning');
+                $html = Helper::meliconnectPrintTag(esc_html__('Pending', 'meliconnect'), 'meliconnect-is-warning');
                 break;
         }
 

@@ -87,16 +87,16 @@ class ListingDataFacade
             ProductToExport::update_product_to_export_status($woo_product_id, 'finished', '');
         }
 
-        update_post_meta($woo_product_id, 'melicon_last_export_time', time());
+        update_post_meta($woo_product_id, 'meliconnect_last_export_time', time());
 
         // Si hay errores, almacenarlos en un array serializado en la base de datos
         if (!empty($all_errors)) {
-            update_post_meta($woo_product_id, 'melicon_export_meli_errors', maybe_serialize($all_errors));
-            update_post_meta($woo_product_id, 'melicon_export_meli_error_time', time());
+            update_post_meta($woo_product_id, 'meliconnect_export_meli_errors', maybe_serialize($all_errors));
+            update_post_meta($woo_product_id, 'meliconnect_export_meli_error_time', time());
         } else {
             // Si no hay errores, eliminamos el campo de errores previo
-            delete_post_meta($woo_product_id, 'melicon_export_meli_errors');
-            delete_post_meta($woo_product_id, 'melicon_export_meli_error_time');
+            delete_post_meta($woo_product_id, 'meliconnect_export_meli_errors');
+            delete_post_meta($woo_product_id, 'meliconnect_export_meli_error_time');
         }
     }
 
@@ -107,8 +107,8 @@ class ListingDataFacade
         //Helper::logData('listing_item: ' . wp_json_encode($listing_item));
 
         if ($listing_item['success'] === true) {
-            delete_post_meta($woo_product_id, 'melicon_export_meli_errors');
-            delete_post_meta($woo_product_id, 'melicon_export_meli_error_time');
+            delete_post_meta($woo_product_id, 'meliconnect_export_meli_errors');
+            delete_post_meta($woo_product_id, 'meliconnect_export_meli_error_time');
 
             ProductToExport::update_product_to_export_status($woo_product_id, 'finished', '');
 
@@ -130,19 +130,19 @@ class ListingDataFacade
         $listing_item = $listing_item['body'];
         Helper::logData('listing_item: ' . wp_json_encode($listing_item));
 
-        update_post_meta($woo_product_id, 'melicon_meli_seller_id', $listing_item['seller_id']);
-        update_post_meta($woo_product_id, 'melicon_meli_category_id', $listing_item['category_id']);
-        update_post_meta($woo_product_id, 'melicon_meli_listing_id', $listing_item['id']);
-        update_post_meta($woo_product_id, 'melicon_meli_permalink', $listing_item['permalink']);
-        update_post_meta($woo_product_id, 'melicon_meli_listing_type_id', $listing_item['listing_type_id']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_seller_id', $listing_item['seller_id']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_category_id', $listing_item['category_id']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_listing_id', $listing_item['id']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_permalink', $listing_item['permalink']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_listing_type_id', $listing_item['listing_type_id']);
 
-        update_post_meta($woo_product_id, 'melicon_meli_status', $listing_item['status']);
-        update_post_meta($woo_product_id, 'melicon_meli_sub_status', $listing_item['sub_status']);
-        update_post_meta($woo_product_id, 'melicon_meli_site_id', $listing_item['site_id']);
-        update_post_meta($woo_product_id, 'melicon_meli_catalog_product_id', $listing_item['catalog_product_id']);
-        update_post_meta($woo_product_id, 'melicon_meli_domain_id', $listing_item['domain_id']);
-        update_post_meta($woo_product_id, 'melicon_meli_sold_quantity', $listing_item['sold_quantity']);
-        update_post_meta($woo_product_id, 'melicon_meli_shipping_mode', $listing_item['shipping']['mode']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_status', $listing_item['status']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_sub_status', $listing_item['sub_status']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_site_id', $listing_item['site_id']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_catalog_product_id', $listing_item['catalog_product_id']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_domain_id', $listing_item['domain_id']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_sold_quantity', $listing_item['sold_quantity']);
+        update_post_meta($woo_product_id, 'meliconnect_meli_shipping_mode', $listing_item['shipping']['mode']);
 
     }
 }

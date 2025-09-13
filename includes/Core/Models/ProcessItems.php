@@ -13,7 +13,7 @@ class ProcessItems
     public static function init()
     {
         global $wpdb;
-        self::$table_name = $wpdb->prefix . "melicon_process_items";
+        self::$table_name = $wpdb->prefix . "meliconnect_process_items";
     }
 
     public static function updateProcessedItemStatus($item_process_id, $status, $process_id )

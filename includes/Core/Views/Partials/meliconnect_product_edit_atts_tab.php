@@ -9,9 +9,9 @@ $instance = $data['instance'] ?? null;
 
 ?>
 
-<div id="melicon-mercadolibre-attributes" class="melicon_hide_if_change_category melicon-mt-2">
+<div id="meliconnect-mercadolibre-attributes" class="meliconnect_hide_if_change_category meliconnect-mt-2">
     <?php if (!empty($pending_required_attrs_names)) : ?>
-        <div class="melicon-mercadolibre-attributes-warning" style="background-color: #ffcccc; padding: 10px; border-radius: 5px; font-size: 14px">
+        <div class="meliconnect-mercadolibre-attributes-warning" style="background-color: #ffcccc; padding: 10px; border-radius: 5px; font-size: 14px">
             <p>
                 <strong><?php esc_html_e('Following Attributes are REQUIRED and are missing in your product to update or create in Mercadolibre:', 'meliconnect'); ?></strong><br>
                 <span style="font-size: 16px">
@@ -26,7 +26,7 @@ $instance = $data['instance'] ?? null;
     <?php if (!empty($meli_attrs) && is_array($meli_attrs)) : ?>
         <p><strong><?php esc_html_e('Mercadolibre Attributes:', 'meliconnect'); ?></strong></p>
         <p><?php esc_html_e('You can create following attributes to update or create in Mercadolibre.', 'meliconnect'); ?></p>
-        <div class="melicon-mercadolibre-attributes-table" style="max-height: 500px; overflow-y: auto">
+        <div class="meliconnect-mercadolibre-attributes-table" style="max-height: 500px; overflow-y: auto">
             <table class="wp-list-table widefat fixed striped">
                 <thead>
                     <tr>
@@ -52,10 +52,10 @@ $instance = $data['instance'] ?? null;
 
                     <?php foreach ($meli_attrs as $attr) : ?>
                         <tr>
-                            <td class="melicon-column-primary">
+                            <td class="meliconnect-column-primary">
                                 <?php echo esc_html($attr->name); ?>
                                 <?php if ($instance->attr_is_matched($attr->name)) : ?>
-                                    <i class="fas fa-solid fa-check melicon-color-success"></i>
+                                    <i class="fas fa-solid fa-check meliconnect-color-success"></i>
                                 <?php endif; ?>
                             </td>
                             <td style="text-align:center; min-width: 100px">
@@ -90,23 +90,23 @@ $instance = $data['instance'] ?? null;
                             </td>
                             <td style="text-align:center">
                                 <?php if ($instance->isRequiredAttribute($attr)) : ?>
-                                    <span class="melicon-tag melicon-bg-success"><?php esc_html_e('YES', 'meliconnect'); ?></span>
+                                    <span class="meliconnect-tag meliconnect-bg-success"><?php esc_html_e('YES', 'meliconnect'); ?></span>
                                 <?php else : ?>
-                                    <span class="melicon-tag melicon-bg-error"><?php esc_html_e('NO', 'meliconnect'); ?></span>
+                                    <span class="meliconnect-tag meliconnect-bg-error"><?php esc_html_e('NO', 'meliconnect'); ?></span>
                                 <?php endif; ?>
                             </td>
                             <td style="text-align:center">
                                 <?php if (!empty($attr->tags->catalog_required)) : ?>
-                                    <span class="melicon-tag melicon-bg-success"><?php esc_html_e('YES', 'meliconnect'); ?></span>
+                                    <span class="meliconnect-tag meliconnect-bg-success"><?php esc_html_e('YES', 'meliconnect'); ?></span>
                                 <?php else : ?>
-                                    <span class="melicon-tag melicon-bg-error"><?php esc_html_e('NO', 'meliconnect'); ?></span>
+                                    <span class="meliconnect-tag meliconnect-bg-error"><?php esc_html_e('NO', 'meliconnect'); ?></span>
                                 <?php endif; ?>
                             </td>
                             <td style="text-align:center">
                                 <?php if (!empty($attr->tags->allow_variations)) : ?>
-                                    <span class="melicon-tag melicon-bg-success"><?php esc_html_e('YES', 'meliconnect'); ?></span>
+                                    <span class="meliconnect-tag meliconnect-bg-success"><?php esc_html_e('YES', 'meliconnect'); ?></span>
                                 <?php else : ?>
-                                    <span class="melicon-tag melicon-bg-error"><?php esc_html_e('NO', 'meliconnect'); ?></span>
+                                    <span class="meliconnect-tag meliconnect-bg-error"><?php esc_html_e('NO', 'meliconnect'); ?></span>
                                 <?php endif; ?>
                             </td>
                         </tr>

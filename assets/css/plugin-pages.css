@@ -1,23 +1,23 @@
 /* Header */
 
-.melicon-app .melicon-upgrade-bar {
+.meliconnect-app .meliconnect-upgrade-bar {
     padding: 0 14px 0 40px;
 }
 
-.melicon-app .melicon-main {
+.meliconnect-app .meliconnect-main {
     height: 100%;
 
 }
 
-body[class*=meliconnect] .melicon-header {
+body[class*=meliconnect] .meliconnect-header {
     height: 112px;
 }
 
-.melicon-app *, .melicon-app :after, .melicon-app :before {
+.meliconnect-app *, .meliconnect-app :after, .meliconnect-app :before {
     box-sizing: inherit;
 }
 
-.melicon-app .melicon-upgrade-bar {
+.meliconnect-app .meliconnect-upgrade-bar {
     display: flex;
     align-items: center;
     height: 40px;
@@ -27,32 +27,32 @@ body[class*=meliconnect] .melicon-header {
     font-size: 13px;
 }
 
-.melicon-app .melicon-upgrade-bar .upgrade-text {
+.meliconnect-app .meliconnect-upgrade-bar .upgrade-text {
     display: flex;
     align-items: center;
     flex: 1;
     justify-content: center;
 }
 
-.melicon-app .melicon-upgrade-bar svg.melicon-close {
+.meliconnect-app .meliconnect-upgrade-bar svg.meliconnect-close {
     cursor: pointer;
     width: 12px;
     height: 12px;
 }
 
-body[class*=meliconnect].melicon-has-bar .melicon-header {
+body[class*=meliconnect].meliconnect-has-bar .meliconnect-header {
     height: 112px;
 }
 
-body[class*=meliconnect].admin-bar .melicon-header, body[class*=meliconnect].admin-bar .melicon-notifications .overlay, body[class*=meliconnect].admin-bar .melicon-notifications .notification-menu {
+body[class*=meliconnect].admin-bar .meliconnect-header, body[class*=meliconnect].admin-bar .meliconnect-notifications .overlay, body[class*=meliconnect].admin-bar .meliconnect-notifications .notification-menu {
     top: 32px;
 }
 
-body[class*=meliconnect] .melicon-header, body[class*=meliconnect] .melicon-notifications .overlay {
+body[class*=meliconnect] .meliconnect-header, body[class*=meliconnect] .meliconnect-notifications .overlay {
     left: 160px;
 }
 
-.melicon-header {
+.meliconnect-header {
     z-index: 1051;
     top: 0;
     right: 0;
@@ -62,50 +62,50 @@ body[class*=meliconnect] .melicon-header, body[class*=meliconnect] .melicon-noti
     color: #141b38;
 }
 
-.melicon-header .melicon-header-content svg.melicon-logo {
+.meliconnect-header .meliconnect-header-content svg.meliconnect-logo {
     height: 40px;
     margin-top: 8px;
 }
 
-.melicon-header .melicon-header-content svg.melicon-logo {
+.meliconnect-header .meliconnect-header-content svg.meliconnect-logo {
     margin-right: 10px;
     margin-top: 8px;
 }
 
-.melicon-header .melicon-header-content .spacer {
+.meliconnect-header .meliconnect-header-content .spacer {
     transform: rotate(-72.26deg);
 }
 
-.melicon-header .melicon-header-content .spacer {
+.meliconnect-header .meliconnect-header-content .spacer {
     display: inline-flex;
     width: 26.25px;
     height: 0px;
     border: 1px solid #D0D1D7;
 }
 
-.melicon-header .melicon-header-content .page-name {
+.meliconnect-header .meliconnect-header-content .page-name {
     margin-left: 10px;
 }
 
-.melicon-header .melicon-header-content .page-name {
+.meliconnect-header .meliconnect-header-content .page-name {
     display: inline-flex;
     font-size: 18px;
     font-weight: 400;
     flex: 1 0 auto;
 }
 
-.melicon-header .melicon-header-content .header-actions {
+.meliconnect-header .meliconnect-header-content .header-actions {
     display: flex;
 }
-.melicon-header .melicon-header-content .header-actions a {
+.meliconnect-header .meliconnect-header-content .header-actions a {
     color: #141b38;
 }
 
-.melicon-header .melicon-header-content .header-actions .round {
+.meliconnect-header .meliconnect-header-content .header-actions .round {
     margin-left: 10px;
 }
 
-.melicon-header .melicon-header-content .header-actions .round {
+.meliconnect-header .meliconnect-header-content .header-actions .round {
     position: relative;
     background-color: #f3f4f5;
     border-radius: 50%;
@@ -118,7 +118,7 @@ body[class*=meliconnect] .melicon-header, body[class*=meliconnect] .melicon-noti
     transition: background-color .2s ease;
 }
 
-.melicon-header .melicon-header-content .header-actions .number {
+.meliconnect-header .meliconnect-header-content .header-actions .number {
     position: absolute;
     background-color: #3abb81;
     width: 16px;
@@ -132,35 +132,35 @@ body[class*=meliconnect] .melicon-header, body[class*=meliconnect] .melicon-noti
     min-width: inherit;
 }
 
-.melicon-header .melicon-header-content .header-actions .number {
+.meliconnect-header .meliconnect-header-content .header-actions .number {
     left: 50%;
     transform: translate(-50%);
 }
 
-.melicon-header .melicon-header-content .header-actions .round svg {
+.meliconnect-header .meliconnect-header-content .header-actions .round svg {
     width: 20px;
     height: 20px;
 }
 
 
-.melicon-app .melicon-message-bar svg.meliconseo-close {
+.meliconnect-app .meliconnect-message-bar svg.meliconseo-close {
     cursor: pointer;
     width: 12px;
     height: 12px;
 }
 
-.melicon-app .melicon-message-bar .upgrade-text {
+.meliconnect-app .meliconnect-message-bar .upgrade-text {
     display: flex;
     align-items: center;
     flex: 1;
     justify-content: center;
 }
 
-.melicon-app .melicon-message-bar {
+.meliconnect-app .meliconnect-message-bar {
     padding: 0 14px 0 40px;
 }
 
-.melicon-app .melicon-message-bar {
+.meliconnect-app .meliconnect-message-bar {
     display: flex;
     align-items: center;
     height: 40px;
@@ -169,32 +169,32 @@ body[class*=meliconnect] .melicon-header, body[class*=meliconnect] .melicon-noti
     color: #4B657E;
     font-size: 13px;
 }
-.melicon-app .melicon-message-bar a {
+.meliconnect-app .meliconnect-message-bar a {
     color: #4B657E;
 }
-.melicon-app .melicon-message-bar strong {
+.meliconnect-app .meliconnect-message-bar strong {
     font-weight: 600;
     color: #4B657E;
 }
 
-.melicon-app .melicon-message-bar a {
+.meliconnect-app .meliconnect-message-bar a {
     color: #4B657E;
     text-decoration: underline;
 }
 
-.melicon-app a:not(.melicon-button).text-white {
+.meliconnect-app a:not(.meliconnect-button).text-white {
     color: #4B657E;
     font-weight: 600;
 }
 
-.melicon-header .melicon-header-content {
+.meliconnect-header .meliconnect-header-content {
     padding: 0;
     display: flex;
     height: 72px;
     align-items: center;
 }
 
-.melicon-header {
+.meliconnect-header {
     display: inherit !important;
 }
 
@@ -270,7 +270,7 @@ body[class*="meliconnect"] [class*="has-background"] {
 
 
 
-.melicon-select:not(.is-multiple):not(.is-loading)::after {
+.meliconnect-select:not(.is-multiple):not(.is-loading)::after {
     border: none !important;
 }
 
@@ -280,31 +280,31 @@ input[type=color], input[type=date], input[type=datetime-local], input[type=date
 
 
 
-body[class*=meliconnect] #sync-hub-results .melicon-card {
+body[class*=meliconnect] #sync-hub-results .meliconnect-card {
     border: 0;
     
 }
 
-body[class*=meliconnect] .melicon-modal-card-title {
+body[class*=meliconnect] .meliconnect-modal-card-title {
     font-size: 20px;
     font-weight: 600;
 }
 
-body[class*=meliconnect] .melicon-modal {
+body[class*=meliconnect] .meliconnect-modal {
     z-index: 9999;
 }
 
-body[class*=meliconnect] .melicon-modal .melicon-modal-card-body label {
+body[class*=meliconnect] .meliconnect-modal .meliconnect-modal-card-body label {
     font-weight: 500;
     font-size: 14px;
 }
 
-body[class*=meliconnect] .melicon-modal .melicon-modal-card-body .container-fluid, body[class*=meliconnect] .melicon-modal .melicon-modal-card-body .container.is-fluid {
+body[class*=meliconnect] .meliconnect-modal .meliconnect-modal-card-body .container-fluid, body[class*=meliconnect] .meliconnect-modal .meliconnect-modal-card-body .container.is-fluid {
     padding-right: 1rem;
     padding-left: 1rem;
 }
 
-body[class*=meliconnect] .melicon-modal-card {
+body[class*=meliconnect] .meliconnect-modal-card {
     max-height: calc(100vh - 100px);
 }
 
@@ -323,11 +323,11 @@ body[class*="meliconnect"].wp-core-ui select {
     padding-right: 28px;
 }
 
-#melicon-step-create-template .wp-core-ui select:hover {
+#meliconnect-step-create-template .wp-core-ui select:hover {
     color: transparent;
 }
 
-body[class*="meliconnect"] .melicon-title-page {
+body[class*="meliconnect"] .meliconnect-title-page {
     text-align: left;
     color: #00779f;
     line-height: 26px;
@@ -347,59 +347,59 @@ body[class*="meliconnect"] #wpcontent {
 /*Responsive*/
 
 @media only screen and (min-width: 782px) {
-    /* .melicon-container {
+    /* .meliconnect-container {
        padding: 0 30px;
     } */
 }
 
 @media only screen and (min-width: 1042px) {
-    /* .melicon-container {
+    /* .meliconnect-container {
        max-width: 1240px;
     } */
 }
 
 @media screen and (min-width: 1024px) {
-    .melicon-section {
+    .meliconnect-section {
        padding: 2rem 2rem;
     }
-    #melicon-settings .melicon-section {
+    #meliconnect-settings .meliconnect-section {
         padding: 2rem 1rem;
      }
 }
 
-.melicon-colapse-arrow {
+.meliconnect-colapse-arrow {
     transition: transform .2s;
     font-size: 1.8em;
  }
   
-.melicon-colapse-arrow.open {
+.meliconnect-colapse-arrow.open {
     transform: rotateZ(180deg);
 }
 
-.melicon-is-pointer{
+.meliconnect-is-pointer{
     cursor:pointer;
 }
 
 /* Estilos para los resultados del export masivo */
-.melicon-export-error_product_name{
+.meliconnect-export-error_product_name{
     font-size: 0.9em;
     margin-bottom: 10px;
     border-top: 1px solid #d9cece;
     padding-top: 20px;
 }
 
-.melicon-export-error_list_title{
+.meliconnect-export-error_list_title{
     font-size: 0.7em;
     font-weight: bold;
 }
 
-.melicon-export-error_list_item{
+.meliconnect-export-error_list_item{
     font-size: 0.7em;
 }
 
 
 /* Estilos product box seccion variations*/
-.melicon-overflow-x{
+.meliconnect-overflow-x{
     overflow-x: auto;
     overflow-y: hidden;
 }
@@ -420,7 +420,7 @@ body[class*="meliconnect"] #wpcontent {
     display: none!important;
 }
 
-.melicon-sidebar {
+.meliconnect-sidebar {
     width: 570px;
     background-color: white;
     height: 100vh;
@@ -433,30 +433,30 @@ body[class*="meliconnect"] #wpcontent {
     right: 0;
   }
 
-.melicon-sidebar.open, #melicon-sidebar-overlay.open{
+.meliconnect-sidebar.open, #meliconnect-sidebar-overlay.open{
     transform: translateX(0);
 }
 
 
-.melicon-sidebar-inner{
+.meliconnect-sidebar-inner{
     position: relative;
 }
 
-.melicon-sidebar-inner-header{
+.meliconnect-sidebar-inner-header{
     background-color: #223F5A;
     padding: 30px 20px 20px 20px;
 }
 
-.melicon-sidebar-inner-header-title, .melicon-sidebar-inner-header-cancel i{
+.meliconnect-sidebar-inner-header-title, .meliconnect-sidebar-inner-header-cancel i{
     color: white !important;
     font-weight:bold ;
 }
 
-.melicon-sidebar-inner-content{
+.meliconnect-sidebar-inner-content{
     padding: 20px;
 }
 
-#melicon-sidebar-overlay{
+#meliconnect-sidebar-overlay{
     position: fixed;
     z-index: 1052;
     top: 0;
@@ -467,65 +467,65 @@ body[class*="meliconnect"] #wpcontent {
     width: 100vw;
     transform: translateX(100vw);
 }
-.melicon-sidebar-inner-content{
+.meliconnect-sidebar-inner-content{
     height: 75vh;
     overflow-y: auto;
 }
 
-.melicon-sidebar-inner-content-item{
+.meliconnect-sidebar-inner-content-item{
     border-bottom: 1px solid #dbdbdb;
     padding-bottom: 20px;
     margin-bottom: 30px !important;
 }
 
-.melicon-sidebar-inner-content-item-body-header-title{
+.meliconnect-sidebar-inner-content-item-body-header-title{
     font-size: 1.2em;
     font-weight: bold;
 }
 
-.melicon-sidebar-inner-content-item-body-actions-btn{
+.meliconnect-sidebar-inner-content-item-body-actions-btn{
     margin-right:20px;
 }
 
-.melicon-sidebar-inner-content-item-body-actions-link{
+.meliconnect-sidebar-inner-content-item-body-actions-link{
     margin-top: 10px;
 }
 
-.melicon-sidebar-inner-content-item-body-actions-link a{
+.meliconnect-sidebar-inner-content-item-body-actions-link a{
     color:#8c8f9a !important;
 }
 
-.melicon-sidebar-inner-content-item-body-actions{
+.meliconnect-sidebar-inner-content-item-body-actions{
     padding:12px;
 }
 
-.melicon-sidebar-inner-header-title{
+.meliconnect-sidebar-inner-header-title{
     font-size: 1.4em !important;
     font-weight: bold !important;
 }
 
-.melicon-sidebar-inner-footer{
+.meliconnect-sidebar-inner-footer{
     height: 90px;
 }
 
-.melicon-sidebar-inner-footer-dismissAll{
+.meliconnect-sidebar-inner-footer-dismissAll{
     margin:20px;
 }
 
 
-#melicon-duplicated-table .column-title {
+#meliconnect-duplicated-table .column-title {
     width:150px;
 }
 
-#melicon-duplicated-table .column-id {
+#meliconnect-duplicated-table .column-id {
     width:300px;
 }
 
-#melicon-duplicated-table .column-similar, 
-#melicon-duplicated-table .column-meliconDelete, 
-#melicon-duplicated-table .column-change, 
-#melicon-duplicated-table .column-woostatus,
-#melicon-duplicated-table .column-sells  {
+#meliconnect-duplicated-table .column-similar, 
+#meliconnect-duplicated-table .column-meliconDelete, 
+#meliconnect-duplicated-table .column-change, 
+#meliconnect-duplicated-table .column-woostatus,
+#meliconnect-duplicated-table .column-sells  {
     width:60px;
     text-align: center;
 }
@@ -575,18 +575,18 @@ body[class*="meliconnect"] #wpcontent {
 }
 
 /* Sweetalert 2 wordpress admin styles */
-.melicon-swal-container {
+.meliconnect-swal-container {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-color: #f1f1f1;
     color: #333;
 }
 
-.melicon-swal-popup {
+.meliconnect-swal-popup {
     border: 1px solid #ddd;
     border-radius: 3px;
 }
 
-.melicon-swal-title {
+.meliconnect-swal-title {
     font-size: 20px;
     font-weight: 600;
 }
@@ -597,23 +597,23 @@ body[class*="meliconnect"] #wpcontent {
 
 
 
-.melicon_custom_toast{
+.meliconnect_custom_toast{
     top: calc(1.5rem + 20px); 
 }
 
 
-.melicon_log_container.wc-metabox.postbox{
+.meliconnect_log_container.wc-metabox.postbox{
     border-top: 0;
     border-left: 0;
     border-right: 0;
 }
 
 
-.melicon-is-fullwidth{
+.meliconnect-is-fullwidth{
     width: 100% !important;
 }
 
-.melicon-app .header-container, .melicon-app .melicon-main{
+.meliconnect-app .header-container, .meliconnect-app .meliconnect-main{
     max-width:90% !important;
     margin:auto;
     

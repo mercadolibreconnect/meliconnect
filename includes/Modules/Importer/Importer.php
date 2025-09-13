@@ -37,13 +37,13 @@ class Importer implements ModuleInterface {
 
     public function registerModuleStyles($hook)
     {
-        wp_enqueue_style('melicon-importer', MELICONNECT_PLUGIN_URL . 'includes/Modules/Importer/Assets/Css/melicon-importer.css', [], '1.0.0');
+        wp_enqueue_style('meliconnect-importer', MELICONNECT_PLUGIN_URL . 'includes/Modules/Importer/Assets/Css/meliconnect-importer.css', [], '1.0.0');
     }
 
     public function registerModuleScripts($hook)
     {
-        wp_register_script('melicon-importer-js', MELICONNECT_PLUGIN_URL . 'includes/Modules/Importer/Assets/Js/melicon-importer.js', ['jquery'], '1.0.0', true);
-        HelperJSTranslations::localizeScript('melicon-importer-js');
-        wp_enqueue_script('melicon-importer-js');
+        wp_register_script('meliconnect-importer-js', MELICONNECT_PLUGIN_URL . 'includes/Modules/Importer/Assets/Js/meliconnect-importer.js', ['jquery'], '1.0.0', true);
+        HelperJSTranslations::localizeScript('meliconnect-importer-js');
+        wp_enqueue_script('meliconnect-importer-js');
     }
 }

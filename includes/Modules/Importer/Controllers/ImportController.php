@@ -33,7 +33,7 @@ class ImportController implements ControllerInterface
             'meli_user_listings_to_import_count' => UserListingToImport::get_user_listings_count(),
             'meli_user_listings_active_to_import_count' => UserListingToImport::get_user_listings_count_by_status('active'),
             'woo_total_active_products' => Helper::get_woo_active_products_count(),
-            'woo_total_vinculated_products' => count(Helper::getProductsWithMeta('melicon_meli_listing_id')),
+            'woo_total_vinculated_products' => count(Helper::getProductsWithMeta('meliconnect_meli_listing_id')),
         ];
 
         return $data;
@@ -345,7 +345,7 @@ class ImportController implements ControllerInterface
         Process::cancelProcess($process_id);
 
         //unlock custom import process cron
-        delete_option('melicon_custom_import_lock');
+        delete_option('meliconnect_custom_import_lock');
 
         wp_send_json_success();
     }
@@ -370,7 +370,7 @@ class ImportController implements ControllerInterface
         }
 
         //unlock custom import process cron
-        delete_option('melicon_custom_import_lock');
+        delete_option('meliconnect_custom_import_lock');
 
         wp_send_json_success();
     }
@@ -507,12 +507,12 @@ class ImportController implements ControllerInterface
         $product_type = isset($_GET['productType']) ? sanitize_text_field(wp_unslash($_GET['productType'])) : '';
 
 
-        // Consulta para obtener productos de WooCommerce que no tienen el postmeta 'melicon_meli_listing_id'
+        // Consulta para obtener productos de WooCommerce que no tienen el postmeta 'meliconnect_meli_listing_id'
 
         $results = $wpdb->get_results($wpdb->prepare(
             "SELECT p.ID, p.post_title, p.post_type, p.post_status
                 FROM {$wpdb->posts} p
-                LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = 'melicon_meli_listing_id'
+                LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = 'meliconnect_meli_listing_id'
                 WHERE pm.post_id IS NULL
                 AND p.post_type = 'product'
                 ORDER BY p.post_title ASC"
@@ -601,7 +601,7 @@ class ImportController implements ControllerInterface
             ];
         }
 
-        // Registrar el proceso inicial en la tabla wp_melicon_processes
+        // Registrar el proceso inicial en la tabla wp_meliconnect_processes
         $process_id = Process::createProcess('custom-import', $formatedItems);
 
         // Si no se puede crear el proceso, detener el proceso

@@ -49,7 +49,7 @@ class ExportProductsTable extends \WP_List_Table
         $order = !empty($_REQUEST['order']) ? sanitize_key($_REQUEST['order']) : 'asc';
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'melicon_products_to_export';
+        $table_name = $wpdb->prefix . 'meliconnect_products_to_export';
 
         list($where_sql, $query_params) = self::build_filters_query($_REQUEST);
 
@@ -143,19 +143,19 @@ class ExportProductsTable extends \WP_List_Table
 
 ?>
 
-        <div class="melicon-columns melicon-is-multiline">
+        <div class="meliconnect-columns meliconnect-is-multiline">
             <!-- Primera Columna -->
-            <div class="melicon-column melicon-is-5">
+            <div class="meliconnect-column meliconnect-is-5">
                 <strong><?php esc_html_e('ID', 'meliconnect'); ?>:</strong> <?php echo esc_html($item['woo_product_id']); ?><br>
                 <strong><?php esc_html_e('SKU', 'meliconnect'); ?>:</strong> <?php echo esc_html($sku ? $sku : esc_html__('No SKU', 'meliconnect')); ?><br>
                 <strong><?php esc_html_e('GTIN', 'meliconnect'); ?>:</strong> <?php echo esc_html($gtin ? $gtin : esc_html__('No GTIN', 'meliconnect')); ?><br>
                 <strong><?php esc_html_e('Product Type', 'meliconnect'); ?>:</strong>
-                <span class="melicon-color-text '<?php echo esc_attr($product_type_class); ?>'"> <?php echo esc_html($type); ?></span>
+                <span class="meliconnect-color-text '<?php echo esc_attr($product_type_class); ?>'"> <?php echo esc_html($type); ?></span>
 
             </div>
 
             <!-- Segunda Columna -->
-            <div class="melicon-column melicon-is-6">
+            <div class="meliconnect-column meliconnect-is-6">
                 <strong><?php esc_html_e('Price', 'meliconnect'); ?>:</strong> <?php echo esc_html($price); ?><br>
                 <strong><?php esc_html_e('Sold Quantity', 'meliconnect'); ?>:</strong> <?php echo esc_html($sold_quantity); ?><br>
                 <strong><?php esc_html_e('Available Quantity', 'meliconnect'); ?>:</strong> <?php echo esc_html($stock_quantity); ?>
@@ -179,20 +179,20 @@ class ExportProductsTable extends \WP_List_Table
 
     public function column_has_template_vinculation($item)
     {
-        $meta_matched_template = get_post_meta($item['woo_product_id'], 'melicon_matched_template_id', true);
-        $meta_asoc_template_id = get_post_meta($item['woo_product_id'], 'melicon_asoc_template_id', true);
+        $meta_matched_template = get_post_meta($item['woo_product_id'], 'meliconnect_matched_template_id', true);
+        $meta_asoc_template_id = get_post_meta($item['woo_product_id'], 'meliconnect_asoc_template_id', true);
 
         $text = ($meta_matched_template || $meta_asoc_template_id)
-            ? Helper::meliconnectPrintTag(esc_html__('Using Template', 'meliconnect'), 'melicon-is-warning')
-            : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'melicon-is-danger');
+            ? Helper::meliconnectPrintTag(esc_html__('Using Template', 'meliconnect'), 'meliconnect-is-warning')
+            : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'meliconnect-is-danger');
 
         $subText = '';
 
         if ($meta_matched_template) {
-            $subText .= '<p class="mt-2">' . Helper::meliconnectPrintTag(esc_html__('Custom match', 'meliconnect'), ' melicon-is-link melicon-is-light') . '</p>';
+            $subText .= '<p class="mt-2">' . Helper::meliconnectPrintTag(esc_html__('Custom match', 'meliconnect'), ' meliconnect-is-link meliconnect-is-light') . '</p>';
             $actions = [
                 'clear-match' => sprintf(
-                    '<a href="#" class="melicon-clear-product-match" data-woo-product-id="%s">' . esc_html__('Clear Match', 'meliconnect') . '</a>',
+                    '<a href="#" class="meliconnect-clear-product-match" data-woo-product-id="%s">' . esc_html__('Clear Match', 'meliconnect') . '</a>',
                     esc_attr($item['woo_product_id'])
                 )
             ];
@@ -201,15 +201,15 @@ class ExportProductsTable extends \WP_List_Table
             if ($meta_asoc_template_id) {
                 /* $actions = [
                     'edit' => sprintf('<a href="%s" target="_blank">' . esc_html__('Edit', 'meliconnect') . '</a>', esc_url(get_edit_post_link($item['woo_product_id']))),
-                    'delete-vinculation' => sprintf('<a href="#" class="melicon-delete-template-vinculation" data-woo-product-id="%d">' . esc_html__('Desvinculate', 'meliconnect') . '</a>', esc_attr($item['woo_product_id']))
+                    'delete-vinculation' => sprintf('<a href="#" class="meliconnect-delete-template-vinculation" data-woo-product-id="%d">' . esc_html__('Desvinculate', 'meliconnect') . '</a>', esc_attr($item['woo_product_id']))
                 ]; */
                 $actions = [];
             } else {
                 $actions = [
                     'find-a-match' => sprintf(
-                        '<a href="#" class="melicon-find-template-to-match melicon-js-modal-trigger" 
+                        '<a href="#" class="meliconnect-find-template-to-match meliconnect-js-modal-trigger" 
                             data-woo-product-id ="%s"
-                            data-target="melicon-find-match-modal">' . esc_html__('Find match', 'meliconnect') . '</a>',
+                            data-target="meliconnect-find-match-modal">' . esc_html__('Find match', 'meliconnect') . '</a>',
                         esc_attr($item['woo_product_id']),
                     ),
                 ];
@@ -225,22 +225,22 @@ class ExportProductsTable extends \WP_List_Table
         $meta_asoc_listing = ($item['vinculated_listing_id']) ? true : false;
 
         $text = ($meta_asoc_listing)
-            ? Helper::meliconnectPrintTag(esc_html__('To update', 'meliconnect'), 'melicon-is-warning')
-            : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'melicon-is-danger');
+            ? Helper::meliconnectPrintTag(esc_html__('To update', 'meliconnect'), 'meliconnect-is-warning')
+            : Helper::meliconnectPrintTag(esc_html__('To create', 'meliconnect'), 'meliconnect-is-danger');
 
 
 
         if ($meta_asoc_listing && $item['meli_permalink']) {
             $actions = [
                 'view' => sprintf('<a href="%s" target="_blank">' . esc_html__('View', 'meliconnect') . '</a>', esc_url($item['meli_permalink'])),
-                'delete-vinculation' => sprintf('<a href="#" class="melicon-delete-listing-vinculation" data-woo-product-id="%d">' . esc_html__('Desvinculate', 'meliconnect') . '</a>', esc_attr($item['woo_product_id']))
+                'delete-vinculation' => sprintf('<a href="#" class="meliconnect-delete-listing-vinculation" data-woo-product-id="%d">' . esc_html__('Desvinculate', 'meliconnect') . '</a>', esc_attr($item['woo_product_id']))
             ];
         } else {
             $actions = [
                 'vinculate-listing' => sprintf(
-                    '<a href="#" class="melicon-find-listing-to-vinculate melicon-js-modal-trigger" 
+                    '<a href="#" class="meliconnect-find-listing-to-vinculate meliconnect-js-modal-trigger" 
                                 data-woo-product-id ="%s"
-                                data-target="melicon-find-vinculate-modal">' . esc_html__('Vinculate', 'meliconnect') . '</a>',
+                                data-target="meliconnect-find-vinculate-modal">' . esc_html__('Vinculate', 'meliconnect') . '</a>',
                     esc_attr($item['woo_product_id']),
                 )
             ];
@@ -252,21 +252,21 @@ class ExportProductsTable extends \WP_List_Table
 
     public function column_export_status($item)
     {
-        $last_json_sent = get_post_meta($item['woo_product_id'], 'melicon_last_export_json_sent', true);
+        $last_json_sent = get_post_meta($item['woo_product_id'], 'meliconnect_last_export_json_sent', true);
         $escaped_last_json_sent = self::unserialize_column_data($last_json_sent);
 
-        $html_last_json_sent_link = '<p><a href="#" class="melicon-toggle-json" data-json-sent="' . $escaped_last_json_sent . '">' . esc_html__('Last Json Sent', 'meliconnect') . '</a></p>';
+        $html_last_json_sent_link = '<p><a href="#" class="meliconnect-toggle-json" data-json-sent="' . $escaped_last_json_sent . '">' . esc_html__('Last Json Sent', 'meliconnect') . '</a></p>';
 
         switch ($item['export_status']) {
 
             case 'processing':
-                $html = Helper::meliconnectPrintTag(esc_html__('Processing', 'meliconnect'), 'melicon-is-info');
+                $html = Helper::meliconnectPrintTag(esc_html__('Processing', 'meliconnect'), 'meliconnect-is-info');
                 break;
             case 'paused':
-                $html = Helper::meliconnectPrintTag(esc_html__('Paused', 'meliconnect'), 'melicon-is-secondary');
+                $html = Helper::meliconnectPrintTag(esc_html__('Paused', 'meliconnect'), 'meliconnect-is-secondary');
                 break;
             case 'failed':
-                $html = Helper::meliconnectPrintTag(esc_html__('Failed', 'meliconnect'), 'melicon-is-danger');
+                $html = Helper::meliconnectPrintTag(esc_html__('Failed', 'meliconnect'), 'meliconnect-is-danger');
 
                 if (isset($item['export_error']) && !empty($item['export_error'])) {
 
@@ -274,18 +274,18 @@ class ExportProductsTable extends \WP_List_Table
                     $escaped_json_errors = self::unserialize_column_data($item['export_error']);
 
                     // Añadir el enlace para mostrar los errores
-                    $html .= '<p class="mb-0"><a href="#" class="melicon-toggle-error" data-error="' . $escaped_json_errors . '">' . esc_html__('Show error', 'meliconnect') . '</a></p>';
+                    $html .= '<p class="mb-0"><a href="#" class="meliconnect-toggle-error" data-error="' . $escaped_json_errors . '">' . esc_html__('Show error', 'meliconnect') . '</a></p>';
                 }
 
                 $html .= $html_last_json_sent_link;
 
                 break;
             case 'finished':
-                $html = Helper::meliconnectPrintTag(esc_html__('Exported', 'meliconnect'), 'melicon-is-success');
+                $html = Helper::meliconnectPrintTag(esc_html__('Exported', 'meliconnect'), 'meliconnect-is-success');
                 $html .= $html_last_json_sent_link;
                 break;
             default:
-                $html = Helper::meliconnectPrintTag(esc_html__('Pending', 'meliconnect'), 'melicon-is-warning');
+                $html = Helper::meliconnectPrintTag(esc_html__('Pending', 'meliconnect'), 'meliconnect-is-warning');
                 break;
         }
 
@@ -382,7 +382,7 @@ class ExportProductsTable extends \WP_List_Table
     public static function record_count()
     {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'melicon_products_to_export';
+        $table_name = $wpdb->prefix . 'meliconnect_products_to_export';
 
         // Construir las cláusulas WHERE y los parámetros de consulta
         list($where_sql, $query_params) = self::build_filters_query();

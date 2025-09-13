@@ -46,7 +46,7 @@ class MercadoLibreListingAdapter
         ];
 
         //Helper::logData('Raw data sent to hub: ' . wp_json_encode($rawData), 'custom-export');
-        update_post_meta($woo_product_id, 'melicon_last_export_json_sent', $rawData);
+        update_post_meta($woo_product_id, 'meliconnect_last_export_json_sent', $rawData);
 
         // Enviar datos sin procesar al servidor y recibir datos transformados
         $server_response = $this->sendDataToServer($rawData);
@@ -159,23 +159,23 @@ class MercadoLibreListingAdapter
         $meta_fields = get_post_meta($product_id);
 
         $metas_to_send = [
-            'melicon_meli_listing_id',
-            'melicon_meli_seller_id',
-            'melicon_meli_permalink',
-            'melicon_meli_listing_type_id',
-            'melicon_meli_category_id',
-            'melicon_meli_status',
-            'melicon_meli_sub_status',
-            'melicon_meli_site_id',
-            'melicon_meli_catalog_product_id',
-            'melicon_meli_domain_id',
-            'melicon_asoc_template_id',
-            'melicon_last_export_time',
-            'melicon_meli_channels',
-            'melicon_meli_sold_quantity',
-            'melicon_meli_shipping_mode',
-            'melicon_meli_shipping_logistic_type',
-            'melicon_meli_shipping_has_free_shipping',
+            'meliconnect_meli_listing_id',
+            'meliconnect_meli_seller_id',
+            'meliconnect_meli_permalink',
+            'meliconnect_meli_listing_type_id',
+            'meliconnect_meli_category_id',
+            'meliconnect_meli_status',
+            'meliconnect_meli_sub_status',
+            'meliconnect_meli_site_id',
+            'meliconnect_meli_catalog_product_id',
+            'meliconnect_meli_domain_id',
+            'meliconnect_asoc_template_id',
+            'meliconnect_last_export_time',
+            'meliconnect_meli_channels',
+            'meliconnect_meli_sold_quantity',
+            'meliconnect_meli_shipping_mode',
+            'meliconnect_meli_shipping_logistic_type',
+            'meliconnect_meli_shipping_has_free_shipping',
             'total_sales',
             '_thumbnail_id',
             '_manage_stock',
@@ -208,9 +208,9 @@ class MercadoLibreListingAdapter
         $image_url = wp_get_attachment_url($woo_image_id);
 
         // Obtiene el ID de MercadoLibre asociado desde los meta datos de la imagen en WooCommerce
-        $ml_image_id = get_post_meta($woo_image_id, 'melicon_meli_image_id', true);
-        $ml_image_seller_id = get_post_meta($woo_image_id, 'melicon_meli_image_seller_id', true);
-        $ml_image_url = get_post_meta($woo_image_id, 'melicon_meli_image_url', true);
+        $ml_image_id = get_post_meta($woo_image_id, 'meliconnect_meli_image_id', true);
+        $ml_image_seller_id = get_post_meta($woo_image_id, 'meliconnect_meli_image_seller_id', true);
+        $ml_image_url = get_post_meta($woo_image_id, 'meliconnect_meli_image_url', true);
 
         // Si existe un ID de MercadoLibre, verifica que la imagen exista en MercadoLibre
         if (!empty($ml_image_id)) {

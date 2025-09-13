@@ -8,8 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-bulma": "sass --load-path=node_modules assets/scss/melicon-custom.scss assets/css/melicon-custom.css",
-    "build-bulma-watch": "sass --load-path=node_modules --watch assets/scss/melicon-custom.scss assets/css/melicon-custom.css"
+    "build-bulma": "sass --load-path=node_modules assets/scss/meliconnect-custom.scss assets/css/meliconnect-custom.css",
+    "build-bulma-watch": "sass --load-path=node_modules --watch assets/scss/meliconnect-custom.scss assets/css/meliconnect-custom.css"
   },
   "keywords": [],
   "author": "",

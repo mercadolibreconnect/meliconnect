@@ -3,9 +3,9 @@ if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 ?>
-<div id="mercadolibre_product_data" class="melicon-product-edit-meli-tab wc-metaboxes-wrapper panel woocommerce_options_panel hidden">
+<div id="mercadolibre_product_data" class="meliconnect-product-edit-meli-tab wc-metaboxes-wrapper panel woocommerce_options_panel hidden">
     <div class="options_group">
-        <p class="form-field melicon_general_seller_meli_id_field">
+        <p class="form-field meliconnect_general_seller_meli_id_field">
             <?php
 
             woocommerce_wp_select(array(
@@ -20,16 +20,16 @@ if (! defined('ABSPATH')) {
         </p>
     </div>
     <div class="options_group">
-        <p class="form-field melicon_general_category_id_field">
-            <label for="melicon_general_category_id">
+        <p class="form-field meliconnect_general_category_id_field">
+            <label for="meliconnect_general_category_id">
                 <?php esc_html_e('Category', 'meliconnect'); ?>
             </label>
-            <select id="melicon_general_category_id" class="wc-enhanced-select select2-category" style="width: 50%;">
+            <select id="meliconnect_general_category_id" class="wc-enhanced-select select2-category" style="width: 50%;">
                 <option value=""><?php esc_html_e('Select a category', 'meliconnect'); ?></option>
             </select>
         </p>
 
-        <input type="text" id="melicon_general_category_id_input" name="template[category_id]" value="<?php echo esc_attr($form_values['category_id']); ?>" style="display: none;">
+        <input type="text" id="meliconnect_general_category_id_input" name="template[category_id]" value="<?php echo esc_attr($form_values['category_id']); ?>" style="display: none;">
 
         <p>
         <div id="subcategory-tree-container"></div>
@@ -37,16 +37,16 @@ if (! defined('ABSPATH')) {
 
         <input type="text" id="subcategory-tree-input" name="template[subcategory_tree]" style="display:none;" value="">
 
-        <input type="text" id="melicon-category-name-input" name="template[category_name]" style="display:none;" value="">
+        <input type="text" id="meliconnect-category-name-input" name="template[category_name]" style="display:none;" value="">
 
 
     </div>
-    <div id="melicon-meessage-category-container" class="options_group melicon_show_if_change_category melicon-m-1">
+    <div id="meliconnect-meessage-category-container" class="options_group meliconnect_show_if_change_category meliconnect-m-1">
         <?php echo '<div class="notice notice-warning"><p>'.esc_html__('You must select a category and save product template to see category options', 'meliconnect') .'</p></div>'; ?>
         
     </div>
-    <div class="options_group melicon_hide_if_change_category ">
-        <p class="form-field melicon_general_buying_mode_field">
+    <div class="options_group meliconnect_hide_if_change_category ">
+        <p class="form-field meliconnect_general_buying_mode_field">
             <?php
             woocommerce_wp_select(array(
                 'id' => 'template[meta][buying_mode]',
@@ -57,7 +57,7 @@ if (! defined('ABSPATH')) {
             ?>
         </p>
 
-        <p class="form-field melicon_general_listing_type_id_field">
+        <p class="form-field meliconnect_general_listing_type_id_field">
             <?php
             woocommerce_wp_select(array(
                 'id' => 'template[meta][listing_type_id]',
@@ -71,7 +71,7 @@ if (! defined('ABSPATH')) {
 
 
 
-        <p class="form-field melicon_general_condition_field">
+        <p class="form-field meliconnect_general_condition_field">
             <?php
             woocommerce_wp_select(array(
                 'id' => 'template[meta][condition]',
@@ -84,7 +84,7 @@ if (! defined('ABSPATH')) {
 
 
 
-        <p class="form-field melicon_general_warranty_type_field">
+        <p class="form-field meliconnect_general_warranty_type_field">
             <label for="template[meta][warranty_type]"><?php esc_html_e('Warranty', 'meliconnect'); ?> </label>
             <span class="wrap">
                 <select id="template[warranty_type]" name="template[meta][warranty_type]">
@@ -93,7 +93,7 @@ if (! defined('ABSPATH')) {
                     <?php } ?>
                 </select>
                 <input
-                    id="melicon_general_warranty_time"
+                    id="meliconnect_general_warranty_time"
                     style="max-width:60px"
                     class="input-text wc_input_decimal"
                     type="number"
@@ -109,7 +109,7 @@ if (! defined('ABSPATH')) {
         </p>
 
 
-        <p class="form-field melicon_general_currency_field">
+        <p class="form-field meliconnect_general_currency_field">
             <?php
             woocommerce_wp_select(array(
                 'id' => 'template[meta][currency_id]',
@@ -120,7 +120,7 @@ if (! defined('ABSPATH')) {
             ?>
         </p>
 
-        <p class="form-field melicon_general_channels_field">
+        <p class="form-field meliconnect_general_channels_field">
             <?php
             woocommerce_wp_select(array(
                 'id' => 'template[channels]',
@@ -131,7 +131,7 @@ if (! defined('ABSPATH')) {
             ?>
         </p>
 
-        <p class="form-field melicon_general_shipping_method_field">
+        <p class="form-field meliconnect_general_shipping_method_field">
             <?php
             woocommerce_wp_select(array(
                 'id' => 'template[meta][shipping_method]',
@@ -143,16 +143,16 @@ if (! defined('ABSPATH')) {
         </p>
 
 
-        <p class="form-field melicon_general_local_pickup_field">
+        <p class="form-field meliconnect_general_local_pickup_field">
         <p class="form-field template[meta][local_pick_up]_field ">
             <label for="template[meta][local_pick_up]"><?php esc_html_e('Local Pick Up', 'meliconnect'); ?></label>
-            <input type="checkbox" name="template[meta][local_pick_up]" id="template[meta][local_pick_up]" value="1" class="melicon-checkbox"
+            <input type="checkbox" name="template[meta][local_pick_up]" id="template[meta][local_pick_up]" value="1" class="meliconnect-checkbox"
                 <?php echo (isset($form_values['local_pick_up']) && $form_values['local_pick_up'] == '1') ? 'checked' : ''; ?>>
             <span class="description"><?php esc_html_e('Enable Local Pick Up', 'meliconnect'); ?></span>
         </p>
         <p class="form-field template[meta][free_shipping]_field ">
             <label for="template[meta][free_shipping]"></label>
-            <input type="checkbox" name="template[meta][free_shipping]" id="template[meta][free_shipping]" value="1" class="melicon-checkbox"
+            <input type="checkbox" name="template[meta][free_shipping]" id="template[meta][free_shipping]" value="1" class="meliconnect-checkbox"
                 <?php echo (isset($form_values['free_shipping']) && $form_values['free_shipping'] == '1') ? 'checked' : ''; ?>>
             <span class="description"><?php esc_html_e('Enable Free Shipping', 'meliconnect'); ?></span>
         </p>
@@ -161,11 +161,11 @@ if (! defined('ABSPATH')) {
         </p>
 
 
-        <p class="form-field melicon_general_manufacturing_time_field">
+        <p class="form-field meliconnect_general_manufacturing_time_field">
             <label for="template[manufacturing_time]"><?php esc_html_e('Manufacturing Time', 'meliconnect'); ?> </label>
             <span class="wrap">
                 <input
-                    id="melicon_general_manufacturing_time"
+                    id="meliconnect_general_manufacturing_time"
                     style="max-width:60px"
                     class="input-text wc_input_decimal"
                     type="number"
@@ -184,7 +184,7 @@ if (! defined('ABSPATH')) {
 
 
         <?php if (!empty($select_options['official_stores'])) { ?>
-            <p class="form-field melicon_general_official_store_field">
+            <p class="form-field meliconnect_general_official_store_field">
                 <?php
                 woocommerce_wp_select(array(
                     'id' => 'template[meta][official_store_id]',
@@ -199,12 +199,12 @@ if (! defined('ABSPATH')) {
 
         <p class="form-field template[meta][catalog_listing]_field">
             <label for="template[meta][catalog_listing]"><?php esc_html_e('Catalog Listing', 'meliconnect'); ?></label>
-            <input type="checkbox" name="template[meta][catalog_listing]" id="template[meta][catalog_listing]" value="1" class="melicon-checkbox"
+            <input type="checkbox" name="template[meta][catalog_listing]" id="template[meta][catalog_listing]" value="1" class="meliconnect-checkbox"
                 <?php echo (isset($form_values['catalog_listing']) && $form_values['catalog_listing'] == '1') ? 'checked' : ''; ?>>
             <span class="description"><?php esc_html_e('Enable Catalog Listing', 'meliconnect') ?></span>
         </p>
 
-        <p class="form-field melicon_general_status_field">
+        <p class="form-field meliconnect_general_status_field">
             <?php
             woocommerce_wp_select(array(
                 'id' => 'template[meta][status]',
@@ -219,19 +219,19 @@ if (! defined('ABSPATH')) {
     </div>
 
     <div class="options_group ">
-        <p class="form-field melicon_general_title_structure_field">
-            <label for="melicon_general_title_structure">
+        <p class="form-field meliconnect_general_title_structure_field">
+            <label for="meliconnect_general_title_structure">
                 <?php esc_html_e('Title Structure', 'meliconnect'); ?>
             </label>
-            <input id="melicon_general_title_structure" class="input-text" type="text" name="template[meta][title_structure]" value="<?php echo esc_attr($form_values['title_structure']); ?>" />
+            <input id="meliconnect_general_title_structure" class="input-text" type="text" name="template[meta][title_structure]" value="<?php echo esc_attr($form_values['title_structure']); ?>" />
         </p>
-        <p class="form-field melicon_general_description_structure_field">
-            <label for="melicon_general_description_structure">
+        <p class="form-field meliconnect_general_description_structure_field">
+            <label for="meliconnect_general_description_structure">
                 <?php esc_html_e('Description Structure', 'meliconnect'); ?>
             </label>
-            <input id="melicon_general_description_structure" class="input-text" type="text" name="template[meta][description_structure]" value="<?php echo esc_attr($form_values['description_structure']); ?>" />
+            <input id="meliconnect_general_description_structure" class="input-text" type="text" name="template[meta][description_structure]" value="<?php echo esc_attr($form_values['description_structure']); ?>" />
         </p>
-        <p class="form-field melicon_general_how_price_formed">
+        <p class="form-field meliconnect_general_how_price_formed">
             <?php
             woocommerce_wp_select(array(
                 'id' => 'template[meta][price_create_method]',
@@ -244,7 +244,7 @@ if (! defined('ABSPATH')) {
             ));
             ?>
         </p>
-        <p class="form-field melicon_general_has_sync_field">
+        <p class="form-field meliconnect_general_has_sync_field">
             <?php
             woocommerce_wp_select(array(
                 'id' => 'template[meta][has_sync]',
@@ -261,19 +261,19 @@ if (! defined('ABSPATH')) {
 
 
 
-    <div class="options_group melicon_product_edit_mercadolibre_tab_save">
+    <div class="options_group meliconnect_product_edit_mercadolibre_tab_save">
         <div class="toolbar toolbar-buttons">
-            <button id="melicon_save_template_button"
+            <button id="meliconnect_save_template_button"
                 type="button"
-                class="melicon-button melicon-is-primary">
+                class="meliconnect-button meliconnect-is-primary">
                 <?php esc_html_e('Save Template', 'meliconnect'); ?>
             </button>
         </div>
     </div>
 </div>
 
-<input type="hidden" id="melicon_current_category_id" value="<?php echo esc_attr($form_values['category_id']); ?>">
-<input type="hidden" id="melicon_woo_product_id" value="<?php echo esc_attr($woo_product_id); ?>">
+<input type="hidden" id="meliconnect_current_category_id" value="<?php echo esc_attr($form_values['category_id']); ?>">
+<input type="hidden" id="meliconnect_woo_product_id" value="<?php echo esc_attr($woo_product_id); ?>">
 
 
 

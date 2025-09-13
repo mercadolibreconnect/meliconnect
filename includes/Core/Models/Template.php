@@ -78,7 +78,7 @@ class Template
     {
         global $wpdb;
 
-        self::$table_name = $wpdb->prefix . "melicon_templates";
+        self::$table_name = $wpdb->prefix . "meliconnect_templates";
     }
 
 
@@ -138,7 +138,7 @@ class Template
     {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . 'melicon_template_attributes';
+        $table_name = $wpdb->prefix . 'meliconnect_template_attributes';
 
         if (empty($template_post_data['attrs'])) {
             Helper::logData('attrs not found in post data');
@@ -398,7 +398,7 @@ class Template
     public static function deleteTemplatesMetas($template_id, $meta_keys = ['all'])
     {
         global $wpdb;
-        $template_metas_table_name = $wpdb->prefix . 'melicon_template_metas';
+        $template_metas_table_name = $wpdb->prefix . 'meliconnect_template_metas';
 
         if (in_array('all', $meta_keys)) {
             $deleted = $wpdb->delete($template_metas_table_name, ['template_id' => $template_id]) !== false;
@@ -503,7 +503,7 @@ class Template
     public static function createTemplateMeta($template_id, $meta_key, $meta_value)
     {
         global $wpdb;
-        $template_metas_table_name = $wpdb->prefix . 'melicon_template_metas';
+        $template_metas_table_name = $wpdb->prefix . 'meliconnect_template_metas';
 
         $template_id = intval($template_id);
         $meta_key = sanitize_text_field($meta_key);
@@ -612,7 +612,7 @@ class Template
     public static function deleteTemplatesAttributes($template_id)
     {
         global $wpdb;
-        $template_attributes_table_name = $wpdb->prefix . 'melicon_template_attributes';
+        $template_attributes_table_name = $wpdb->prefix . 'meliconnect_template_attributes';
 
         $deleted = $wpdb->delete(
             $template_attributes_table_name,
@@ -632,7 +632,7 @@ class Template
     public static function createUpdateTemplateAttributes($used_by, $used_asoc_id, $meli_attribute_id, $data)
     {
         global $wpdb;
-        $template_attributes_table_name = $wpdb->prefix . 'melicon_template_attributes';
+        $template_attributes_table_name = $wpdb->prefix . 'meliconnect_template_attributes';
 
         // Verificar si ya existe un registro con used_by, used_asoc_id, y meli_attribute_id
         $existing_row = $wpdb->get_row(
@@ -679,7 +679,7 @@ class Template
     public static function createMainProductAttributes($template_id, $meli_listing_data, $woo_product_id)
     {
         global $wpdb;
-        $template_attributes_table_name = $wpdb->prefix . 'melicon_template_attributes';
+        $template_attributes_table_name = $wpdb->prefix . 'meliconnect_template_attributes';
         $product = wc_get_product($woo_product_id);
 
         if (!$product) {
@@ -720,7 +720,7 @@ class Template
     public static function createVariationCombinationAttributes($template_id, $meli_listing_data, $woo_product_id)
     {
         global $wpdb;
-        $template_attributes_table_name = $wpdb->prefix . 'melicon_template_attributes';
+        $template_attributes_table_name = $wpdb->prefix . 'meliconnect_template_attributes';
 
         // Obtén el producto de WooCommerce por ID
         $product = wc_get_product($woo_product_id);
@@ -734,7 +734,7 @@ class Template
 
             $meli_variation_id = $variation->id;
 
-            $woo_variation = Helper::getPostByMeta('melicon_meli_asoc_variation_id', $meli_variation_id);
+            $woo_variation = Helper::getPostByMeta('meliconnect_meli_asoc_variation_id', $meli_variation_id);
 
             $woo_variation_id = isset($woo_variation->ID) ? $woo_variation->ID : '';
 
@@ -777,7 +777,7 @@ class Template
     public static function createVariationAttributes($template_id, $meli_listing_data, $woo_product_id)
     {
         global $wpdb;
-        $template_attributes_table_name = $wpdb->prefix . 'melicon_template_attributes';
+        $template_attributes_table_name = $wpdb->prefix . 'meliconnect_template_attributes';
         $product = wc_get_product($woo_product_id);
 
         if (!$product) {
@@ -788,7 +788,7 @@ class Template
         foreach ($meli_listing_data->variations as $variation) {
             $meli_variation_id = $variation->id;
 
-            $woo_variation = Helper::getPostByMeta('melicon_meli_asoc_variation_id', $meli_variation_id);
+            $woo_variation = Helper::getPostByMeta('meliconnect_meli_asoc_variation_id', $meli_variation_id);
 
             $woo_variation_id = isset($woo_variation->ID) ? $woo_variation->ID : '';
 
@@ -862,8 +862,8 @@ class Template
     public static function getTemplateData($template_id)
     {
         global $wpdb;
-        $template_table_name = $wpdb->prefix . 'melicon_templates';
-        $template_metas_table_name = $wpdb->prefix . 'melicon_template_metas';
+        $template_table_name = $wpdb->prefix . 'meliconnect_templates';
+        $template_metas_table_name = $wpdb->prefix . 'meliconnect_template_metas';
 
         // Obtener la data del template
         $template_data = $wpdb->get_row(
@@ -899,7 +899,7 @@ class Template
     public static function getTemplateAttributes($template_id)
     {
         global $wpdb;
-        $template_attributes_table_name = $wpdb->prefix . 'melicon_template_attributes';
+        $template_attributes_table_name = $wpdb->prefix . 'meliconnect_template_attributes';
         $template_attributes = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM {$template_attributes_table_name} WHERE template_id = %d",
@@ -914,7 +914,7 @@ class Template
     public static function selectCustomTemplateData($template_id, array $data)
     {
         global $wpdb;
-        $template_table_name = $wpdb->prefix . 'melicon_templates';
+        $template_table_name = $wpdb->prefix . 'meliconnect_templates';
 
         // Verificar que $data sea un string o un array de strings
         if (is_string($data)) {
@@ -925,7 +925,7 @@ class Template
             return false; // Retornar false si no es un array válido
         }
 
-        // Lista de columnas permitidas basada en la estructura de la tabla wp_melicon_templates
+        // Lista de columnas permitidas basada en la estructura de la tabla wp_meliconnect_templates
         $allowed_columns = [
             'id',
             'used_by',
@@ -973,7 +973,7 @@ class Template
 
 
         // Nombre de la tabla
-        $table_name = $wpdb->prefix . 'melicon_templates';
+        $table_name = $wpdb->prefix . 'meliconnect_templates';
 
         // Validamos si el array de datos no está vacío
         if (empty($data)) {
