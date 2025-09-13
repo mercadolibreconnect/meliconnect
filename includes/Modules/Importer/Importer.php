@@ -32,17 +32,17 @@ class Importer implements ModuleInterface {
 
     public function renderImporterPage()
     {
-        include MC_PLUGIN_ROOT . 'includes/Modules/Importer/Views/importer.php';
+        include MELICONNECT_PLUGIN_ROOT . 'includes/Modules/Importer/Views/importer.php';
     }
 
     public function registerModuleStyles($hook)
     {
-        wp_enqueue_style('melicon-importer', MC_PLUGIN_URL . 'includes/Modules/Importer/Assets/Css/melicon-importer.css', [], '1.0.0');
+        wp_enqueue_style('melicon-importer', MELICONNECT_PLUGIN_URL . 'includes/Modules/Importer/Assets/Css/melicon-importer.css', [], '1.0.0');
     }
 
     public function registerModuleScripts($hook)
     {
-        wp_register_script('melicon-importer-js', MC_PLUGIN_URL . 'includes/Modules/Importer/Assets/Js/melicon-importer.js', ['jquery'], '1.0.0', true);
+        wp_register_script('melicon-importer-js', MELICONNECT_PLUGIN_URL . 'includes/Modules/Importer/Assets/Js/melicon-importer.js', ['jquery'], '1.0.0', true);
         HelperJSTranslations::localizeScript('melicon-importer-js');
         wp_enqueue_script('melicon-importer-js');
     }

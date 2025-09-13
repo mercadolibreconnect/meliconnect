@@ -36,7 +36,7 @@ class Notification
                         OR from_version <= %s
                     )
                 ORDER BY date_from DESC
-            ", MC_VERSION)
+            ", MELICONNECT_VERSION)
         );
 
         return $notifications;

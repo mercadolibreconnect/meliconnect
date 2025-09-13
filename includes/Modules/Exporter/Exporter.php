@@ -36,17 +36,17 @@ class Exporter implements ModuleInterface
     public function renderExporterPage()
     {
 
-        include MC_PLUGIN_ROOT . 'includes/Modules/Exporter/Views/exporter.php';
+        include MELICONNECT_PLUGIN_ROOT . 'includes/Modules/Exporter/Views/exporter.php';
     }
 
     public function registerModuleStyles($hook)
     {
-        wp_enqueue_style('melicon-exporter', MC_PLUGIN_URL . 'includes/Modules/Exporter/Assets/Css/melicon-exporter.css', [], '1.0.0');
+        wp_enqueue_style('melicon-exporter', MELICONNECT_PLUGIN_URL . 'includes/Modules/Exporter/Assets/Css/melicon-exporter.css', [], '1.0.0');
     }
 
     public function registerModuleScripts($hook)
     {
-        wp_register_script('melicon-exporter-js', MC_PLUGIN_URL . 'includes/Modules/Exporter/Assets/Js/melicon-exporter.js', ['jquery'], '1.0.0', true);
+        wp_register_script('melicon-exporter-js', MELICONNECT_PLUGIN_URL . 'includes/Modules/Exporter/Assets/Js/melicon-exporter.js', ['jquery'], '1.0.0', true);
 
         HelperJSTranslations::localizeScript('melicon-exporter-js');
         wp_enqueue_script('melicon-exporter-js');

@@ -16,7 +16,7 @@ $headerTitle = esc_html__('Exporter', 'meliconnect');
 
 
 
-include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
+include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 
 ?>
 <!-- START MCSYNCAPP -->
@@ -259,6 +259,6 @@ include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
         </div>
     </div>
 
-    <?php include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/footer.php'; ?>
+    <?php include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/footer.php'; ?>
 </div>
 <!-- END MCSYNCAPP -->

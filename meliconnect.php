@@ -24,17 +24,17 @@ if (!defined('ABSPATH')) {
 /**
  * Define constantes del plugin
  */
-define('MC_VERSION', '1.0.1');
-define('MC_DATABASE_VERSION', '1.0.0');
-define('MC_TEXTDOMAIN', 'meliconnect');
-define('MC_PLUGIN_ROOT', plugin_dir_path(__FILE__));
-define('MC_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('MELICONNECT_VERSION', '1.0.1');
+define('MELICONNECT_DATABASE_VERSION', '1.0.0');
+define('MELICONNECT_TEXTDOMAIN', 'meliconnect');
+define('MELICONNECT_PLUGIN_ROOT', plugin_dir_path(__FILE__));
+define('MELICONNECT_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 /**
  * Carga de dependencias
  */
-if (file_exists(MC_PLUGIN_ROOT . 'vendor/autoload.php')) {
-    require_once MC_PLUGIN_ROOT . 'vendor/autoload.php';
+if (file_exists(MELICONNECT_PLUGIN_ROOT . 'vendor/autoload.php')) {
+    require_once MELICONNECT_PLUGIN_ROOT . 'vendor/autoload.php';
 }
 
 /**
@@ -51,15 +51,15 @@ new Meliconnect\Meliconnect\Core\Initialize();
 /**
  * Funciones de compatibilidad
  */
-if (!function_exists('mc_get_plugin_path')) {
-    function mc_get_plugin_path() {
-        return MC_PLUGIN_ROOT;
+if (!function_exists('meliconnect_get_plugin_path')) {
+    function meliconnect_get_plugin_path() {
+        return MELICONNECT_PLUGIN_ROOT;
     }
 }
 
-if (!function_exists('mc_get_plugin_url')) {
-    function mc_get_plugin_url() {
-        return MC_PLUGIN_URL;
+if (!function_exists('meliconnect_get_plugin_url')) {
+    function meliconnect_get_plugin_url() {
+        return MELICONNECT_PLUGIN_URL;
     }
 }
 

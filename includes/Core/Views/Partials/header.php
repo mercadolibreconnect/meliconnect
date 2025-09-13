@@ -34,7 +34,7 @@ $notifications = Notification::getNotifications();
             <div class="melicon-container header-container ">
                 <div class="melicon-header-content">
                     <a href="https://meliconnect.com" target="_blank">
-                        <img src="<?php echo esc_html(MC_PLUGIN_URL); ?>/includes/Core/Assets/Images/logo-mercadolibre-connect.png" alt="Meliconnect" class="melicon-logo" style="height: 40px; margin-top: 8px;">
+                        <img src="<?php echo esc_html(MELICONNECT_PLUGIN_URL); ?>/includes/Core/Assets/Images/logo-mercadolibre-connect.png" alt="Meliconnect" class="melicon-logo" style="height: 40px; margin-top: 8px;">
                     </a>
                     <span class="spacer"></span>
                     <span class="page-name"><?php echo esc_html($headerTitle ?? ''); ?></span>

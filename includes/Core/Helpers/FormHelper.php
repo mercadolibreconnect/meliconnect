@@ -10,7 +10,7 @@ class FormHelper
     public static function print_checkbox($key, $label, $value = '', $check_compare_value = true, $helpText = '')
     {
         // Ruta del archivo parcial
-        $partial_path = MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/Form/checkbox.php';
+        $partial_path = MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/Form/checkbox.php';
 
         // Verificar si el archivo existe
         if (file_exists($partial_path)) {

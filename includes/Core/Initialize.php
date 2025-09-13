@@ -51,9 +51,9 @@ class Initialize
         //add_action('init', [$this, 'testCode'], 10);
 
 
-        register_activation_hook(MC_PLUGIN_ROOT, array($this, 'activate'));
-        register_deactivation_hook(MC_PLUGIN_ROOT, array('Initialize', 'deactivate'));
-        register_uninstall_hook(MC_PLUGIN_ROOT, array('Initialize', 'uninstall'));
+        register_activation_hook(MELICONNECT_PLUGIN_ROOT, array($this, 'activate'));
+        register_deactivation_hook(MELICONNECT_PLUGIN_ROOT, array('Initialize', 'deactivate'));
+        register_uninstall_hook(MELICONNECT_PLUGIN_ROOT, array('Initialize', 'uninstall'));
     }
 
     public function showAdminNotices()
@@ -83,7 +83,7 @@ class Initialize
 
         self::createDefaultOptions();
 
-        update_option('meliconnect_db_version', MC_DATABASE_VERSION);
+        update_option('meliconnect_db_version', MELICONNECT_DATABASE_VERSION);
     }
 
     public static function createDefaultOptions()
@@ -179,7 +179,7 @@ class Initialize
     public function initApp()
     {
         self::registerTextDomain();
-        add_action('plugins_loaded', 'mc_register_text_domain');
+        add_action('plugins_loaded', 'meliconnect_register_text_domain');
 
         do_action('meliconnect_init');
 
@@ -263,38 +263,38 @@ class Initialize
 
         wp_enqueue_style(
             self::$css_pre . 'all-pages',
-            MC_PLUGIN_URL . 'assets/css/all-pages.css',
+            MELICONNECT_PLUGIN_URL . 'assets/css/all-pages.css',
             [],
             '1.0.0'
         );
 
         // Solo páginas del plugin
         if ($this->is_plugin_page()) {
-            wp_enqueue_style(self::$css_pre . 'bulma-divider-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma-divider.min.css', [], '1.0.1');
-            wp_enqueue_style(self::$css_pre . 'plugin-pages', MC_PLUGIN_URL . 'assets/css/plugin-pages.css', [], '1.0.0');
+            wp_enqueue_style(self::$css_pre . 'bulma-divider-css', MELICONNECT_PLUGIN_URL . 'assets/css/bulma/bulma-divider.min.css', [], '1.0.1');
+            wp_enqueue_style(self::$css_pre . 'plugin-pages', MELICONNECT_PLUGIN_URL . 'assets/css/plugin-pages.css', [], '1.0.0');
         }
 
         // Si estás en páginas de WordPress que usa tu plugin
         if ($this->is_wordpress_page_used_by_plugin()) {
-            wp_enqueue_style(self::$css_pre . 'wordpress-pages', MC_PLUGIN_URL . 'assets/css/wordpress-pages.css', [], '1.0.0');
+            wp_enqueue_style(self::$css_pre . 'wordpress-pages', MELICONNECT_PLUGIN_URL . 'assets/css/wordpress-pages.css', [], '1.0.0');
         }
 
         // En común para plugin + páginas WP relacionadas
         if ($this->is_plugin_page() || $this->is_wordpress_page_used_by_plugin()) {
-            wp_enqueue_style(self::$css_pre . 'font-awesome-5', MC_PLUGIN_URL . 'assets/css/font-awesome/css/all.min.css', [], '5');
-            wp_enqueue_style(self::$css_pre . 'font-awesome-brands', MC_PLUGIN_URL . 'assets/css/font-awesome/css/brands.min.css', [], '5');
-            wp_enqueue_style(self::$css_pre . 'font-awesome-solid', MC_PLUGIN_URL . 'assets/css/font-awesome/css/solid.min.css', [], '5');
-            wp_enqueue_style(self::$css_pre . 'font-awesome-duotone', MC_PLUGIN_URL . 'assets/css/font-awesome/css/duotone.min.css', [], '5');
-            wp_enqueue_style(self::$css_pre . 'bulma-switch-css', MC_PLUGIN_URL . 'assets/css/bulma/bulma-switch.min.css', [], '1.0.1');
-            wp_enqueue_style(self::$css_pre . 'select2', MC_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.1.0');
-            wp_enqueue_style(self::$css_pre . 'swal-css', MC_PLUGIN_URL . 'assets/css/sweetalert/sweetalert2.min.css', [], '11.4.8', false);
-            wp_enqueue_style(self::$css_pre . 'melicon-custom', MC_PLUGIN_URL . 'assets/css/melicon-custom.css', [], '1.0.0');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-5', MELICONNECT_PLUGIN_URL . 'assets/css/font-awesome/css/all.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-brands', MELICONNECT_PLUGIN_URL . 'assets/css/font-awesome/css/brands.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-solid', MELICONNECT_PLUGIN_URL . 'assets/css/font-awesome/css/solid.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'font-awesome-duotone', MELICONNECT_PLUGIN_URL . 'assets/css/font-awesome/css/duotone.min.css', [], '5');
+            wp_enqueue_style(self::$css_pre . 'bulma-switch-css', MELICONNECT_PLUGIN_URL . 'assets/css/bulma/bulma-switch.min.css', [], '1.0.1');
+            wp_enqueue_style(self::$css_pre . 'select2', MELICONNECT_PLUGIN_URL . 'assets/css/select2/select2.min.css', [], '4.1.0');
+            wp_enqueue_style(self::$css_pre . 'swal-css', MELICONNECT_PLUGIN_URL . 'assets/css/sweetalert/sweetalert2.min.css', [], '11.4.8', false);
+            wp_enqueue_style(self::$css_pre . 'melicon-custom', MELICONNECT_PLUGIN_URL . 'assets/css/melicon-custom.css', [], '1.0.0');
 
             /* Connection page */
-            wp_enqueue_style('melicon-connection', MC_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-connection.css', [], '1.0.0');
+            wp_enqueue_style('melicon-connection', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-connection.css', [], '1.0.0');
 
             /* Setting page */
-            wp_enqueue_style('melicon-setting', MC_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-setting.css', [], '1.0.0');
+            wp_enqueue_style('melicon-setting', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Css/melicon-setting.css', [], '1.0.0');
         }
     }
 
@@ -335,7 +335,7 @@ class Initialize
 
         wp_enqueue_script(
             'melicon-swal-js',
-            MC_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js',
+            MELICONNECT_PLUGIN_URL . 'assets/js/sweetalert/sweetalert2.all.min.js',
             ['jquery'],
             '11.4.8',
             true
@@ -343,7 +343,7 @@ class Initialize
 
         wp_enqueue_script(
             self::$js_pre . 'select-2',
-            MC_PLUGIN_URL . 'assets/js/select2/select2.min.js',
+            MELICONNECT_PLUGIN_URL . 'assets/js/select2/select2.min.js',
             ['jquery'],
             '1.0.0',
             true
@@ -351,7 +351,7 @@ class Initialize
 
         wp_register_script(
             self::$js_pre . 'general-script',
-            MC_PLUGIN_URL . 'assets/js/melicon-general.js',
+            MELICONNECT_PLUGIN_URL . 'assets/js/melicon-general.js',
             ['jquery'],
             '1.0.0',
             true
@@ -361,10 +361,10 @@ class Initialize
         wp_enqueue_script(self::$js_pre . 'general-script');
 
         /* Connection page */
-        wp_enqueue_script('melicon-connection', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-connection.js', ['jquery'], '1.0.0', true);
+        wp_enqueue_script('melicon-connection', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-connection.js', ['jquery'], '1.0.0', true);
 
         /* Setting page */
-        wp_enqueue_script('melicon-setting', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-setting.js', ['jquery'], '1.0.0', true);
+        wp_enqueue_script('melicon-setting', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-setting.js', ['jquery'], '1.0.0', true);
 
         /* Product edit page */
         if ($this->is_wordpress_page_used_by_plugin()) {
@@ -372,7 +372,7 @@ class Initialize
 
             // Verifica que el tipo de post sea 'product'
             if (get_post_type($post_id) === 'product') {
-                wp_enqueue_script('melicon-product-edit-js', MC_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-product-edit.js', ['jquery'], '1.0.0', true);
+                wp_enqueue_script('melicon-product-edit-js', MELICONNECT_PLUGIN_URL . 'includes/Core/Assets/Js/melicon-product-edit.js', ['jquery'], '1.0.0', true);
             }
         }
     }

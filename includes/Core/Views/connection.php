@@ -10,7 +10,7 @@ $connectionController = new ConnectionController();
 $data = $connectionController->getData();
 $headerTitle = esc_html__('Connection', 'meliconnect');
 
-include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
+include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 ?>
 <!-- START MCSYNCAPP -->
 <div id="melicon-page-core-connection" class="melicon-app">
@@ -113,6 +113,6 @@ include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
         </div>
     </div>
 
-    <?php include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/footer.php'; ?>
+    <?php include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/footer.php'; ?>
 </div>
 <!-- END MCSYNCAPP -->

@@ -40,7 +40,7 @@ class SettingController implements ControllerInterface
 
         header('Content-Type:  text/html');
 
-        include(MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/general.php');
+        include(MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/general.php');
 
         die();
     }
@@ -56,7 +56,7 @@ class SettingController implements ControllerInterface
 
         header('Content-Type:  text/html');
 
-        include(MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/export.php');
+        include(MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/export.php');
 
         die();
     }
@@ -72,7 +72,7 @@ class SettingController implements ControllerInterface
 
         header('Content-Type:  text/html');
 
-        include(MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/import.php');
+        include(MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/import.php');
 
         die();
     }
@@ -88,7 +88,7 @@ class SettingController implements ControllerInterface
 
         header('Content-Type:  text/html');
 
-        include(MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/sync.php');
+        include(MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/sync.php');
 
         die();
     }

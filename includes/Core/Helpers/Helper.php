@@ -516,7 +516,7 @@ class Helper
 
     public static function load_partial($template_path, $data = [], $once = true, $print = true)
     {
-        $full_path = MC_PLUGIN_ROOT . $template_path;
+        $full_path = MELICONNECT_PLUGIN_ROOT . $template_path;
 
         if (!file_exists($full_path)) {
             /* translators: %s is the template path that could not be found. */

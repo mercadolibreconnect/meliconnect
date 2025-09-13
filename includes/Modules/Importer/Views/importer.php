@@ -11,7 +11,7 @@ $data = $importController->getData();
 
 $headerTitle = esc_html__('Importer', 'meliconnect');
 
-include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
+include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 
 ?>
 <!-- START MCSYNCAPP -->
@@ -178,7 +178,7 @@ include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 
                                         <?php
                                         $selectName = 'user_id';
-                                        include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/meliconnect_sellers_select.php';
+                                        include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/meliconnect_sellers_select.php';
                                         ?>
                                     </div>
 
@@ -336,7 +336,7 @@ include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
                                                             <?php
                                                             $sellerSelectAddAll = true;
 
-                                                            include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/meliconnect_sellers_select.php';
+                                                            include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/meliconnect_sellers_select.php';
                                                             ?>
                                                         </div>
                                                     </div>
@@ -411,6 +411,6 @@ include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
         </div>
     </div>
 
-    <?php include MC_PLUGIN_ROOT . 'includes/Core/Views/Partials/footer.php'; ?>
+    <?php include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/footer.php'; ?>
 </div>
 <!-- END MCSYNCAPP -->
