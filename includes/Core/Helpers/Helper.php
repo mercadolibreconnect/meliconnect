@@ -2,7 +2,7 @@
 
 namespace Meliconnect\Meliconnect\Core\Helpers;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
@@ -36,22 +36,12 @@ class Helper
 
     public static function get_active_product_id_by_sku($sku)
     {
-
         if (empty($sku)) {
             return null;
         }
 
-        global $wpdb;
-
-        $product_id = $wpdb->get_var($wpdb->prepare("
-            SELECT p.ID 
-            FROM {$wpdb->posts} p
-            INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
-            WHERE pm.meta_key = '_sku'
-            AND pm.meta_value = %s
-            AND p.post_status = 'publish'
-            LIMIT 1
-        ", $sku));
+        // WooCommerce ya maneja la consulta internamente
+        $product_id = wc_get_product_id_by_sku($sku);
 
         return $product_id ? (int) $product_id : null;
     }
@@ -106,10 +96,9 @@ class Helper
 
     public static function getMeliconnectOptions($type = 'all')
     {
-        global $wpdb;
-
         $options = [];
 
+        // Definir prefijos según el tipo
         switch ($type) {
             case 'general':
                 $prefix = 'meliconnect_general';
@@ -128,30 +117,16 @@ class Helper
                 break;
         }
 
-        if ($type === 'all') {
-            // Consulta sin datos dinámicos, manejada directamente
-            $results = $wpdb->get_results(
-                "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'meliconnect_%'",
-                ARRAY_A
-            );
-        } else {
-            // Consulta preparada con datos dinámicos
-            $results = $wpdb->get_results(
-                $wpdb->prepare(
-                    "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE %s",
-                    $wpdb->esc_like($prefix) . '%'
-                ),
-                ARRAY_A
-            );
-        }
+        // Recuperar todas las opciones en caché
+        $all_options = wp_load_alloptions();
 
-        if ($results) {
-            foreach ($results as $row) {
-                $options[$row['option_name']] = maybe_unserialize($row['option_value']);
+        foreach ($all_options as $name => $value) {
+            if (strpos($name, $prefix) === 0 || $type === 'all') {
+                $options[$name] = maybe_unserialize($value);
             }
         }
 
-        // Agregar 'meliconnect_general_sync_type' si el tipo es 'export' o 'import'
+        // Agregar 'meliconnect_general_sync_type' si corresponde
         if ($type === 'export' || $type === 'import') {
             $general_sync_type = get_option('meliconnect_general_sync_type');
             $options['meliconnect_general_sync_type'] = maybe_unserialize($general_sync_type);
@@ -246,24 +221,27 @@ class Helper
 
     public static function getPostsWithMetaArray($meta_key)
     {
-        global $wpdb;
+        $args = [
+            'post_type'      => 'any',
+            'post_status'    => 'any',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+            'meta_query'     => [
+                [
+                    'key'     => $meta_key,
+                    'compare' => 'EXISTS',
+                ],
+            ],
+        ];
 
-        // Ejecutar directamente la consulta preparada
-        $results = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT post_id, meta_value 
-                FROM {$wpdb->postmeta} 
-                WHERE meta_key = %s",
-                $meta_key
-            ),
-            ARRAY_A
-        );
+        $posts = get_posts($args);
 
-        // Formatear los resultados como un array asociativo meta_value => post_id
         $formatted_results = [];
-        if ($results) {
-            foreach ($results as $row) {
-                $formatted_results[$row['meta_value']] = $row['post_id'];
+
+        if ($posts) {
+            foreach ($posts as $post_id) {
+                $value = get_post_meta($post_id, $meta_key, true);
+                $formatted_results[$value] = $post_id;
             }
         }
 
@@ -272,21 +250,21 @@ class Helper
 
     public static function getPostByMeta($meta_key, $meta_value)
     {
-        global $wpdb;
+        $args = [
+            'post_type'      => 'any',
+            'post_status'    => 'any',
+            'posts_per_page' => 1,
+            'meta_query'     => [
+                [
+                    'key'   => $meta_key,
+                    'value' => $meta_value,
+                ],
+            ],
+        ];
 
-        $post_id = $wpdb->get_var($wpdb->prepare("
-            SELECT post_id
-            FROM $wpdb->postmeta
-            WHERE meta_key = %s
-            AND meta_value = %s
-            LIMIT 1
-        ", $meta_key, $meta_value));
+        $posts = get_posts($args);
 
-        if ($post_id) {
-            return get_post($post_id);
-        }
-
-        return null;
+        return ! empty($posts) ? $posts[0] : null;
     }
 
 
@@ -365,17 +343,14 @@ class Helper
 
     public static function get_product_by_sku($sku)
     {
-        global $wpdb;
+        if (empty($sku)) {
+            return null;
+        }
 
-        $product_id = $wpdb->get_var($wpdb->prepare("
-            SELECT pm.post_id
-            FROM {$wpdb->postmeta} pm
-            JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-            WHERE pm.meta_key = '_sku' AND pm.meta_value = %s AND p.post_type = 'product' AND p.post_status = 'publish'
-            LIMIT 1
-        ", $sku));
+        // WooCommerce ya maneja la query y cache interno
+        $product_id = wc_get_product_id_by_sku($sku);
 
-        return $product_id ? get_post($product_id) : null;
+        return $product_id ? wc_get_product($product_id) : null;
     }
 
     public static function get_woo_active_products()
@@ -462,16 +437,8 @@ class Helper
 
     public static function get_woo_active_products_count()
     {
-        global $wpdb;
-
-        $count = $wpdb->get_var("
-        SELECT COUNT(*)
-        FROM {$wpdb->prefix}posts
-        WHERE post_type = 'product'
-        AND post_status = 'publish'
-    ");
-
-        return (int) $count;
+        $count_posts = wp_count_posts('product');
+        return isset($count_posts->publish) ? (int) $count_posts->publish : 0;
     }
 
     public static function change_meli_listing_status($product_id, $status)

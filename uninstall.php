@@ -1,10 +1,10 @@
 <?php
 
 if (! defined('ABSPATH')) {
-    exit; // Exit if accessed directly
+    exit;
 }
 
-if (!defined('WP_UNINSTALL_PLUGIN')) {
+if (! defined('WP_UNINSTALL_PLUGIN')) {
     exit;
 }
 
@@ -28,5 +28,6 @@ foreach ($tables as $table) {
     $wpdb->query("DROP TABLE IF EXISTS {$prefix}{$table}");
 }
 
-// Eliminar todas las opciones que comiencen con 'meliconnect_' o 'meliconnect_'
-$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE 'meliconnect_%' OR option_name LIKE 'meliconnect_%'");
+$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE 'meliconnect_%'");
+
+wp_cache_flush();

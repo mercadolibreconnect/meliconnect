@@ -9,6 +9,8 @@ Stable tag: 1.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
+Seamless WooCommerce and Mercado Libre integration with real-time sync of products, stock, and prices.
+
 
 == Description ==
 Meliconnect is a powerful plugin that integrates WooCommerce with Mercado Libre, allowing you to import, export, and synchronize products between your WooCommerce store and Mercado Libre accounts. Manage individual products, bulk operations, and automatic processes, ensuring your store and marketplace listings are always up-to-date.
