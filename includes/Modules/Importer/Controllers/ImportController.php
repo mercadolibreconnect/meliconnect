@@ -215,16 +215,15 @@ class ImportController implements ControllerInterface {
 			return;
 		}
 
-		// Obtiene los datos enviados por AJAX
-		$data = $_POST;
-
-		// Verifica si la solicitud está vacía
-		if ( ! isset( $data['user_id'] ) ) {
+		if ( ! isset( $_POST['user_id'] ) ) {
 			wp_send_json_error( esc_html__( 'Invalid request data', 'meliconnect' ) );
 			return;
 		}
 
-		$meli_user = UserConnection::getUser( $data['user_id'] );
+		$user_id_raw = isset( $_POST['user_id'] ) ? wp_unslash( $_POST['user_id'] ) : '';
+		$user_id     = ctype_digit( $user_id_raw ) ? $user_id_raw : 0;
+
+		$meli_user = UserConnection::getUser( $user_id );
 
 		if ( ! $meli_user ) {
 			wp_send_json_error( esc_html__( 'User not found', 'meliconnect' ) );
