@@ -3,91 +3,87 @@
 namespace Meliconnect\Meliconnect\Core\Models;
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly
+	exit; // Exit if accessed directly
 }
-class ProcessItems
-{
-    private static $table_name;
+class ProcessItems {
 
-    // Este método se llama automáticamente cuando se accede por primera vez a la clase
-    public static function init()
-    {
-        global $wpdb;
-        self::$table_name = $wpdb->prefix . "meliconnect_process_items";
-    }
+	private static $table_name;
 
-    public static function updateProcessedItemStatus($item_process_id, $status, $process_id )
-    {
-        global $wpdb;
+	// Este método se llama automáticamente cuando se accede por primera vez a la clase
+	public static function init() {
+		global $wpdb;
+		self::$table_name = $wpdb->prefix . 'meliconnect_process_items';
+	}
 
-        self::init();
+	public static function updateProcessedItemStatus( $item_process_id, $status, $process_id ) {
+		global $wpdb;
 
-        $table_name = self::$table_name;
+		self::init();
 
-        $result_item = $wpdb->query($wpdb->prepare("UPDATE {$table_name} SET process_status = %s WHERE id = %s", $status, $item_process_id));
+		$table_name = self::$table_name;
 
-        if ($result_item !== false) {
+		$result_item = $wpdb->query( $wpdb->prepare( "UPDATE {$table_name} SET process_status = %s WHERE id = %s", $status, $item_process_id ) );
 
-            //update Process
-            $process = Process::updateProcessProgress($process_id, true);
+		if ( $result_item !== false ) {
 
-            return $process;
-        }
-    
-        return false;
-    }
+			// update Process
+			$process = Process::updateProcessProgress( $process_id, true );
+
+			return $process;
+		}
+
+		return false;
+	}
 
 
-    public static function createProcessItems($process_id, $items)
-    {
-        global $wpdb;
+	public static function createProcessItems( $process_id, $items ) {
+		global $wpdb;
 
-        self::init();
+		self::init();
 
-        $table_name = self::$table_name;
+		$table_name = self::$table_name;
 
-        // Asegúrate de que $items sea un array no vacío y de arrays asociativos
-        if (!empty($items) && is_array($items)) {
-            foreach ($items as $item) {
-                if (is_array($item)) {
-                    $wpdb->insert($table_name, [
-                        'process_id'      => $process_id,
-                        'meli_user_id'    => $item['meli_user_id'],
-                        'meli_listing_id' => $item['meli_listing_id'],
-                        'woo_product_id'  => $item['woo_product_id'],
-                        'template_id'     => $item['template_id'],
-                        'process_status'  => 'pending',
-                    ]);
-                }
-            }
-        }
-    }
+		// Asegúrate de que $items sea un array no vacío y de arrays asociativos
+		if ( ! empty( $items ) && is_array( $items ) ) {
+			foreach ( $items as $item ) {
+				if ( is_array( $item ) ) {
+					$wpdb->insert(
+						$table_name,
+						array(
+							'process_id'      => $process_id,
+							'meli_user_id'    => $item['meli_user_id'],
+							'meli_listing_id' => $item['meli_listing_id'],
+							'woo_product_id'  => $item['woo_product_id'],
+							'template_id'     => $item['template_id'],
+							'process_status'  => 'pending',
+						)
+					);
+				}
+			}
+		}
+	}
 
-    public static function getProcessItems($process_id, $limit = 100, $item_status = 'pending')
-    {
-        global $wpdb;
+	public static function getProcessItems( $process_id, $limit = 100, $item_status = 'pending' ) {
+		global $wpdb;
 
-        self::init();
+		self::init();
 
-        $table_name = self::$table_name;
+		$table_name = self::$table_name;
 
+		$items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_name} WHERE process_id = %s AND process_status = %s LIMIT %d", $process_id, $item_status, $limit ) );
 
-        $items = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$table_name} WHERE process_id = %s AND process_status = %s LIMIT %d", $process_id, $item_status, $limit));
+		return $items;
+	}
 
-        return $items;
-    }
+	public static function deleteItems( $process_id ) {
+		global $wpdb;
 
-    public static function deleteItems($process_id)
-    {
-        global $wpdb;
+		self::init();
 
-        self::init();
+		$table_name = self::$table_name;
 
-        $table_name = self::$table_name;
+		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table_name} WHERE process_id = %s", $process_id ) );
 
-
-        $result = $wpdb->query($wpdb->prepare("DELETE FROM {$table_name} WHERE process_id = %s", $process_id));
-
-        return $result;
-    }
+		return $result;
+	}
 }

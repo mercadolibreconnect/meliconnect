@@ -3,57 +3,59 @@
 namespace Meliconnect\Meliconnect\Core\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly
+	exit; // Exit if accessed directly
 }
 
-class HubApi
-{
-    private static $_apiUrl = "https://www.meliconnect.com/apicore/";
+class HubApi {
 
-    public static function connectHubApi($urlPath, $args, $method = 'GET', $timeOut = 30)
-    {
-        $url = self::$_apiUrl . $urlPath;
+	private static $_apiUrl = 'https://www.meliconnect.com/apicore/';
 
-        $wp_args = [
-            'method'  => $method,
-            'timeout' => $timeOut,
-        ];
+	public static function connectHubApi( $urlPath, $args, $method = 'GET', $timeOut = 30 ) {
+		$url = self::$_apiUrl . $urlPath;
 
-        if (strtoupper($method) === 'POST' || strtoupper($method) === 'PUT') {
-            $wp_args['body'] = wp_json_encode($args);
-            $wp_args['headers'] = [
-                'Content-Type' => 'application/json'
-            ];
-        } else {
-            $wp_args['body'] = $args;
-        }
+		$wp_args = array(
+			'method'  => $method,
+			'timeout' => $timeOut,
+		);
 
-        // Make the call and store the response in $res
-        $res = wp_remote_request($url, $wp_args);
+		if ( strtoupper( $method ) === 'POST' || strtoupper( $method ) === 'PUT' ) {
+			$wp_args['body']    = wp_json_encode( $args );
+			$wp_args['headers'] = array(
+				'Content-Type' => 'application/json',
+			);
+		} else {
+			$wp_args['body'] = $args;
+		}
 
-        if (is_wp_error($res)) {
-            return [
-                'success' => false,
-                'response' => $res->get_error_messages(),
-                'errorCodes' => $res->get_error_codes(),
-                'errorData' => $res->get_error_data()
-            ];
-        }
+		// Make the call and store the response in $res
+		$res = wp_remote_request( $url, $wp_args );
 
-        $responseCode = wp_remote_retrieve_response_code($res);
-        $responseBody = json_decode(wp_remote_retrieve_body($res));
+		if ( is_wp_error( $res ) ) {
+			return array(
+				'success'    => false,
+				'response'   => $res->get_error_messages(),
+				'errorCodes' => $res->get_error_codes(),
+				'errorData'  => $res->get_error_data(),
+			);
+		}
 
-        if (($responseCode == 200 || $responseCode == 201) && !isset($responseBody->error)) {
-            update_option('meliconnect_api_hub_errors', []);
-            return ['success' => true, 'response' => $responseBody];
-        } else {
-            $errorBody = $responseBody->error ?? 'Unknown error';
-            update_option('meliconnect_api_hub_errors', [$errorBody]);
-            return [
-                'success' => false,
-                'response' => $responseBody,
-                'errorCodes' => ["errorUserId"]
-            ];
-        }
-    }
+		$responseCode = wp_remote_retrieve_response_code( $res );
+		$responseBody = json_decode( wp_remote_retrieve_body( $res ) );
+
+		if ( ( $responseCode == 200 || $responseCode == 201 ) && ! isset( $responseBody->error ) ) {
+			update_option( 'meliconnect_api_hub_errors', array() );
+			return array(
+				'success'  => true,
+				'response' => $responseBody,
+			);
+		} else {
+			$errorBody = $responseBody->error ?? 'Unknown error';
+			update_option( 'meliconnect_api_hub_errors', array( $errorBody ) );
+			return array(
+				'success'    => false,
+				'response'   => $responseBody,
+				'errorCodes' => array( 'errorUserId' ),
+			);
+		}
+	}
 }

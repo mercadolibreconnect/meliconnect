@@ -1,6 +1,6 @@
 {
     "name": "meliconnect/meliconnect",
-    "description": "Conecta WooCommerce con Mercadolibre - Gestiona preguntas, ventas, cobros, envíos y más.",
+    "description": "WordPress plugin to connect and synchronize with MercadoLibre.",
     "type": "wordpress-plugin",
     "license": "GPL-3.0-or-later",
     "autoload": {
@@ -19,6 +19,27 @@
     "require": {
         "php": "^8.0"
     },
+    "extra": {
+        "wordpress-install-dir": "wp-content/plugins/meliconnect"
+    },
     "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^3.0"
+    },
+    "scripts": {
+        "lint": [
+            "php -d memory_limit=1024M vendor/bin/phpcs meliconnect.php uninstall.php --standard=WordPress",
+            "php -d memory_limit=1024M vendor/bin/phpcs includes/Core --standard=WordPress",
+            "php -d memory_limit=1024M vendor/bin/phpcs includes/Modules --standard=WordPress"
+        ],
+        "lint-fix": [
+            "php -d memory_limit=1024M vendor/bin/phpcbf meliconnect.php uninstall.php --standard=WordPress",
+            "php -d memory_limit=1024M vendor/bin/phpcbf includes/Core --standard=WordPress",
+            "php -d memory_limit=1024M vendor/bin/phpcbf includes/Modules --standard=WordPress"
+        ]
     }
 }

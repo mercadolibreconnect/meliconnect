@@ -2,50 +2,48 @@
 
 namespace Meliconnect\Meliconnect\Core;
 
-if (! defined('ABSPATH')) {
-    exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
 }
 
 /**
  * Class DatabaseManager
+ *
  * @package Meliconnect\Meliconnect
  */
-class DatabaseManager
-{
-    private $prefix;
-    private $charset_collate;
+class DatabaseManager {
 
-    public $tables_names = [];
+	private $prefix;
+	private $charset_collate;
 
-    public function __construct()
-    {
-        global $wpdb;
-        $this->prefix = $wpdb->prefix . 'meliconnect_';
-        $this->charset_collate = $wpdb->get_charset_collate();
-    }
+	public $tables_names = array();
 
-    public function create_or_update_tables()
-    {
-        $this->create_or_update_notification();
-        $this->create_or_update_user_connection();
-        $this->create_or_update_template();
+	public function __construct() {
+		global $wpdb;
+		$this->prefix          = $wpdb->prefix . 'meliconnect_';
+		$this->charset_collate = $wpdb->get_charset_collate();
+	}
 
-        //Always after create_or_update_template
-        $this->create_or_update_template_meta();
-        $this->create_or_update_template_attributes();
-        $this->create_or_update_process();
-        $this->create_or_update_process_item();
-        $this->create_or_update_user_listings_to_import();
-        $this->create_or_update_products_to_export();
-    }
+	public function create_or_update_tables() {
+		$this->create_or_update_notification();
+		$this->create_or_update_user_connection();
+		$this->create_or_update_template();
 
-    public function create_or_update_notification()
-    {
-        $table_name = $this->prefix . 'notifications';
+		// Always after create_or_update_template
+		$this->create_or_update_template_meta();
+		$this->create_or_update_template_attributes();
+		$this->create_or_update_process();
+		$this->create_or_update_process_item();
+		$this->create_or_update_user_listings_to_import();
+		$this->create_or_update_products_to_export();
+	}
 
-        $this->tables_names[] = $table_name;
+	public function create_or_update_notification() {
+		$table_name = $this->prefix . 'notifications';
 
-        $sql = "CREATE TABLE {$table_name} (
+		$this->tables_names[] = $table_name;
+
+		$sql = "CREATE TABLE {$table_name} (
             `id` mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT,
             `unique_id` varchar(250) NOT NULL,
 			`title_html` varchar(250) DEFAULT NULL,
@@ -65,17 +63,16 @@ class DatabaseManager
             PRIMARY KEY  (id)
         ) {$this->charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-    }
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
 
-    public function create_or_update_user_connection()
-    {
-        $table_name = $this->prefix . 'user_connection';
+	public function create_or_update_user_connection() {
+		$table_name = $this->prefix . 'user_connection';
 
-        $this->tables_names[] = $table_name;
+		$this->tables_names[] = $table_name;
 
-        $sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE {$table_name} (
             `id` mediumint(9) NOT NULL AUTO_INCREMENT,
             `access_token` varchar(255) NOT NULL,
             `app_id` varchar(255) NOT NULL,
@@ -95,18 +92,17 @@ class DatabaseManager
             UNIQUE KEY user_id (user_id)
         ) {$this->charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-    }
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
 
 
-    public function create_or_update_template()
-    {
-        $table_name = $this->prefix . 'templates';
+	public function create_or_update_template() {
+		$table_name = $this->prefix . 'templates';
 
-        $this->tables_names[] = $table_name;
+		$this->tables_names[] = $table_name;
 
-        $sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE {$table_name} (
             `id` mediumint(9) UNSIGNED NOT NULL AUTO_INCREMENT,
             `used_by` enum('product','template') NOT NULL DEFAULT 'template',
 			`used_asoc_id` varchar(100) DEFAULT NULL,
@@ -125,16 +121,15 @@ class DatabaseManager
 			UNIQUE KEY `unique_template_by_used_asoc` (`used_asoc_id`,`used_by`)
         ) {$this->charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-    }
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
 
-    public function create_or_update_template_meta()
-    {
-        $table_name = $this->prefix .  'template_metas';
-        $this->tables_names[] = $table_name;
+	public function create_or_update_template_meta() {
+		$table_name           = $this->prefix . 'template_metas';
+		$this->tables_names[] = $table_name;
 
-        $sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE {$table_name} (
             `meta_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             `template_id` MEDIUMINT(9) UNSIGNED NOT NULL,
             `meta_key` VARCHAR(255) DEFAULT NULL,
@@ -145,16 +140,15 @@ class DatabaseManager
             KEY template_id (template_id)
         ) {$this->charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-    }
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
 
-    public function create_or_update_template_attributes()
-    {
-        $table_name = $this->prefix . 'template_attributes';
-        $this->tables_names[] = $table_name;
+	public function create_or_update_template_attributes() {
+		$table_name           = $this->prefix . 'template_attributes';
+		$this->tables_names[] = $table_name;
 
-        $sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE {$table_name} (
             `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             `template_id` varchar(200) DEFAULT NULL,
             `used_by` enum('product','template','variation') NOT NULL DEFAULT 'template',
@@ -176,16 +170,15 @@ class DatabaseManager
             PRIMARY KEY  (id)
         ) {$this->charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-    }
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
 
-    public function create_or_update_process()
-    {
-        $table_name = $this->prefix . 'processes';
-        $this->tables_names[] = $table_name;
+	public function create_or_update_process() {
+		$table_name           = $this->prefix . 'processes';
+		$this->tables_names[] = $table_name;
 
-        $sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE {$table_name} (
             `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             `process_id` varchar(150) NOT NULL,
             `status` enum('pending','processing','paused','finished','failed') NOT NULL DEFAULT 'pending',
@@ -203,16 +196,15 @@ class DatabaseManager
             UNIQUE KEY `unique_process_id` (`process_id`)
         ) {$this->charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-    }
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
 
-    public function create_or_update_process_item()
-    {
-        $table_name = $this->prefix . 'process_items';
-        $this->tables_names[] = $table_name;
+	public function create_or_update_process_item() {
+		$table_name           = $this->prefix . 'process_items';
+		$this->tables_names[] = $table_name;
 
-        $sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE {$table_name} (
             `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             `process_id` varchar(200) NOT NULL,
             `meli_user_id` varchar(100) NULL,
@@ -227,17 +219,16 @@ class DatabaseManager
             KEY process_id (process_id)
         ) {$this->charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-    }
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
 
 
-    public function create_or_update_user_listings_to_import()
-    {
-        $table_name = $this->prefix . 'user_listings_to_import';
-        $this->tables_names[] = $table_name;
+	public function create_or_update_user_listings_to_import() {
+		$table_name           = $this->prefix . 'user_listings_to_import';
+		$this->tables_names[] = $table_name;
 
-        $sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE {$table_name} (
             `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             `meli_listing_id` VARCHAR(50) NOT NULL,
             `meli_user_id` VARCHAR(50) NOT NULL,
@@ -264,17 +255,16 @@ class DatabaseManager
             UNIQUE KEY meli_listing_id (meli_listing_id)
         ) {$this->charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-    }
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
 
 
-    public function create_or_update_products_to_export()
-    {
-        $table_name = $this->prefix . 'products_to_export';
-        $this->tables_names[] = $table_name;
+	public function create_or_update_products_to_export() {
+		$table_name           = $this->prefix . 'products_to_export';
+		$this->tables_names[] = $table_name;
 
-        $sql = "CREATE TABLE {$table_name} (
+		$sql = "CREATE TABLE {$table_name} (
             `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             `woo_product_id` BIGINT(20) UNSIGNED NOT NULL,
             `woo_product_name` VARCHAR(255) NOT NULL, 
@@ -303,7 +293,7 @@ class DatabaseManager
             UNIQUE KEY `woo_product_id` (`woo_product_id`)
         ) {$this->charset_collate};";
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-    }
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
+	}
 }

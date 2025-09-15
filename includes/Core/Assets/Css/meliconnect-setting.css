@@ -1,27 +1,27 @@
-    .meliconnect-image-uploader {
-        position: relative;
-    }
+.meliconnect-image-uploader {
+		position: relative;
+	}
 
-    .meliconnect-image-uploader .meliconnect-file-cta {
-        min-height: 180px !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        overflow: hidden;
-    }
+	.meliconnect-image-uploader .meliconnect-file-cta {
+		min-height: 180px !important;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		overflow: hidden;
+	}
 
-    .meliconnect-image-uploader .meliconnect-image-preview {
-        border: 1px solid #dbdbdb !important;
-    }
+	.meliconnect-image-uploader .meliconnect-image-preview {
+		border: 1px solid #dbdbdb !important;
+	}
 
-    .delete-image {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 10;
-    }
+	.delete-image {
+		position: absolute;
+		top: 0;
+		right: 0;
+		z-index: 10;
+	}
 
-    .delete-image:hover {
-        cursor: pointer;
-    }
+	.delete-image:hover {
+		cursor: pointer;
+	}

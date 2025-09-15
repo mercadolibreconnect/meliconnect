@@ -2,8 +2,8 @@
 
 namespace Meliconnect\Meliconnect\Modules\Importer\Services;
 
-if (! defined('ABSPATH')) {
-    exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
 }
 
 use Meliconnect\Meliconnect\Core\Helpers\Helper;
@@ -14,161 +14,156 @@ use Meliconnect\Meliconnect\Core\Models\UserConnection;
  * Handles communication with the external server to processs and send raw product data
  * and receive transformed product data.
  */
-class WooCommerceProductAdapter
-{
-    protected $apiEndpoint;
+class WooCommerceProductAdapter {
 
-    public function __construct() {
-        // Detectar entorno y seleccionar la URL correspondiente
+	protected $apiEndpoint;
 
-        $this->apiEndpoint = 'https://meliconnect.com/api/v1/process-product-data-to-import';
-        
-    }
+	public function __construct() {
+		// Detectar entorno y seleccionar la URL correspondiente
 
-    public function getTransformedProductData($meli_listing_data, $meli_user_id, $template_id = NULL, $woo_product_id = NULL, $sync_options = NULL)
-    {
-        
+		$this->apiEndpoint = 'https://meliconnect.com/api/v1/process-product-data-to-import';
+	}
 
-        $rawData = [
-            'extra_data' => [
-                'meli_user_id' => $meli_user_id,
-                'woo_product_id' => $woo_product_id,
-                'template_id' => $template_id,
-                'domain' => Helper::getDomainName(),
-            ],
+	public function getTransformedProductData( $meli_listing_data, $meli_user_id, $template_id = null, $woo_product_id = null, $sync_options = null ) {
 
-            'meli_listing' => $meli_listing_data,
-            'settings' => Helper::getMeliconnectOptions('import'),
-            'sync_options' => $sync_options
-            //'woo_product' => $this->getWooProductData($woo_product_id),
-            //'woo_variations' => $this->getWooProductVariations($woo_product_id),
-            //'template' => $this->getMeliconTemplateData($template_id),
-            
-        ];
+		$rawData = array(
+			'extra_data'   => array(
+				'meli_user_id'   => $meli_user_id,
+				'woo_product_id' => $woo_product_id,
+				'template_id'    => $template_id,
+				'domain'         => Helper::getDomainName(),
+			),
 
-        //Helper::logData('Raw data sent to hub: ' . wp_json_encode($rawData), 'custom-import');
+			'meli_listing' => $meli_listing_data,
+			'settings'     => Helper::getMeliconnectOptions( 'import' ),
+			'sync_options' => $sync_options,
+			// 'woo_product' => $this->getWooProductData($woo_product_id),
+			// 'woo_variations' => $this->getWooProductVariations($woo_product_id),
+			// 'template' => $this->getMeliconTemplateData($template_id),
 
-        // Enviar datos sin procesar al servidor y recibir datos transformados
-        $server_response = $this->sendDataToServer($rawData);
+		);
 
-        //Helper::logData('Server response:' . $server_response, 'custom-import');
+		// Helper::logData('Raw data sent to hub: ' . wp_json_encode($rawData), 'custom-import');
 
-        return json_decode($server_response, true);
-    }
+		// Enviar datos sin procesar al servidor y recibir datos transformados
+		$server_response = $this->sendDataToServer( $rawData );
 
-    private function getWooProductData($woo_product_id = NULL)
-    {
-        if ($woo_product_id == NULL) {
-            return [];
-        }
+		// Helper::logData('Server response:' . $server_response, 'custom-import');
 
-        // Obtén el objeto del producto
-        $product = wc_get_product($woo_product_id);
+		return json_decode( $server_response, true );
+	}
 
-        if (!$product) {
-            return [];
-        }
+	private function getWooProductData( $woo_product_id = null ) {
+		if ( $woo_product_id == null ) {
+			return array();
+		}
 
-        // Extrae la información necesaria
-        $product_data = [
-            'id' => $product->get_id(),
-            'title' => $product->get_name(),
-            'short_description' => $product->get_short_description(),
-            'long_description' => $product->get_description(),
-            '_sku' => $product->get_sku(),
-            'is_variable' => $product->is_type('variable'),
-            'categories' => $this->getProductCategories($product),
-        ];
+		// Obtén el objeto del producto
+		$product = wc_get_product( $woo_product_id );
 
-        return $product_data;
-    }
+		if ( ! $product ) {
+			return array();
+		}
 
-    private function getWooProductVariations($woo_product_id = NULL)
-    {
-        if ($woo_product_id == NULL) {
-            return [];
-        }
+		// Extrae la información necesaria
+		$product_data = array(
+			'id'                => $product->get_id(),
+			'title'             => $product->get_name(),
+			'short_description' => $product->get_short_description(),
+			'long_description'  => $product->get_description(),
+			'_sku'              => $product->get_sku(),
+			'is_variable'       => $product->is_type( 'variable' ),
+			'categories'        => $this->getProductCategories( $product ),
+		);
 
-        // Obtén el objeto del producto
-        $product = wc_get_product($woo_product_id);
+		return $product_data;
+	}
 
-        // Verifica que el producto sea de tipo variable
-        if (!$product || !$product->is_type('variable')) {
-            return [];
-        }
+	private function getWooProductVariations( $woo_product_id = null ) {
+		if ( $woo_product_id == null ) {
+			return array();
+		}
 
-        // Obtén las variaciones del producto
-        $variations = [];
-        $variation_ids = $product->get_children();
+		// Obtén el objeto del producto
+		$product = wc_get_product( $woo_product_id );
 
-        foreach ($variation_ids as $variation_id) {
-            $variation = wc_get_product($variation_id);
-            if ($variation) {
-                $variations[] = [
-                    'id' => $variation->get_id(),
-                    '_sku' => $variation->get_sku(),
-                    'price' => $variation->get_price(),
-                    'regular_price' => $variation->get_regular_price(),
-                    'sale_price' => $variation->get_sale_price(),
-                    'stock_quantity' => $variation->get_stock_quantity(),
-                    'attributes' => $variation->get_attributes(),
-                    'is_in_stock' => $variation->is_in_stock(),
-                ];
-            }
-        }
+		// Verifica que el producto sea de tipo variable
+		if ( ! $product || ! $product->is_type( 'variable' ) ) {
+			return array();
+		}
 
-        return $variations;
-    }
+		// Obtén las variaciones del producto
+		$variations    = array();
+		$variation_ids = $product->get_children();
 
-    
+		foreach ( $variation_ids as $variation_id ) {
+			$variation = wc_get_product( $variation_id );
+			if ( $variation ) {
+				$variations[] = array(
+					'id'             => $variation->get_id(),
+					'_sku'           => $variation->get_sku(),
+					'price'          => $variation->get_price(),
+					'regular_price'  => $variation->get_regular_price(),
+					'sale_price'     => $variation->get_sale_price(),
+					'stock_quantity' => $variation->get_stock_quantity(),
+					'attributes'     => $variation->get_attributes(),
+					'is_in_stock'    => $variation->is_in_stock(),
+				);
+			}
+		}
+
+		return $variations;
+	}
 
 
-    private function getMeliconTemplateData()
-    {
-        return [];
-    }
-
-    private function sendDataToServer(array $productData)
-    {
-        $response = wp_remote_post($this->apiEndpoint, [
-            'method'  => 'POST',
-            'body'    => wp_json_encode($productData),
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-        ]);
-
-        if (is_wp_error($response)) {
-            // Manejo de error en la conexión
-            return false;
-        }
-
-        $body = wp_remote_retrieve_body($response);
-
-        if (isset($body['data']) && !empty($body['data'])) {
-            return $body['data'];
-        }
-
-        return $body;
-    }
 
 
-    /**
-     * Función auxiliar para obtener las categorías del producto.
-     */
-    private function getProductCategories($product)
-    {
-        $categories = [];
-        $terms = get_the_terms($product->get_id(), 'product_cat');
+	private function getMeliconTemplateData() {
+		return array();
+	}
 
-        if ($terms && !is_wp_error($terms)) {
-            foreach ($terms as $term) {
-                if ($term->parent == 0) {
-                    $categories[] = $term->name;
-                }
-            }
-        }
+	private function sendDataToServer( array $productData ) {
+		$response = wp_remote_post(
+			$this->apiEndpoint,
+			array(
+				'method'  => 'POST',
+				'body'    => wp_json_encode( $productData ),
+				'headers' => array(
+					'Content-Type' => 'application/json',
+				),
+			)
+		);
 
-        return $categories;
-    }
+		if ( is_wp_error( $response ) ) {
+			// Manejo de error en la conexión
+			return false;
+		}
+
+		$body = wp_remote_retrieve_body( $response );
+
+		if ( isset( $body['data'] ) && ! empty( $body['data'] ) ) {
+			return $body['data'];
+		}
+
+		return $body;
+	}
+
+
+	/**
+	 * Función auxiliar para obtener las categorías del producto.
+	 */
+	private function getProductCategories( $product ) {
+		$categories = array();
+		$terms      = get_the_terms( $product->get_id(), 'product_cat' );
+
+		if ( $terms && ! is_wp_error( $terms ) ) {
+			foreach ( $terms as $term ) {
+				if ( $term->parent == 0 ) {
+					$categories[] = $term->name;
+				}
+			}
+		}
+
+		return $categories;
+	}
 }
