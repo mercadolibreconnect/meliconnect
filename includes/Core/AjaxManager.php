@@ -24,7 +24,10 @@ class AjaxManager {
 		add_action( 'wp_ajax_meliconnect_settings_get_sync_html', array( SettingController::class, 'handleSettingsGetSyncHtml' ) ); // ajax_settings_nonce
 
 		add_action( 'wp_ajax_meliconnect_save_general_settings', array( SettingController::class, 'handleSaveGeneralSettings' ) ); // ajax_settings_nonce
-		add_action( 'wp_ajax_meliconnect_save_others_settings', array( SettingController::class, 'handleSaveOthersSettings' ) ); // ajax_settings_nonce
+        add_action( 'wp_ajax_meliconnect_save_export_settings', array( SettingController::class, 'handleSaveExportSettings' ) ); // ajax_settings_nonce
+        add_action( 'wp_ajax_meliconnect_save_import_settings', array( SettingController::class, 'handleSaveImportSettings' ) ); // ajax_settings_nonce
+        add_action( 'wp_ajax_meliconnect_save_sync_settings', array( SettingController::class, 'handleSaveSyncSettings' ) ); // ajax_settings_nonce
+        
 
 		/* Import Ajax */
 		add_action( 'wp_ajax_meliconnect_get_meli_user_listings', array( ImportController::class, 'handleGetMeliUserListings' ) );// get_meli_user_listings_nonce

@@ -187,7 +187,7 @@ function initExportSettings() {
         e.preventDefault();
         var formData = new FormData(this);
 
-        formData.append("action", "meliconnect_save_others_settings");
+        formData.append("action", "meliconnect_save_export_settings");
         formData.append("nonce", mcTranslations.ajax_settings_nonce);
 
         jQuery.ajax({
@@ -258,7 +258,7 @@ function initImportSettings() {
             e.preventDefault();
             var formData = new FormData(this);
 
-            formData.append("action", "meliconnect_save_others_settings");
+            formData.append("action", "meliconnect_save_import_settings");
             formData.append("nonce", mcTranslations.ajax_settings_nonce);
 
             $.ajax({
@@ -318,7 +318,7 @@ function initSyncSettings() {
             e.preventDefault();
             var formData = new FormData(this);
 
-            formData.append("action", "meliconnect_save_others_settings");
+            formData.append("action", "meliconnect_save_sync_settings");
             formData.append("nonce", mcTranslations.ajax_settings_nonce);
 
             $.ajax({
