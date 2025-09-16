@@ -292,26 +292,29 @@ class Initialize {
 
 
 	protected function is_wordpress_page_used_by_plugin() {
-		// Load on product edit page
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Solo lectura de parámetros de URL.
 		if (
-			isset( $_GET['post'], $_GET['action'] )
-			&& sanitize_text_field( wp_unslash( $_GET['action'] ) ) === 'edit'
-			&& get_post_type( absint( wp_unslash( $_GET['post'] ) ) ) === 'product'
+		isset( $_GET['post'], $_GET['action'] )
+		&& sanitize_text_field( wp_unslash( $_GET['action'] ) ) === 'edit'
+		&& get_post_type( absint( wp_unslash( $_GET['post'] ) ) ) === 'product'
 		) {
 			if ( ! $this->is_plugin_page() ) {
 				return true;
 			}
 		}
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		return false;
 	}
 
 	protected function is_plugin_page() {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Solo lectura de parámetros de URL.
 		if ( ! isset( $_GET['page'] ) ) {
 			return false;
 		}
 
 		$page = sanitize_text_field( wp_unslash( $_GET['page'] ) );
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		return strpos( $page, 'meliconnect' ) !== false;
 	}
@@ -357,7 +360,9 @@ class Initialize {
 
 		/* Product edit page */
 		if ( $this->is_wordpress_page_used_by_plugin() ) {
-			$post_id = absint( $_GET['post'] ); // Sanitizar el ID del post
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Solo lectura de parámetros de URL.
+			$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 			// Verifica que el tipo de post sea 'product'
 			if ( get_post_type( $post_id ) === 'product' ) {
@@ -418,16 +423,6 @@ class Initialize {
 		include plugin_dir_path( __FILE__ ) . '/Views/settings.php';
 	}
 
-	/*
-	public function renderImporterPage()
-	{
-		include plugin_dir_path(__FILE__)  .  '/Views/importer.php';
-	}
-
-	public function renderExporterPage()
-	{
-		include plugin_dir_path(__FILE__)  . '/Views/exporter.php';
-	} */
 
 	public function renderConnectionPage() {
 		include plugin_dir_path( __FILE__ ) . '/Views/connection.php';

@@ -52,6 +52,7 @@ class UserListingsTable extends \WP_List_Table {
 		$where_clauses = array();
 		$query_params  = array();
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Solo lectura de filtros de búsqueda.
 		$filters = array(
 			'search'       => isset( $_REQUEST['search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['search'] ) ) : '',
 			'vinculation'  => isset( $_REQUEST['vinculation_filter'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['vinculation_filter'] ) ) : '',
@@ -59,6 +60,7 @@ class UserListingsTable extends \WP_List_Table {
 			'seller_id'    => isset( $_REQUEST['seller_filter'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['seller_filter'] ) ) : '',
 			'status'       => isset( $_REQUEST['listing_status_filter'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['listing_status_filter'] ) ) : '',
 		);
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		if ( ! empty( $filters['search'] ) ) {
 			$search          = '%' . $wpdb->esc_like( $filters['search'] ) . '%';
@@ -265,6 +267,7 @@ class UserListingsTable extends \WP_List_Table {
 		$actions = array();
 
 		if ( ! empty( $item['vinculated_template_id'] ) ) {
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Solo lectura del parámetro `page` de WP admin.
 			$url = add_query_arg(
 				array(
 					'page'    => isset( $_REQUEST['page'] ) ? sanitize_key( wp_unslash( $_REQUEST['page'] ) ) : '',
@@ -273,6 +276,7 @@ class UserListingsTable extends \WP_List_Table {
 				),
 				admin_url( 'admin.php' )
 			);
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 			$actions['delete-vinculation'] = sprintf(
 				'<a class="meliconnect-delete-template-vinculation" data-listing-id="%s" data-template-id="%s" href="%s">%s</a>',
@@ -359,13 +363,14 @@ class UserListingsTable extends \WP_List_Table {
 		$per_page     = $this->get_items_per_page( 'user_listings_per_page', 10 );
 		$current_page = $this->get_pagenum();
 
-		// Recoger los filtros de la solicitud con sanitización
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Solo lectura de filtros de búsqueda.
 		$filters = array(
 			'search'       => isset( $_REQUEST['search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['search'] ) ) : '',
 			'vinculation'  => isset( $_REQUEST['vinculation_filter'] ) ? sanitize_key( wp_unslash( $_REQUEST['vinculation_filter'] ) ) : '',
 			'listing_type' => isset( $_REQUEST['listing_type_filter'] ) ? sanitize_key( wp_unslash( $_REQUEST['listing_type_filter'] ) ) : '',
 			'seller_id'    => isset( $_REQUEST['seller_filter'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['seller_filter'] ) ) : '',
 		);
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		// Obtener el conteo total basado en los filtros
 		$total_items = self::record_count( $filters );
@@ -378,9 +383,10 @@ class UserListingsTable extends \WP_List_Table {
 			)
 		);
 
-		// Ordenar resultados
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Solo lectura de filtros de búsqueda.
 		$orderby = ! empty( $_REQUEST['orderby'] ) ? sanitize_key( wp_unslash( $_REQUEST['orderby'] ) ) : 'meli_listing_title';
 		$order   = ! empty( $_REQUEST['order'] ) ? sanitize_key( wp_unslash( $_REQUEST['order'] ) ) : 'asc';
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$this->items = self::get_user_listings( $per_page, $current_page, $filters, $orderby, $order );
 	}

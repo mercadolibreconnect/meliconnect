@@ -99,9 +99,14 @@ class SettingController implements ControllerInterface {
 		}
 
 		// Obtiene los datos enviados por AJAX
-		$general_image_attachment_ids = isset( $_POST['meliconnect_general_image_attachment_ids'] )
-		? array_map( 'intval', array_filter( (array) wp_unslash( $_POST['meliconnect_general_image_attachment_ids'] ) ) )
-		: array();
+		$general_image_attachment_ids = array();
+
+		if ( isset( $_POST['meliconnect_general_image_attachment_ids'] ) && is_array( $_POST['meliconnect_general_image_attachment_ids'] ) ) {
+			$general_image_attachment_ids = array_map(
+				'intval',
+				wp_unslash( $_POST['meliconnect_general_image_attachment_ids'] )
+			);
+		}
 
 		$general_description_template = isset( $_POST['meliconnect_general_description_template'] )
 		? sanitize_text_field( wp_unslash( $_POST['meliconnect_general_description_template'] ) )

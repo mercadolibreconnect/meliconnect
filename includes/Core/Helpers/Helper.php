@@ -364,22 +364,19 @@ class Helper {
 		);
 
 		// Obtener IDs de todos los productos para comprobar variaciones
-		$product_ids = array_column( $products, 'product_id' );
+		$product_ids = array_map( 'absint', array_column( $products, 'product_id' ) );
 
 		if ( empty( $product_ids ) ) {
 			return $products;
 		}
 
-		// Generar placeholders para la cláusula IN
-		$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
-
-		// Consulta para obtener los IDs de las variaciones
+		// Construir directamente en el prepare
 		$variations = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT DISTINCT post_parent 
-                 FROM {$wpdb->posts}
-                 WHERE post_type = 'product_variation'
-                 AND post_parent IN ($placeholders)",
+				"SELECT DISTINCT post_parent
+         FROM {$wpdb->posts}
+         WHERE post_type = 'product_variation'
+         AND post_parent IN (" . implode( ', ', array_fill( 0, count( $product_ids ), '%d' ) ) . ')',
 				...$product_ids
 			)
 		);

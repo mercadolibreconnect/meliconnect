@@ -472,14 +472,14 @@ jQuery(document).ready(function ($) {
                 woo_product_title: $('#title').val(),
             },
             success: function (response) {
-                console.log(response);
+                //console.log(response);
                 if (response.success) {
-                    console.log(response.data);
+                    //console.log(response.data);
                     Toast.fire({
                         icon: "success",
                         title: response.data.message
                     });
-                    //location.reload();
+                    location.reload();
                 } else {
                     Toast.fire({
                         icon: "error",

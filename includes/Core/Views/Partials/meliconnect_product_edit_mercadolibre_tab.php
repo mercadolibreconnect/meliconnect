@@ -43,10 +43,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 	</div>
-	<div id="meliconnect-meessage-category-container" class="options_group meliconnect_show_if_change_category meliconnect-m-1">
-		<?php echo '<div class="notice notice-warning"><p>' . esc_html__( 'You must select a category and save product template to see category options', 'meliconnect' ) . '</p></div>'; ?>
+	<!-- <div id="meliconnect-meessage-category-container" class="options_group meliconnect_show_if_change_category meliconnect-m-1">
+		<?php echo '<div class="notice notice-warning"><p>' . esc_html__( 'Meliconnect: You must select a category and save product template to see category options', 'meliconnect' ) . '</p></div>'; ?>
 		
-	</div>
+	</div> -->
 	<div class="options_group meliconnect_hide_if_change_category ">
 		<p class="form-field meliconnect_general_buying_mode_field">
 			<?php

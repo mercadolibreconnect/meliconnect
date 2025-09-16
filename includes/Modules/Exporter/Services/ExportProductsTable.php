@@ -43,6 +43,8 @@ class ExportProductsTable extends \WP_List_Table {
 	}
 
 	// Retrieve the data from the database
+    // phpcs:disable WordPress.Security.NonceVerification.Recommended
+
 	public static function get_products_data( $per_page, $page_number ) {
 		$orderby = ! empty( $_REQUEST['orderby'] ) ? sanitize_key( $_REQUEST['orderby'] ) : 'woo_product_name';
 		$order   = ! empty( $_REQUEST['order'] ) ? sanitize_key( $_REQUEST['order'] ) : 'asc';
@@ -69,6 +71,7 @@ class ExportProductsTable extends \WP_List_Table {
 			);
 		}
 	}
+    
 
 	// Prepare the items for the table to display
 	public function prepare_items() {
@@ -95,6 +98,7 @@ class ExportProductsTable extends \WP_List_Table {
 
 		$this->items = self::get_products_data( $per_page, $current_page );
 	}
+    // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	public function get_items_per_page( $option, $default = 10 ) {
 		$per_page = get_user_option( $option, get_current_user_id() );
@@ -313,13 +317,13 @@ class ExportProductsTable extends \WP_List_Table {
 
 		$where_clauses = array();
 		$query_params  = array();
-
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Solo lectura de filtros de búsqueda.
 		$filters = array(
 			'search'       => isset( $_REQUEST['search'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['search'] ) ) : '',
 			'vinculation'  => isset( $_REQUEST['product_vinculation_filter'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['product_vinculation_filter'] ) ) : '',
 			'listing_type' => isset( $_REQUEST['product_type_filter'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['product_type_filter'] ) ) : '',
 		);
-
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 		if ( ! empty( $filters['search'] ) ) {
 			$search          = '%' . $wpdb->esc_like( $filters['search'] ) . '%';
 			$where_clauses[] = '(woo_product_name LIKE %s OR woo_sku LIKE %s OR woo_gtin LIKE %s)';
