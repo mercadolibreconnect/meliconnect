@@ -145,7 +145,7 @@ require MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 												$selected_product_type        = isset( $_GET['product_type_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['product_type_filter'] ) ) : '';
 												$per_page                     = isset( $_REQUEST['export_products_per_page'] ) ? absint( wp_unslash( $_REQUEST['export_products_per_page'] ) ) : 10;
 												// phpcs:enable WordPress.Security.NonceVerification.Recommended
-                                                ?>
+												?>
 
 												<div class="meliconnect-field meliconnect-has-addons">
 													<div class="meliconnect-control">

@@ -294,7 +294,7 @@ require MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 												$selected_listing_type   = isset( $_GET['listing_type_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['listing_type_filter'] ) ) : '';
 												$selected_seller         = isset( $_GET['seller_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['seller_filter'] ) ) : '';
 												// phpcs:enable WordPress.Security.NonceVerification.Recommended
-                                                ?>
+												?>
 												<div class="meliconnect-field meliconnect-has-addons">
 													<div class="meliconnect-control">
 														<input id="user-search-input" class="meliconnect-input" type="search" placeholder="<?php esc_html_e( 'Search By Title, SKU, Meli listing id ...', 'meliconnect' ); ?>" name="search" value="<?php echo esc_attr( $search_value ); ?>">

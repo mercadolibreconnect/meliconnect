@@ -21,7 +21,7 @@ class ProcessItems {
 		self::init();
 
 		$table_name = self::$table_name;
-        
+
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$result_item = $wpdb->query( $wpdb->prepare( "UPDATE {$table_name} SET process_status = %s WHERE id = %s", $status, $item_process_id ) );
 

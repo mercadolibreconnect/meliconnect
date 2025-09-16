@@ -51,7 +51,6 @@ class Notification {
 		);
         // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-
 		// Guardar resultados en cache por 1 hora
 		wp_cache_set( 'meliconnect_notifications', $notifications, 'meliconnect', 3600 );
 

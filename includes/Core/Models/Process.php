@@ -142,7 +142,7 @@ class Process {
 			)
 		);
         // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-        
+
 		if ( $process_data ) {
 			$total         = intval( $process_data->total );
 			$executed      = intval( $process_data->executed );

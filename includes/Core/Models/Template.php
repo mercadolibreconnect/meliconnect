@@ -877,7 +877,7 @@ class Template {
 
         // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		$template_attributes            = $wpdb->get_results(
+		$template_attributes = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$template_attributes_table_name} WHERE template_id = %d",
 				$template_id

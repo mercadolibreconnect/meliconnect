@@ -189,7 +189,7 @@ class ProductToExport {
 			)
 		);
         // phpcs:enable
-        
+
 		// Verificamos si hubo algún error
 		if ( $result === false ) {
 
