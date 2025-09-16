@@ -21,7 +21,8 @@ class ProcessItems {
 		self::init();
 
 		$table_name = self::$table_name;
-
+        
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$result_item = $wpdb->query( $wpdb->prepare( "UPDATE {$table_name} SET process_status = %s WHERE id = %s", $status, $item_process_id ) );
 
 		if ( $result_item !== false ) {
@@ -70,6 +71,7 @@ class ProcessItems {
 
 		$table_name = self::$table_name;
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_name} WHERE process_id = %s AND process_status = %s LIMIT %d", $process_id, $item_status, $limit ) );
 
 		return $items;
@@ -82,6 +84,7 @@ class ProcessItems {
 
 		$table_name = self::$table_name;
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table_name} WHERE process_id = %s", $process_id ) );
 
 		return $result;

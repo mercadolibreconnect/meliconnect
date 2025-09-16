@@ -27,6 +27,7 @@ class Process {
 		// Delete process items
 		ProcessItems::deleteItems( $process_id );
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table_name} WHERE process_id = %s", $process_id ) );
 
 		return $result;
@@ -81,13 +82,17 @@ class Process {
 		$placeholders = implode( ',', array_fill( 0, count( $status ), '%s' ) );
 		$params       = array_merge( array( $process_type ), $status );
 
-		// Ejecutar la consulta con el SQL directo y preparar los parámetros
-		return $wpdb->get_row(
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// Ejecutar la consulta con prepare
+		$result = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT * FROM $table_name WHERE process_type = %s AND status IN ($placeholders) ORDER BY created_at DESC LIMIT 1",
 				...$params
 			)
 		);
+	    // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+		return $result;
 	}
 
 	public static function calculateExecutionTime( $process ) {
@@ -127,6 +132,7 @@ class Process {
 
 		$table_name = self::$table_name;
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$process_data = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT executed, total, status, total_success, total_fails, starts_at 
@@ -135,7 +141,8 @@ class Process {
 				$process_id
 			)
 		);
-
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        
 		if ( $process_data ) {
 			$total         = intval( $process_data->total );
 			$executed      = intval( $process_data->executed );

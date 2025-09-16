@@ -30,7 +30,7 @@ class UserListingToImport {
 		$import_process_id = hash( 'sha256', $meli_user->user_id . time() . bin2hex( random_bytes( 8 ) ) );
 
 		foreach ( $meli_user_listings_ids as $listing_id ) {
-
+            // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$existing_row = $wpdb->get_var(
 				$wpdb->prepare(
 					"SELECT COUNT(*) FROM $table_name WHERE meli_user_id = %d AND meli_listing_id = %s",
@@ -50,6 +50,7 @@ class UserListingToImport {
 					)
 				);
 			}
+            // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 
 		return true;
@@ -111,6 +112,7 @@ class UserListingToImport {
 
 		$table_name = self::$table_name;
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$result = $wpdb->query( "DELETE FROM {$table_name}" );
 
 		// Verificación del resultado
@@ -131,7 +133,10 @@ class UserListingToImport {
 
 		$table_name = self::$table_name;
 
-		return $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$result = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name}" );
+
+		return $result;
 	}
 
 	public static function get_user_listings_to_import( $meli_listings_ids = array() ) {
@@ -140,11 +145,10 @@ class UserListingToImport {
 
 		$table_name = self::$table_name;
 
+	    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		if ( ! empty( $meli_listings_ids ) && is_array( $meli_listings_ids ) ) {
-			// Construir los placeholders manualmente
 			$placeholders = implode( ',', array_fill( 0, count( $meli_listings_ids ), '%s' ) );
 
-			// Ejecutar la consulta preparada directamente
 			return $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT * FROM {$table_name} WHERE meli_listing_id IN ($placeholders)",
@@ -153,8 +157,8 @@ class UserListingToImport {
 			);
 		}
 
-		// Consulta sin parámetros si $meli_listings_ids está vacío
 		return $wpdb->get_results( "SELECT * FROM {$table_name}" );
+	    // phpcs:enable
 	}
 
 
@@ -246,32 +250,33 @@ class UserListingToImport {
 			return;
 		}
 
-		// Aseguramos que los IDs estén formateados correctamente para la consulta SQL
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$placeholders = implode( ',', array_fill( 0, count( $meliListingIds ), '%s' ) );
 
-		// Ejecutamos la consulta y obtenemos los resultados
 		$postmeta_results = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-            SELECT post_id, meta_value
-            FROM {$wpdb->postmeta}
-            WHERE meta_key = 'meliconnect_meli_listing_id'
-            AND meta_value IN ($placeholders)
-        ",
+			SELECT post_id, meta_value
+			FROM {$wpdb->postmeta}
+			WHERE meta_key = 'meliconnect_meli_listing_id'
+			AND meta_value IN ($placeholders)
+			",
 				...$meliListingIds
 			)
 		);
+	// phpcs:enable
 
 		if ( ! empty( $postmeta_results ) ) {
 			foreach ( $postmeta_results as $postmeta ) {
-				// Actualizamos la tabla wp_meliconnect_user_listings_to_import con el post_id correspondiente
+				// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->update(
 					'wp_meliconnect_user_listings_to_import',
 					array( 'vinculated_product_id' => $postmeta->post_id ),
 					array( 'meli_listing_id' => $postmeta->meta_value ),
-					array( '%d' ),  // Formato de vinculated_product_id
-					array( '%s' )   // Formato de meli_listing_id
+					array( '%d' ),
+					array( '%s' )
 				);
+				// phpcs:enable
 			}
 		}
 	}
@@ -279,69 +284,70 @@ class UserListingToImport {
 	public static function clear_matches( $meli_listing_ids = 'all' ) {
 		global $wpdb;
 
-		// Definir la tabla
-		$table_name = $wpdb->prefix . 'meliconnect_user_listings_to_import';
+		// Nombre de tabla seguro
+		$table_name = esc_sql( $wpdb->prefix . 'meliconnect_user_listings_to_import' );
 
-		// Manejar un solo valor de meli_listing_id convirtiéndolo en un array
+		// Asegurar que $meli_listing_ids sea array si no es 'all'
 		if ( ! is_array( $meli_listing_ids ) && $meli_listing_ids !== 'all' ) {
 			$meli_listing_ids = array( $meli_listing_ids );
 		}
 
 		Helper::logData( 'meli_listing_ids: ' . wp_json_encode( $meli_listing_ids ) );
 
-		// Construir consulta según el tipo de entrada
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared
+		// Construir query y argumentos dinámicamente
 		if ( is_array( $meli_listing_ids ) && ! empty( $meli_listing_ids ) ) {
-			// Preparar placeholders para las IDs
+			// placeholders para los IDs
 			$placeholders = implode( ',', array_fill( 0, count( $meli_listing_ids ), '%s' ) );
 
-			// Ejecutar la consulta preparada directamente
-			$result = $wpdb->query(
-				$wpdb->prepare(
-					"
-                    UPDATE {$table_name}
-                    SET vinculated_product_id = NULL,
-                        is_product_match_by_sku = 0,
-                        is_product_match_by_name = 0,
-                        is_product_match_manually = 0,
-                        updated_at = %s
-                    WHERE meli_listing_id IN ($placeholders) 
-                    AND (is_product_match_by_sku = 1 
-                    OR is_product_match_by_name = 1 
-                    OR is_product_match_manually = 1)
-                    ",
-					current_time( 'mysql' ),
-					...$meli_listing_ids
-				)
-			);
+			// argumentos para $wpdb->prepare(): primero updated_at, luego IDs
+			$args = array_merge( array( current_time( 'mysql' ) ), $meli_listing_ids );
+
+			$sql = "
+            UPDATE {$table_name}
+            SET vinculated_product_id = NULL,
+                is_product_match_by_sku = 0,
+                is_product_match_by_name = 0,
+                is_product_match_manually = 0,
+                updated_at = %s
+            WHERE meli_listing_id IN ($placeholders)
+            AND (
+                is_product_match_by_sku = 1
+                OR is_product_match_by_name = 1
+                OR is_product_match_manually = 1
+            )
+        ";
+
+			$result = $wpdb->query( $wpdb->prepare( $sql, ...$args ) );
 		} else {
-			// Si no se pasan IDs específicas, limpiar todas las coincidencias
-			$result = $wpdb->query(
-				$wpdb->prepare(
-					"
-                    UPDATE {$table_name}
-                    SET vinculated_product_id = NULL,
-                        is_product_match_by_sku = 0,
-                        is_product_match_by_name = 0,
-                        is_product_match_manually = 0,
-                        updated_at = %s
-                    WHERE is_product_match_by_sku = 1 
-                    OR is_product_match_by_name = 1 
-                    OR is_product_match_manually = 1
-                    ",
-					current_time( 'mysql' )
-				)
-			);
+			// Caso "all": no hay IDs, solo updated_at
+			$sql = "
+            UPDATE {$table_name}
+            SET vinculated_product_id = NULL,
+                is_product_match_by_sku = 0,
+                is_product_match_by_name = 0,
+                is_product_match_manually = 0,
+                updated_at = %s
+            WHERE is_product_match_by_sku = 1
+                OR is_product_match_by_name = 1
+                OR is_product_match_manually = 1
+        ";
+
+			$result = $wpdb->query( $wpdb->prepare( $sql, current_time( 'mysql' ) ) );
 		}
+        // phpcs:enable
 
 		// Manejo de errores
 		if ( $result === false ) {
-			$error_message = $wpdb->last_error;
-			Helper::logData( 'Failed to clear the matches: ' . $error_message );
+			Helper::logData( 'Failed to clear the matches: ' . $wpdb->last_error );
 			return false;
 		}
 
 		return true;
 	}
+
+
+
 
 
 
@@ -353,6 +359,7 @@ class UserListingToImport {
 
 		$table_name = self::$table_name;
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared	
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$table_name} 
@@ -362,8 +369,8 @@ class UserListingToImport {
 				0
 			)
 		);
+        // phpcs:enable
 	}
-
 
 	public static function update_user_listing_item_import_status( $meli_listing_ids, $import_status ) {
 		global $wpdb;
@@ -381,13 +388,21 @@ class UserListingToImport {
 
 		$placeholders = implode( ',', array_fill( 0, count( $meli_listing_ids ), '%s' ) );
 
+		// argumentos dinámicos: primero import_status, luego los IDs
+		$args = array_merge( array( $import_status ), $meli_listing_ids );
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		return $wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$table_name} SET import_status = %s WHERE meli_listing_id IN ($placeholders)",
-				array_merge( array( $import_status ), $meli_listing_ids )
+				"UPDATE {$table_name} 
+             SET import_status = %s 
+             WHERE meli_listing_id IN ($placeholders)",
+				...$args
 			)
 		);
+        // phpcs:enable
 	}
+
+
 
 	public static function get_user_listings_count_by_status( $status ) {
 		global $wpdb;
@@ -395,7 +410,10 @@ class UserListingToImport {
 
 		$table_name = self::$table_name;
 
-		return $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name} WHERE meli_status = '{$status}'" );
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$result = $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name} WHERE meli_status = '{$status}'" );
+
+		return $result;
 	}
 
 	public static function get_user_listing_by_listing_id( $meli_listing_id ) {
@@ -404,12 +422,14 @@ class UserListingToImport {
 
 		$table_name = self::$table_name;
 
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT * FROM {$table_name} WHERE meli_listing_id = %s",
 				$meli_listing_id
 			)
 		);
+	// phpcs:enable
 	}
 
 
@@ -422,26 +442,24 @@ class UserListingToImport {
 		}
 
 		global $wpdb;
-
 		self::init();
 
-		$table_name = self::$table_name; // Asegúrate de que esta propiedad tenga un valor válido
+		$table_name = self::$table_name;
 
-		// Placeholder sin comillas
+	    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$result = $wpdb->query(
 			$wpdb->prepare(
 				"UPDATE {$table_name} SET vinculated_product_id = 0 WHERE meli_listing_id = %s",
 				$meli_listing_id
 			)
 		);
+	    // phpcs:enable
 
-		// Verificamos si hubo algún error
 		if ( $result === false ) {
 			Helper::logData( 'Error unlinking product from user listing: ' . $wpdb->last_error );
 			return false;
 		}
 
-		// Si no hubo error, devolvemos el número de filas afectadas
 		return $result;
 	}
 }

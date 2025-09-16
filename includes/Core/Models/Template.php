@@ -325,6 +325,7 @@ class Template {
 
 		$template_table_name = self::$table_name;
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$existing_template = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT id FROM $template_table_name WHERE used_by = %s AND used_asoc_id = %d",
@@ -362,6 +363,8 @@ class Template {
 
 			return $wpdb->insert_id;
 		}
+
+        // phpcs:enable
 	}
 
 	public static function deleteCreateTemplatesMetasFromMeliListing( $template_id, $meli_listing_data, $template_data = array() ) {
@@ -376,6 +379,7 @@ class Template {
 
 	public static function deleteTemplatesMetas( $template_id, $meta_keys = array( 'all' ) ) {
 		global $wpdb;
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$template_metas_table_name = $wpdb->prefix . 'meliconnect_template_metas';
 
 		if ( in_array( 'all', $meta_keys ) ) {
@@ -405,6 +409,7 @@ class Template {
 			Helper::logData( 'SQL: ' . $wpdb->last_query );
 			return false;
 		}
+        // phpcs:enable
 
 		return $deleted !== false;
 	}
@@ -606,6 +611,8 @@ class Template {
 		$template_attributes_table_name = $wpdb->prefix . 'meliconnect_template_attributes';
 
 		// Verificar si ya existe un registro con used_by, used_asoc_id, y meli_attribute_id
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 		$existing_row = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT id FROM $template_attributes_table_name WHERE used_by = %s AND used_asoc_id = %d AND meli_attribute_id = %s",
@@ -614,6 +621,7 @@ class Template {
 				$meli_attribute_id
 			)
 		);
+        // phpcs:enable
 
 		if ( $existing_row ) {
 			// Intentar actualizar el registro existente
@@ -829,6 +837,8 @@ class Template {
 		$template_table_name       = $wpdb->prefix . 'meliconnect_templates';
 		$template_metas_table_name = $wpdb->prefix . 'meliconnect_template_metas';
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 		// Obtener la data del template
 		$template_data = $wpdb->get_row(
 			$wpdb->prepare(
@@ -851,6 +861,7 @@ class Template {
 			),
 			ARRAY_A
 		);
+        // phpcs:enable
 
 		// Agregar los metadatos directamente al array del template
 		foreach ( $template_meta as $meta ) {
@@ -863,6 +874,9 @@ class Template {
 	public static function getTemplateAttributes( $template_id ) {
 		global $wpdb;
 		$template_attributes_table_name = $wpdb->prefix . 'meliconnect_template_attributes';
+
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 		$template_attributes            = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$template_attributes_table_name} WHERE template_id = %d",
@@ -870,6 +884,8 @@ class Template {
 			),
 			ARRAY_A
 		);
+
+        // phpcs:enable
 
 		return $template_attributes;
 	}
@@ -915,6 +931,8 @@ class Template {
 		// Convertir el array de columnas en una cadena separada por comas
 		$columns = implode( ', ', $filtered_columns );
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
 		// Obtener la data del template
 		$template_data = $wpdb->get_row(
 			$wpdb->prepare(
@@ -923,6 +941,7 @@ class Template {
 			),
 			ARRAY_A
 		);
+        // phpcs:enable
 
 		return $template_data;
 	}

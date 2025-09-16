@@ -28,6 +28,8 @@ class Notification {
 			return $cached;
 		}
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
 		// Consulta preparada con MELICONNECT_VERSION como parámetro dinámico
 		$notifications = $wpdb->get_results(
 			$wpdb->prepare(
@@ -47,6 +49,8 @@ class Notification {
 			),
 			ARRAY_A
 		);
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
 
 		// Guardar resultados en cache por 1 hora
 		wp_cache_set( 'meliconnect_notifications', $notifications, 'meliconnect', 3600 );

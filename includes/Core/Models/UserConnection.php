@@ -27,7 +27,7 @@ class UserConnection {
 
 		$table_name = self::$table_name;
 
-		// Obtener los resultados
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$results = $wpdb->get_results( "SELECT * FROM {$table_name}" );
 
 		return $results;
@@ -40,7 +40,7 @@ class UserConnection {
 
 		$table_name = self::$table_name;
 
-		// Preparar y ejecutar la consulta
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$results = $wpdb->get_results( "SELECT * FROM {$table_name}" );
 
 		return $results;
@@ -53,6 +53,7 @@ class UserConnection {
 
 		$table_name = self::$table_name;
 
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// Obtener resultados según si se proporciona $user_id
 		if ( ! is_null( $user_id ) ) {
 			$result = $wpdb->get_results(
@@ -61,6 +62,7 @@ class UserConnection {
 		} else {
 			$result = $wpdb->get_results( "SELECT * FROM {$table_name}" );
 		}
+        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		// Si hay exactamente un resultado, retornarlo directamente
 		if ( count( $result ) === 1 ) {
@@ -85,6 +87,7 @@ class UserConnection {
 		$pending_count = 0;
 
 		// Eliminar todas las conexiones existentes antes de insertar las nuevas
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$wpdb->query( "DELETE FROM {$table_name}" );
 
 		// Insertar cada usuario recibido en la tabla `wp_meliconnect_user_connection`

@@ -46,32 +46,79 @@ class ExportProductsTable extends \WP_List_Table {
     // phpcs:disable WordPress.Security.NonceVerification.Recommended
 
 	public static function get_products_data( $per_page, $page_number ) {
-		$orderby = ! empty( $_REQUEST['orderby'] ) ? sanitize_key( $_REQUEST['orderby'] ) : 'woo_product_name';
-		$order   = ! empty( $_REQUEST['order'] ) ? sanitize_key( $_REQUEST['order'] ) : 'asc';
-
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'meliconnect_products_to_export';
 
+		// Validar columnas permitidas para ORDER BY
+		$allowed_columns = array(
+			'woo_product_name',
+			'woo_sku',
+			'woo_gtin',
+			'meli_seller_id',
+			'vinculated_listing_id',
+		);
+
+		$orderby = isset( $_REQUEST['orderby'] ) ? sanitize_key( $_REQUEST['orderby'] ) : 'woo_product_name';
+		if ( ! in_array( $orderby, $allowed_columns, true ) ) {
+			$orderby = 'woo_product_name';
+		}
+
+		$order = isset( $_REQUEST['order'] ) ? strtoupper( sanitize_key( $_REQUEST['order'] ) ) : 'ASC';
+		if ( ! in_array( $order, array( 'ASC', 'DESC' ), true ) ) {
+			$order = 'ASC';
+		}
+
+		// Nombre de tabla seguro
+		$table_name = esc_sql( $wpdb->prefix . 'meliconnect_products_to_export' );
+
+		// Construir filtros
 		list($where_sql, $query_params) = self::build_filters_query( $_REQUEST );
 
 		if ( $per_page == -1 ) {
-			return $wpdb->get_results(
-				$wpdb->prepare( "SELECT * FROM {$table_name} {$where_sql} ORDER BY {$orderby} {$order}", $query_params ),
-				ARRAY_A
-			);
+			// Si no hay placeholders, no usar prepare
+            // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared
+			if ( ! empty( $query_params ) ) {
+				$sql    = "SELECT * FROM {$table_name} {$where_sql} ORDER BY {$orderby} {$order}";
+				$result = $wpdb->get_results( $wpdb->prepare( $sql, ...$query_params ), ARRAY_A );
+			} else {
+				$result = $wpdb->get_results(
+					"SELECT * FROM {$table_name} {$where_sql} ORDER BY {$orderby} {$order}",
+					ARRAY_A
+				);
+			}
+            // phpcs:enable
+			return $result;
+
 		} else {
+			$offset = ( $page_number - 1 ) * $per_page;
 
-			$offset         = ( $page_number - 1 ) * $per_page;
-			$query_params[] = $per_page;
-			$query_params[] = $offset;
+			// Siempre limitar y sanitizar LIMIT/OFFSET
+			$sql = "SELECT * FROM {$table_name} {$where_sql} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d";
 
-			return $wpdb->get_results(
-				$wpdb->prepare( "SELECT * FROM {$table_name} {$where_sql} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d", $query_params ),
-				ARRAY_A
-			);
+			if ( ! empty( $query_params ) ) {
+				// placeholders = los de $where_sql + 2 por LIMIT y OFFSET
+				$placeholders_count = substr_count( $where_sql, '%s' ) + substr_count( $where_sql, '%d' ) + 2;
+				if ( count( $query_params ) === $placeholders_count - 2 ) {
+					// añadir LIMIT y OFFSET
+					$query_params[] = $per_page;
+					$query_params[] = $offset;
+                    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					$result = $wpdb->get_results( $wpdb->prepare( $sql, ...$query_params ), ARRAY_A );
+				} else {
+					// fallback: usar solo LIMIT/OFFSET
+                    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					$result = $wpdb->get_results( $wpdb->prepare( $sql, $per_page, $offset ), ARRAY_A );
+				}
+			} else {
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$result = $wpdb->get_results( $wpdb->prepare( $sql, $per_page, $offset ), ARRAY_A );
+			}
+
+			return $result;
 		}
 	}
-    
+
+
+
 
 	// Prepare the items for the table to display
 	public function prepare_items() {
@@ -80,6 +127,7 @@ class ExportProductsTable extends \WP_List_Table {
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
+        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended
 		$per_page = isset( $_REQUEST['export_products_per_page'] ) ? (int) $_REQUEST['export_products_per_page'] : $this->get_items_per_page( 'export_products_per_page', 10 );
 
 		// $per_page = $this->get_items_per_page('export_products_per_page', 10);
@@ -98,7 +146,7 @@ class ExportProductsTable extends \WP_List_Table {
 
 		$this->items = self::get_products_data( $per_page, $current_page );
 	}
-    // phpcs:enable WordPress.Security.NonceVerification.Recommended
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	public function get_items_per_page( $option, $default = 10 ) {
 		$per_page = get_user_option( $option, get_current_user_id() );
@@ -362,18 +410,20 @@ class ExportProductsTable extends \WP_List_Table {
 
 	public static function record_count() {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'meliconnect_products_to_export';
+
+		$table_name = esc_sql( $wpdb->prefix . 'meliconnect_products_to_export' );
 
 		// Construir las cláusulas WHERE y los parámetros de consulta
-		list($where_sql, $query_params) = self::build_filters_query();
+		list( $where_sql, $query_params ) = self::build_filters_query();
 
-		// Ejecutar directamente con o sin parámetros
+		$sql = "SELECT COUNT(*) FROM {$table_name} " . $where_sql;
+
 		if ( ! empty( $query_params ) ) {
-			return $wpdb->get_var(
-				$wpdb->prepare( "SELECT COUNT(*) FROM {$table_name} {$where_sql}", $query_params )
-			);
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql no contiene datos de usuario aquí
+			return $wpdb->get_var( $wpdb->prepare( $sql, $query_params ) );
 		} else {
-			return $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name} {$where_sql}" );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql no contiene datos de usuario aquí
+			return $wpdb->get_var( $wpdb->prepare( $sql ) );
 		}
 	}
 }

@@ -25,6 +25,7 @@ $tables = array(
 );
 
 foreach ( $tables as $table ) {
+    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	$wpdb->query( "DROP TABLE IF EXISTS {$prefix}{$table}" );
 }
 

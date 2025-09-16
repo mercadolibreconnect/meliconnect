@@ -32,18 +32,42 @@ class UserListingsTable extends \WP_List_Table {
 
 	public static function get_user_listings( $per_page, $page_number, $filters = array(), $orderby = 'meli_listing_title', $order = 'asc' ) {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'meliconnect_user_listings_to_import';
 
-		// Construir las cláusulas WHERE y los parámetros de consulta
-		list($where_sql, $query_params) = self::build_filters_query( $filters );
+		// Nombre de tabla seguro
+		$table_name = esc_sql( $wpdb->prefix . 'meliconnect_user_listings_to_import' );
+
+		// Validar columnas permitidas para ORDER BY
+		$allowed_columns = array( 'meli_listing_title', 'price', 'created_at' ); // ajustar según tus columnas
+		if ( ! in_array( $orderby, $allowed_columns, true ) ) {
+			$orderby = 'meli_listing_title';
+		}
+
+		// Validar orden
+		$order = strtoupper( $order );
+		if ( ! in_array( $order, array( 'ASC', 'DESC' ), true ) ) {
+			$order = 'ASC';
+		}
+
+		// Construir cláusulas WHERE y parámetros
+		list( $where_sql, $query_params ) = self::build_filters_query( $filters );
 
 		$offset = ( $page_number - 1 ) * $per_page;
 
-		// Añadir los parámetros de paginación a los parámetros de consulta
+		// Añadir parámetros de paginación
 		$query_params[] = $per_page;
 		$query_params[] = $offset;
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_name} {$where_sql} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d", $query_params ), ARRAY_A );
+		// Preparar SQL
+		$sql = "SELECT * FROM {$table_name} {$where_sql} ORDER BY {$orderby} {$order} LIMIT %d OFFSET %d";
+
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.NotPrepared	
+		$results = $wpdb->get_results(
+			$wpdb->prepare( $sql, ...$query_params ),
+			ARRAY_A
+		);
+        // phpcs:enable
+
+		return $results;
 	}
 
 	private static function build_filters_query( $filters ) {
@@ -117,16 +141,21 @@ class UserListingsTable extends \WP_List_Table {
 	public static function record_count( $filters = array() ) {
 		global $wpdb;
 
-		// Nombre de la tabla (seguro con $wpdb->prefix)
-		$table_name = $wpdb->prefix . 'meliconnect_user_listings_to_import';
+		// Nombre de la tabla seguro
+		$table_name = esc_sql( $wpdb->prefix . 'meliconnect_user_listings_to_import' );
 
-		// Construir las cláusulas WHERE y los parámetros de consulta
-		list($where_sql, $query_params) = self::build_filters_query( $filters );
+		// Construir cláusulas WHERE y parámetros
+		list( $where_sql, $query_params ) = self::build_filters_query( $filters );
 
-		// Ejecutar la consulta directamente con prepare si hay parámetros
-		return ! empty( $query_params )
-			? (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table_name} {$where_sql}", $query_params ) )
-			: (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table_name} {$where_sql}" );
+		$sql = "SELECT COUNT(*) FROM {$table_name} {$where_sql}";
+
+	    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQL.NotPrepared
+		if ( ! empty( $query_params ) ) {
+			return (int) $wpdb->get_var( $wpdb->prepare( $sql, ...$query_params ) );
+		}
+
+		return (int) $wpdb->get_var( $sql );
+	    // phpcs:enable
 	}
 
 	public function no_items() {
@@ -226,36 +255,34 @@ class UserListingsTable extends \WP_List_Table {
 
 	public function column_meli_listing_id( $item ) {
 		// Decodificar la respuesta JSON de MercadoLibre
-		$meli_response = json_decode( $item['meli_response'], true );
+		$meli_response = ! empty( $item['meli_response'] ) ? json_decode( $item['meli_response'], true ) : array();
 
-		$product_type_class = $item['meli_product_type'] === 'simple' ? 'has-text-link' : 'has-text-success';
-		$status_class       = $item['meli_status'] === 'active' ? 'has-text-success' : 'has-text-danger';
-
+		$product_type_class = isset( $item['meli_product_type'] ) && $item['meli_product_type'] === 'simple' ? 'has-text-link' : 'has-text-success';
+		$status_class       = isset( $item['meli_status'] ) && $item['meli_status'] === 'active' ? 'has-text-success' : 'has-text-danger';
 		?>
-
-		<div class="meliconnect-columns meliconnect-is-multiline">
-			<!-- Primera Columna -->
-			<div class="meliconnect-column meliconnect-is-5">
-				<strong><?php esc_html_e( 'ID', 'meliconnect' ); ?>:</strong> <?php echo esc_html( $item['meli_listing_id'] ); ?><br>
-				<strong><?php esc_html_e( 'User ID', 'meliconnect' ); ?>:</strong> <?php echo esc_html( $item['meli_user_id'] ); ?><br>
-				<?php if ( ! empty( $item['meli_sku'] ) ) : ?>
-					<strong><?php esc_html_e( 'SKU', 'meliconnect' ); ?>:</strong> <?php echo esc_html( $item['meli_sku'] ); ?>
-				<?php endif; ?>
-				<strong><?php esc_html_e( 'Status', 'meliconnect' ); ?>:</strong>
-				<span class="meliconnect-color-text <?php echo esc_attr( $status_class ); ?>"> <?php echo esc_html( $item['meli_status'] ); ?></span>
-				<br>
-				<strong><?php esc_html_e( 'Product Type', 'meliconnect' ); ?>:</strong>
-				<span class="meliconnect-color-text <?php echo esc_attr( $product_type_class ); ?>"> <?php echo esc_html( $item['meli_product_type'] ); ?></span>
-				<strong><?php esc_html_e( 'Listing Type', 'meliconnect' ); ?>:</strong> <?php echo esc_html( $meli_response['listing_type_id'] ); ?>
-			</div>
-
-			<!-- Segunda Columna -->
-			<div class="meliconnect-column meliconnect-is-6">
-				<strong><?php esc_html_e( 'Price', 'meliconnect' ); ?>:</strong> <?php echo esc_html( $meli_response['price'] ); ?><br>
-				<strong><?php esc_html_e( 'Sold Quantity', 'meliconnect' ); ?>:</strong> <?php echo esc_html( $meli_response['sold_quantity'] ); ?><br>
-				<strong><?php esc_html_e( 'Available Quantity', 'meliconnect' ); ?>:</strong> <?php echo esc_html( $meli_response['available_quantity'] ); ?>
-			</div>
+	<div class="meliconnect-columns meliconnect-is-multiline">
+		<!-- Primera Columna -->
+		<div class="meliconnect-column meliconnect-is-5">
+			<strong><?php esc_html_e( 'ID', 'meliconnect' ); ?>:</strong> <?php echo isset( $item['meli_listing_id'] ) ? esc_html( $item['meli_listing_id'] ) : ''; ?><br>
+			<strong><?php esc_html_e( 'User ID', 'meliconnect' ); ?>:</strong> <?php echo isset( $item['meli_user_id'] ) ? esc_html( $item['meli_user_id'] ) : ''; ?><br>
+			<?php if ( ! empty( $item['meli_sku'] ) ) : ?>
+				<strong><?php esc_html_e( 'SKU', 'meliconnect' ); ?>:</strong> <?php echo esc_html( $item['meli_sku'] ); ?>
+			<?php endif; ?>
+			<strong><?php esc_html_e( 'Status', 'meliconnect' ); ?>:</strong>
+			<span class="meliconnect-color-text <?php echo esc_attr( $status_class ); ?>"> <?php echo isset( $item['meli_status'] ) ? esc_html( $item['meli_status'] ) : ''; ?></span>
+			<br>
+			<strong><?php esc_html_e( 'Product Type', 'meliconnect' ); ?>:</strong>
+			<span class="meliconnect-color-text <?php echo esc_attr( $product_type_class ); ?>"> <?php echo isset( $item['meli_product_type'] ) ? esc_html( $item['meli_product_type'] ) : ''; ?></span>
+			<strong><?php esc_html_e( 'Listing Type', 'meliconnect' ); ?>:</strong> <?php echo isset( $meli_response['listing_type_id'] ) ? esc_html( $meli_response['listing_type_id'] ) : ''; ?>
 		</div>
+
+		<!-- Segunda Columna -->
+		<div class="meliconnect-column meliconnect-is-6">
+			<strong><?php esc_html_e( 'Price', 'meliconnect' ); ?>:</strong> <?php echo isset( $meli_response['price'] ) ? esc_html( $meli_response['price'] ) : ''; ?><br>
+			<strong><?php esc_html_e( 'Sold Quantity', 'meliconnect' ); ?>:</strong> <?php echo isset( $meli_response['sold_quantity'] ) ? esc_html( $meli_response['sold_quantity'] ) : ''; ?><br>
+			<strong><?php esc_html_e( 'Available Quantity', 'meliconnect' ); ?>:</strong> <?php echo isset( $meli_response['available_quantity'] ) ? esc_html( $meli_response['available_quantity'] ) : ''; ?>
+		</div>
+	</div>
 		<?php
 	}
 
