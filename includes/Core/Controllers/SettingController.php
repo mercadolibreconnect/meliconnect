@@ -329,7 +329,7 @@ class SettingController implements ControllerInterface {
 	}
 
 
-	
+
 
 	/* START CUSTOM METHODS */
 	public static function print_setting_checkbox( $key, $label, $value = '', $check_compare_value = true, $helpText = '' ) {
