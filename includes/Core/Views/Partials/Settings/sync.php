@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+?>
 <form id="meliconnect-sync-settings-form">
 
 	<input type="hidden" name="checkbox_fields" id="checkbox_fields" value="meliconnect_sync_stock_woo_to_meli,meliconnect_sync_price_woo_to_meli,meliconnect_sync_status_woo_to_meli,meliconnect_sync_stock_meli_to_woo,meliconnect_sync_price_meli_to_woo,meliconnect_sync_variations_price_meli_to_woo">

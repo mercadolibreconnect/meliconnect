@@ -58,7 +58,7 @@ class ExportController implements ControllerInterface {
 			return;
 		}
 
-		update_option( 'custom_export_cancel_requested', true );
+		update_option( 'meliconnect_export_cancel_requested', true );
 
 		sleep( 2 );
 

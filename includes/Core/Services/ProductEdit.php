@@ -871,25 +871,55 @@ class ProductEdit {
 
 	public function meliconnect_save_custom_product_data( $post_id ) {
 
-		// VERIFY NONCE
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'woocommerce_save_product' ) ) {
-			// wp_die('Nonce verification failed');
+		$nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'update-post_' . $post_id ) ) {
+			wp_die( esc_html__( 'Nonce verification failed', 'meliconnect' ) );
 		}
 
-		$post = wp_unslash( $_POST );
+		$woo_product_id    = isset( $_POST['post_ID'] ) ? absint( $_POST['post_ID'] ) : 0;
+		$woo_product_title = isset( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
 
+		// Validación de datos mínimos
 		$template_id = get_post_meta( $post_id, 'meliconnect_asoc_template_id', true );
-
-		if ( ! isset( $post['template'] ) || empty( $post['template'] ) || empty( $template_id ) ) {
+		if ( empty( $template_id ) || $woo_product_id <= 0 ) {
 			return;
 		}
 
-		$woo_product_id     = $post['post_ID'];
-		$woo_product_title  = $post['post_title'];
-		$template_post_data = $post['template'];
+		$template_post_data = array();
 
-		$template_id = Template::createUpdateProductTemplateFromPost( $template_post_data, $woo_product_id, $woo_product_title );
+		// Acceso directo pero siempre sanitizando
+		if ( isset( $_POST['template'] ) && is_array( $_POST['template'] ) ) {
+
+			$template_post_data['meta'] = array();
+			if ( isset( $_POST['template']['meta'] ) && is_array( $_POST['template']['meta'] ) ) {
+				$template_post_data['meta'] = array_map(
+					'sanitize_text_field',
+					wp_unslash( $_POST['template']['meta'] )
+				);
+			}
+
+			$template_post_data['attrs'] = array();
+			if ( isset( $_POST['template']['attrs'] ) && is_array( $_POST['template']['attrs'] ) ) {
+				$template_post_data['attrs'] = array_map(
+					'wp_kses_post',
+					wp_unslash( $_POST['template']['attrs'] )
+				);
+			}
+
+			$template_post_data['seller_meli_id']   = isset( $_POST['template']['seller_meli_id'] ) ? sanitize_text_field( wp_unslash( $_POST['template']['seller_meli_id'] ) ) : '';
+			$template_post_data['category_id']      = isset( $_POST['template']['category_id'] ) ? sanitize_text_field( wp_unslash( $_POST['template']['category_id'] ) ) : '';
+			$template_post_data['subcategory_tree'] = isset( $_POST['template']['subcategory_tree'] ) ? sanitize_text_field( wp_unslash( $_POST['template']['subcategory_tree'] ) ) : '';
+			$template_post_data['category_name']    = isset( $_POST['template']['category_name'] ) ? sanitize_text_field( wp_unslash( $_POST['template']['category_name'] ) ) : '';
+			$template_post_data['channels']         = isset( $_POST['template']['channels'] ) ? sanitize_text_field( wp_unslash( $_POST['template']['channels'] ) ) : '';
+		}
+
+		$template_id = Template::createUpdateProductTemplateFromPost(
+			$template_post_data,
+			$woo_product_id,
+			$woo_product_title
+		);
 	}
+
 
 
 
@@ -1357,6 +1387,8 @@ class ProductEdit {
 
 		$exportedResponse = $listingDataFacade->getAndExportListing( $seller_id, $woo_product_id, $template_id, $meli_listing_id, $sync_options );
 
+
+
 		// Variables to handle the success or failure of item and description
 		$item_success        = false;
 		$description_success = false;
@@ -1487,53 +1519,81 @@ class ProductEdit {
 	}
 
 	public static function handleSaveTemplateData() {
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'meliconnect_save_template_data_nonce' ) ) {
+		// Validar nonce
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'meliconnect_save_template_data_nonce' ) ) {
 			wp_send_json_error( esc_html__( 'Invalid nonce', 'meliconnect' ) );
 			wp_die();
 		}
 
+		// Validar permisos
 		if ( ! current_user_can( 'meliconnect_manage_plugin' ) ) {
 			wp_send_json_error( esc_html__( 'You do not have permission to perform this action', 'meliconnect' ) );
 			wp_die();
 		}
 
-		$templateDataJSON = isset( $_POST['templateData'] ) ? sanitize_textarea_field( wp_unslash( $_POST['templateData'] ) ) : null;
+		// Recibir datos del POST (sanitizados)
+		$templateDataJSON  = isset( $_POST['templateData'] ) ? sanitize_textarea_field( wp_unslash( $_POST['templateData'] ) ) : '';
+		$woo_product_id    = isset( $_POST['woo_product_id'] ) ? absint( wp_unslash( $_POST['woo_product_id'] ) ) : 0;
+		$woo_product_title = isset( $_POST['woo_product_title'] ) ? sanitize_text_field( wp_unslash( $_POST['woo_product_title'] ) ) : '';
 
-		$woo_product_id    = isset( $_POST['woo_product_id'] ) ? sanitize_text_field( wp_unslash( $_POST['woo_product_id'] ) ) : null;
-		$woo_product_title = isset( $_POST['woo_product_title'] ) ? sanitize_text_field( wp_unslash( $_POST['woo_product_title'] ) ) : null;
-
-		if ( empty( $templateDataJSON ) || empty( $woo_product_id ) || empty( $woo_product_title ) ) {
+		if ( empty( $templateDataJSON ) || $woo_product_id <= 0 || empty( $woo_product_title ) ) {
 			wp_send_json_error( array( 'message' => esc_html__( 'Invalid data', 'meliconnect' ) ) );
 			wp_die();
 		}
 
+		// Decodificar JSON
 		$template_data = json_decode( $templateDataJSON, true );
 
-		if ( json_last_error() === JSON_ERROR_NONE ) {
-
-			// Transforma las claves en un array multidimensional
-			$parsed_template_data = array();
-			parse_str( http_build_query( $template_data ), $parsed_template_data );
-
-			$template_id = Template::createUpdateProductTemplateFromPost( $parsed_template_data['template'], $woo_product_id, $woo_product_title );
-
-			if ( empty( $template_id ) ) {
-				wp_send_json_error( array( 'message' => esc_html__( 'Failed to save template', 'meliconnect' ) ) );
-				wp_die();
-			}
-
-			wp_send_json_success( array( 'message' => esc_html__( 'Template saved successfully', 'meliconnect' ) ) );
-		} else {
-
+		if ( json_last_error() !== JSON_ERROR_NONE || ! is_array( $template_data ) ) {
 			$message = sprintf(
-				/* translators: %s is the error message returned by json_last_error_msg() */
+			/* translators: %s is the error message returned by json_last_error_msg() */
 				esc_html__( 'Failed to decode Template Data: %s', 'meliconnect' ),
 				json_last_error_msg()
 			);
-
 			wp_send_json_error( array( 'message' => $message ) );
+			wp_die();
 		}
 
+		// Sanitizar campos
+		$parsed_template_data = array();
+		parse_str( http_build_query( $template_data ), $parsed_template_data );
+
+		$template_post_data = array();
+
+		if ( isset( $parsed_template_data['template'] ) && is_array( $parsed_template_data['template'] ) ) {
+			$raw_template = $parsed_template_data['template'];
+
+			$template_post_data['meta'] = array();
+			if ( isset( $raw_template['meta'] ) && is_array( $raw_template['meta'] ) ) {
+				$template_post_data['meta'] = array_map( 'sanitize_text_field', $raw_template['meta'] );
+			}
+
+			$template_post_data['attrs'] = array();
+			if ( isset( $raw_template['attrs'] ) && is_array( $raw_template['attrs'] ) ) {
+				$template_post_data['attrs'] = array_map( 'wp_kses_post', $raw_template['attrs'] );
+			}
+
+			$template_post_data['seller_meli_id']   = isset( $raw_template['seller_meli_id'] ) ? sanitize_text_field( $raw_template['seller_meli_id'] ) : '';
+			$template_post_data['category_id']      = isset( $raw_template['category_id'] ) ? sanitize_text_field( $raw_template['category_id'] ) : '';
+			$template_post_data['subcategory_tree'] = isset( $raw_template['subcategory_tree'] ) ? sanitize_text_field( $raw_template['subcategory_tree'] ) : '';
+			$template_post_data['category_name']    = isset( $raw_template['category_name'] ) ? sanitize_text_field( $raw_template['category_name'] ) : '';
+			$template_post_data['channels']         = isset( $raw_template['channels'] ) ? sanitize_text_field( $raw_template['channels'] ) : '';
+		}
+
+		// Guardar template
+		$template_id = Template::createUpdateProductTemplateFromPost(
+			$template_post_data,
+			$woo_product_id,
+			$woo_product_title
+		);
+
+		if ( empty( $template_id ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Failed to save template', 'meliconnect' ) ) );
+			wp_die();
+		}
+
+		wp_send_json_success( array( 'message' => esc_html__( 'Template saved successfully', 'meliconnect' ) ) );
 		wp_die();
 	}
 }

@@ -45,8 +45,10 @@ class MercadoLibreListingAdapter {
 		// Helper::logData('Raw data sent to hub: ' . wp_json_encode($rawData), 'custom-export');
 		update_post_meta( $woo_product_id, 'meliconnect_last_export_json_sent', $rawData );
 
+
 		// Enviar datos sin procesar al servidor y recibir datos transformados
 		$server_response = $this->sendDataToServer( $rawData );
+
 
 		Helper::logData( 'Server response:' . $server_response, 'custom-export' );
 

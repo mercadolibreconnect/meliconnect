@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+?>
 <form id="meliconnect-import-settings-form">
 
 	<input type="hidden" name="checkbox_fields" id="checkbox_fields" value="meliconnect_import_is_disabled,meliconnect_import_state_paused, meliconnect_import_state_closed, meliconnect_import_by_sku, meliconnect_import_attrs">

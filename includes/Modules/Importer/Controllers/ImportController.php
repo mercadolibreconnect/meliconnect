@@ -204,34 +204,33 @@ class ImportController implements ControllerInterface {
 	}
 
 	public static function handleGetMeliUserListings() {
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'get_meli_user_listings_nonce' ) ) {
+		// Verifica el nonce
+		$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'get_meli_user_listings_nonce' ) ) {
 			wp_send_json_error( esc_html__( 'Invalid nonce', 'meliconnect' ) );
 			return;
 		}
 
-		// Verifica los permisos del usuario
+		// Verifica permisos
 		if ( ! current_user_can( 'meliconnect_manage_plugin' ) ) {
 			wp_send_json_error( esc_html__( 'You do not have permission to perform this action', 'meliconnect' ) );
 			return;
 		}
 
-		if ( ! isset( $_POST['user_id'] ) ) {
-			wp_send_json_error( esc_html__( 'Invalid request data', 'meliconnect' ) );
+		// Sanitiza y valida user_id
+		$user_id = filter_input( INPUT_POST, 'user_id', FILTER_VALIDATE_INT );
+		if ( ! $user_id || $user_id <= 0 ) {
+			wp_send_json_error( esc_html__( 'Invalid user ID', 'meliconnect' ) );
 			return;
 		}
 
-		$user_id_raw = isset( $_POST['user_id'] ) ? wp_unslash( $_POST['user_id'] ) : '';
-		$user_id     = ctype_digit( $user_id_raw ) ? $user_id_raw : 0;
-
 		$meli_user = UserConnection::getUser( $user_id );
-
 		if ( ! $meli_user ) {
 			wp_send_json_error( esc_html__( 'User not found', 'meliconnect' ) );
 			return;
 		}
 
 		$meli_user_listings_ids = self::getMeliUserLisntingIds( $meli_user );
-
 		if ( $meli_user_listings_ids === false ) {
 			wp_send_json_error( esc_html__( 'There was an error getting the user listings. Check connections page.', 'meliconnect' ) );
 			return;
@@ -239,15 +238,8 @@ class ImportController implements ControllerInterface {
 
 		UserListingToImport::create_or_skip_meli_user_listings_ids_to_import( $meli_user, $meli_user_listings_ids );
 
-		// Adds extra data to imported listings
 		$listings_extra_data = self::multiGetListingsData( $meli_user, $meli_user_listings_ids );
-
 		UserListingToImport::update_meli_user_listings_extra_data_to_import( $listings_extra_data );
-
-		/*
-		echo PHP_EOL . '-------------------- listings_extra_data --------------------' . PHP_EOL;
-		echo '<pre>' . wp_json_encode( $listings_extra_data) . '</pre>';
-		echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL; */
 	}
 
 	public static function handleResetMeliUserListings() {
@@ -322,7 +314,7 @@ class ImportController implements ControllerInterface {
 
 		// UserListingToImport::cancel_import_process();
 
-		update_option( 'custom_import_cancel_requested', true );
+		update_option( 'meliconnect_import_cancel_requested', true );
 
 		sleep( 2 );
 

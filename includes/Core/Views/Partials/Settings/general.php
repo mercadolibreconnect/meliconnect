@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+?>
 <form id="meliconnect-general-settings-form">
 	<section class="meliconnect-section">
 		<div class="meliconnect-container">

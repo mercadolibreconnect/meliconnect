@@ -29,10 +29,10 @@ jQuery(document).ready(function ($) {
         // Perform the AJAX request
         $.ajax({
             type: "GET",
-            url: mcTranslations.admin_ajax_url,
+            url: meliconnect_translations.admin_ajax_url,
             data: {
                 "action": selectAction,
-                "nonce": mcTranslations.ajax_settings_nonce
+                "nonce": meliconnect_translations.ajax_settings_nonce
             },
             success: function (response) {
                 // Insert the obtained HTML content into the tab container
@@ -97,12 +97,12 @@ function initGeneralSettings() {
             e.preventDefault();
             var button = $(this); // Botón que se ha pulsado
             var custom_uploader = wp.media({
-                title: mcTranslations.select_or_upload_media,
+                title: meliconnect_translations.select_or_upload_media,
                 library: {
                     type: 'image'
                 },
                 button: {
-                    text: mcTranslations.select_or_upload_media
+                    text: meliconnect_translations.select_or_upload_media
                 },
                 multiple: false // Permitir la selección de una sola imagen
             }).on('select', function () {
@@ -137,7 +137,7 @@ function initGeneralSettings() {
 
             // Opcional: restablecer el input file o cualquier otro estado necesario
             uploader.find('.image_attachment_id').val('');
-            uploader.find('.image-name').text(mcTranslations.no_image_selected);
+            uploader.find('.image-name').text(meliconnect_translations.no_image_selected);
 
             // Muestra de nuevo el span .file-cta si se desea
             uploader.find('.meliconnect-file-cta').show();
@@ -148,11 +148,11 @@ function initGeneralSettings() {
             var formData = new FormData(this); // Recolecta los datos del formulario
 
             formData.append("action", "meliconnect_save_general_settings");
-            formData.append("nonce", mcTranslations.ajax_settings_nonce);
+            formData.append("nonce", meliconnect_translations.ajax_settings_nonce);
 
             $.ajax({
                 type: "POST",
-                url: mcTranslations.admin_ajax_url,
+                url: meliconnect_translations.admin_ajax_url,
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -188,11 +188,11 @@ function initExportSettings() {
         var formData = new FormData(this);
 
         formData.append("action", "meliconnect_save_export_settings");
-        formData.append("nonce", mcTranslations.ajax_settings_nonce);
+        formData.append("nonce", meliconnect_translations.ajax_settings_nonce);
 
         jQuery.ajax({
             type: "POST",
-            url: mcTranslations.admin_ajax_url,
+            url: meliconnect_translations.admin_ajax_url,
             data: formData,
             contentType: false,
             processData: false,
@@ -218,11 +218,11 @@ function initExportSettings() {
         } else {
             MeliconSwal.fire({
                 icon: 'warning',
-                title: mcTranslations.alert_title_disable_export,
-                text: mcTranslations.alert_body_disable_export,
+                title: meliconnect_translations.alert_title_disable_export,
+                text: meliconnect_translations.alert_body_disable_export,
                 showCancelButton: true,
-                confirmButtonText: mcTranslations.confirm,
-                cancelButtonText: mcTranslations.cancel,
+                confirmButtonText: meliconnect_translations.confirm,
+                cancelButtonText: meliconnect_translations.cancel,
                 customClass: {
                     confirmButton: 'meliconnect-button meliconnect-is-primary',
                     cancelButton: 'meliconnect-button meliconnect-is-secondary'
@@ -259,11 +259,11 @@ function initImportSettings() {
             var formData = new FormData(this);
 
             formData.append("action", "meliconnect_save_import_settings");
-            formData.append("nonce", mcTranslations.ajax_settings_nonce);
+            formData.append("nonce", meliconnect_translations.ajax_settings_nonce);
 
             $.ajax({
                 type: "POST",
-                url: mcTranslations.admin_ajax_url,
+                url: meliconnect_translations.admin_ajax_url,
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -291,11 +291,11 @@ function initImportSettings() {
             } else {
                 MeliconSwal.fire({
                     icon: 'warning',
-                    title: mcTranslations.alert_title_disable_import,
-                    text: mcTranslations.alert_body_disable_import,
+                    title: meliconnect_translations.alert_title_disable_import,
+                    text: meliconnect_translations.alert_body_disable_import,
                     showCancelButton: true,
-                    confirmButtonText: mcTranslations.confirm,
-                    cancelButtonText: mcTranslations.cancel,
+                    confirmButtonText: meliconnect_translations.confirm,
+                    cancelButtonText: meliconnect_translations.cancel,
                     customClass: {
                         confirmButton: 'meliconnect-button meliconnect-is-primary',
                         cancelButton: 'meliconnect-button meliconnect-is-secondary'
@@ -319,11 +319,11 @@ function initSyncSettings() {
             var formData = new FormData(this);
 
             formData.append("action", "meliconnect_save_sync_settings");
-            formData.append("nonce", mcTranslations.ajax_settings_nonce);
+            formData.append("nonce", meliconnect_translations.ajax_settings_nonce);
 
             $.ajax({
                 type: "POST",
-                url: mcTranslations.admin_ajax_url,
+                url: meliconnect_translations.admin_ajax_url,
                 data: formData,
                 contentType: false,
                 processData: false,

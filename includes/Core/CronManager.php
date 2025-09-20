@@ -136,7 +136,7 @@ class CronManager {
 
 			foreach ( $items_to_process as $item ) {
 				// Verificar si se ha solicitado la cancelación
-				$cancel_requested = get_option( 'custom_import_cancel_requested' );
+				$cancel_requested = get_option( 'meliconnect_import_cancel_requested' );
 
 				Helper::logData( 'Cancel requested: ' . $cancel_requested, 'custom-import' );
 				if ( $cancel_requested ) {
@@ -185,10 +185,10 @@ class CronManager {
 			// When cron finishes, remove lock
 			delete_option( $this->custom_import_lock_option_name );
 
-			// Helper::logData('Custom import process finished. Deleting custom_import_cancel_requested', 'custom-import');
+			// Helper::logData('Custom import process finished. Deleting meliconnect_import_cancel_requested', 'custom-import');
 
 			// Remove the cancel request flag
-			delete_option( 'custom_import_cancel_requested' );
+			delete_option( 'meliconnect_import_cancel_requested' );
 		}
 	}
 
@@ -221,7 +221,7 @@ class CronManager {
 
 			foreach ( $items_to_process as $item ) {
 				// Verificar si se ha solicitado la cancelación
-				$cancel_requested = get_option( 'custom_export_cancel_requested' );
+				$cancel_requested = get_option( 'meliconnect_export_cancel_requested' );
 
 				if ( $cancel_requested ) {
 
@@ -286,9 +286,9 @@ class CronManager {
 
 			// When cron finishes, remove lock
 			delete_option( $this->custom_export_lock_option_name );
-			// Helper::logData('Custom export process finished. Deleting custom_export_cancel_requested', 'custom-export');
+			// Helper::logData('Custom export process finished. Deleting meliconnect_export_cancel_requested', 'custom-export');
 			// Remove the cancel request flag
-			delete_option( 'custom_export_cancel_requested' );
+			delete_option( 'meliconnect_export_cancel_requested' );
 		}
 	}
 

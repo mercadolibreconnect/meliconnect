@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+?>
 <form id="meliconnect-export-settings-form">
 	<input type="hidden" name="checkbox_fields" id="checkbox_fields" value="meliconnect_export_is_disabled,meliconnect_export_state_paused,meliconnect_export_state_closed">
 	<section class="meliconnect-section">

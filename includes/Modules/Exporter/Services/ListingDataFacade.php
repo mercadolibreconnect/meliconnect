@@ -40,6 +40,8 @@ class ListingDataFacade {
 		// Obtener datos transformados desde el servidor usando el adaptador
 		$exportedResponse = $this->mercadoLibreListingAdapter->getTransformedListingData( $meli_user_data, $woo_product_id, $template_id, $meliListingId, $sync_options );
 
+
+
 		if ( ! isset( $exportedResponse['status'] ) || $exportedResponse['status'] !== 200 || ! isset( $exportedResponse['data'] ) || empty( $exportedResponse['data'] ) ) {
 			Helper::logData( 'Hub error exporting listing data: ' . wp_json_encode( $exportedResponse ), 'custom-export' );
 			return false;

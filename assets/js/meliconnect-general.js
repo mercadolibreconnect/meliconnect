@@ -91,7 +91,7 @@ function dismissMessage(event, notificationId) {
     event.preventDefault();
 
     jQuery.ajax({
-        url: mcTranslations.admin_ajax_url,
+        url: meliconnect_translations.admin_ajax_url,
         type: 'POST',
         data: {
             action: 'meliconnect_dismiss_message',

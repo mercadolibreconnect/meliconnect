@@ -172,7 +172,6 @@ class Initialize {
 
 
 	public function initApp() {
-		self::registerTextDomain();
 		add_action( 'plugins_loaded', 'meliconnect_register_text_domain' );
 
 		do_action( 'meliconnect_init' );
@@ -429,8 +428,5 @@ class Initialize {
 	}
 
 
-	public static function registerTextDomain() {
-        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
-		load_plugin_textdomain( 'meliconnect', false, 'meliconnect/languages' );
-	}
+
 }

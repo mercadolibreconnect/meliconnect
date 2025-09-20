@@ -83,6 +83,6 @@ class HelperJSTranslations {
 	}
 
 	public static function localizeScript( $script_handle ) {
-		wp_localize_script( $script_handle, 'mcTranslations', self::getTranslations() );
+		wp_localize_script( $script_handle, 'meliconnect_translations', self::getTranslations() );
 	}
 }

@@ -15,18 +15,18 @@ jQuery(document).ready(function ($) {
                 // Alerta de SweetAlert para acción inválida
                 MeliconSwal.fire({
                     icon: 'error',
-                    title: mcTranslations.invalid_action,
-                    text: mcTranslations.please_select_a_valid_bulk_action
+                    title: meliconnect_translations.invalid_action,
+                    text: meliconnect_translations.please_select_a_valid_bulk_action
                 });
             } else {
                 // Alerta de SweetAlert para confirmar la acción
                 MeliconSwal.fire({
                     icon: 'warning',
-                    title: mcTranslations.alert_title_apply_bulk_action,
-                    text: mcTranslations.alert_body_apply_bulk_action,
+                    title: meliconnect_translations.alert_title_apply_bulk_action,
+                    text: meliconnect_translations.alert_body_apply_bulk_action,
                     showCancelButton: true,
-                    confirmButtonText: mcTranslations.confirm,
-                    cancelButtonText: mcTranslations.cancel,
+                    confirmButtonText: meliconnect_translations.confirm,
+                    cancelButtonText: meliconnect_translations.cancel,
                     customClass: {
                         confirmButton: 'meliconnect-button meliconnect-is-primary',
                         cancelButton: 'meliconnect-button meliconnect-is-secondary'
@@ -35,13 +35,13 @@ jQuery(document).ready(function ($) {
                     if (result.isConfirmed) {
                         // Enviar la solicitud AJAX
                         $.ajax({
-                            url: mcTranslations.admin_ajax_url,
+                            url: meliconnect_translations.admin_ajax_url,
                             type: 'POST',
                             data: {
                                 action: 'meliconnect_bulk_export_action',
                                 action_to_do: selectedAction,
                                 products_ids: selectedIds,
-                                nonce: mcTranslations.export_bulk_action_nonce
+                                nonce: meliconnect_translations.export_bulk_action_nonce
                             },
                             success: function (response) {
                                 // Manejar la respuesta
@@ -73,8 +73,8 @@ jQuery(document).ready(function ($) {
             // Mostrar una alerta si no hay IDs seleccionados
             MeliconSwal.fire({
                 icon: 'warning',
-                title: mcTranslations.no_items_selected,
-                text: mcTranslations.select_items_to_apply_action
+                title: meliconnect_translations.no_items_selected,
+                text: meliconnect_translations.select_items_to_apply_action
             });
         }
     });
@@ -169,11 +169,11 @@ jQuery(document).ready(function ($) {
             return;
         }
         $.ajax({
-            url: mcTranslations.admin_ajax_url, // URL de AJAX en WordPress
+            url: meliconnect_translations.admin_ajax_url, // URL de AJAX en WordPress
             method: 'POST',
             data: {
                 action: 'meliconnect_get_process_progress',
-                nonce: mcTranslations.get_process_progress_nonce,
+                nonce: meliconnect_translations.get_process_progress_nonce,
                 process_id: processId
             },
             success: function (response) {
@@ -189,7 +189,7 @@ jQuery(document).ready(function ($) {
                             .addClass('is-success'); // Cambiar la clase CSS
 
                         $('#meliconnect-process-progress').text(100 + '%');
-                        $('#meliconnect-process-text-title').text(mcTranslations.process_finished);
+                        $('#meliconnect-process-text-title').text(meliconnect_translations.process_finished);
 
                         // Recargar la página
                         setTimeout(function () {
@@ -242,14 +242,14 @@ jQuery(document).ready(function ($) {
 
         MeliconSwal.fire({
             icon: 'error',
-            title: mcTranslations.error,
+            title: meliconnect_translations.error,
             html: errorContent,
             customClass: {
                 popup: 'meliconnect-swal-popup', // Clase personalizada para el popup
                 title: 'meliconnect-swal-title', // Clase personalizada para el título
                 content: 'meliconnect-swal-content' // Clase personalizada para el contenido
             },
-            confirmButtonText: mcTranslations.close
+            confirmButtonText: meliconnect_translations.close
         });
 
     });
@@ -277,7 +277,7 @@ jQuery(document).ready(function ($) {
 
         MeliconSwal.fire({
             icon: 'info',
-            title: mcTranslations.alert_last_json_sent_title,
+            title: meliconnect_translations.alert_last_json_sent_title,
             html: jsonContent, // Mostrar el JSON formateado en formato HTML
             customClass: {
                 popup: 'meliconnect-swal-popup', // Clase personalizada para el popup
@@ -285,8 +285,8 @@ jQuery(document).ready(function ($) {
                 content: 'meliconnect-swal-content' // Clase personalizada para el contenido
             },
             showCancelButton: true,
-            confirmButtonText: mcTranslations.copy_to_clipboard,
-            cancelButtonText: mcTranslations.back,
+            confirmButtonText: meliconnect_translations.copy_to_clipboard,
+            cancelButtonText: meliconnect_translations.back,
             customClass: {
                 confirmButton: 'meliconnect-button meliconnect-is-primary',
                 cancelButton: 'meliconnect-button meliconnect-is-secondary'
@@ -309,7 +309,7 @@ jQuery(document).ready(function ($) {
                 // Alerta de éxito después de copiar al portapapeles
                 MeliconSwal.fire({
                     icon: 'success',
-                    title: mcTranslations.copy_to_clipboard_success
+                    title: meliconnect_translations.copy_to_clipboard_success
                 });
             }
         });
@@ -328,11 +328,11 @@ jQuery(document).ready(function ($) {
 
         MeliconSwal.fire({
             icon: 'warning',
-            title: mcTranslations.alert_title_cancel_custom_export,
-            text: mcTranslations.alert_body_cancel_custom_export,
+            title: meliconnect_translations.alert_title_cancel_custom_export,
+            text: meliconnect_translations.alert_body_cancel_custom_export,
             showCancelButton: true,
-            confirmButtonText: mcTranslations.confirm,
-            cancelButtonText: mcTranslations.cancel,
+            confirmButtonText: meliconnect_translations.confirm,
+            cancelButtonText: meliconnect_translations.cancel,
             customClass: {
                 confirmButton: 'meliconnect-button meliconnect-is-primary',
                 cancelButton: 'meliconnect-button meliconnect-is-secondary'
@@ -340,11 +340,11 @@ jQuery(document).ready(function ($) {
             preConfirm: function () {
                 // Realizar la solicitud AJAX si el usuario confirma la acción
                 return $.ajax({
-                    url: mcTranslations.admin_ajax_url,
+                    url: meliconnect_translations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'meliconnect_cancel_custom_export',
-                        nonce: mcTranslations.cancel_custom_export_nonce,
+                        nonce: meliconnect_translations.cancel_custom_export_nonce,
                         process_id: processId
                     }
                 }).then(function (response) {
@@ -352,7 +352,7 @@ jQuery(document).ready(function ($) {
                 }).catch(function (xhr, status, error) {
                     MeliconSwal.fire({
                         icon: 'error',
-                        title: mcTranslations.error,
+                        title: meliconnect_translations.error,
                         text: error
                     });
                 });
@@ -373,11 +373,11 @@ jQuery(document).ready(function ($) {
 
         MeliconSwal.fire({
             icon: 'warning',
-            title: mcTranslations.alert_title_desvinculate_product,
-            text: mcTranslations.alert_body_desvinculate_product,
+            title: meliconnect_translations.alert_title_desvinculate_product,
+            text: meliconnect_translations.alert_body_desvinculate_product,
             showCancelButton: true,
-            confirmButtonText: mcTranslations.confirm,
-            cancelButtonText: mcTranslations.cancel,
+            confirmButtonText: meliconnect_translations.confirm,
+            cancelButtonText: meliconnect_translations.cancel,
             customClass: {
                 confirmButton: 'meliconnect-button meliconnect-is-primary',
                 cancelButton: 'meliconnect-button meliconnect-is-secondary'
@@ -385,11 +385,11 @@ jQuery(document).ready(function ($) {
             preConfirm: function () {
                 // Realizar la solicitud AJAX si el usuario confirma la desvinculación
                 return $.ajax({
-                    url: mcTranslations.admin_ajax_url,
+                    url: meliconnect_translations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'meliconnect_desvinculate_listing',
-                        nonce: mcTranslations.desvinculate_product_nonce,
+                        nonce: meliconnect_translations.desvinculate_product_nonce,
                         wooProductId: wooProductId,
                     }
                 }).then(function (response) {
@@ -399,7 +399,7 @@ jQuery(document).ready(function ($) {
                     // Manejar el error si la solicitud AJAX falla
                     MeliconSwal.fire({
                         icon: 'error',
-                        title: mcTranslations.error,
+                        title: meliconnect_translations.error,
                         text: error
                     });
                 });
@@ -413,11 +413,11 @@ jQuery(document).ready(function ($) {
         var processId = $(this).data('process-id');
 
         $.ajax({
-            url: mcTranslations.admin_ajax_url,
+            url: meliconnect_translations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'meliconnect_clean_custom_export_process',
-                nonce: mcTranslations.clean_custom_export_nonce,
+                nonce: meliconnect_translations.clean_custom_export_nonce,
                 processId: processId
             },
             success: function (response) {
@@ -426,7 +426,7 @@ jQuery(document).ready(function ($) {
             error: function (xhr, status, error) {
                 MeliconSwal.fire({
                     icon: 'error',
-                    title: mcTranslations.error,
+                    title: meliconnect_translations.error,
                     text: error
                 });
             }

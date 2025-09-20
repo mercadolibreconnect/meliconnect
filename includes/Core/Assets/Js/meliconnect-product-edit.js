@@ -59,13 +59,13 @@ jQuery(document).ready(function ($) {
         var seller_id = $('#template\\[seller_meli_id\\]').val();
 
         $.ajax({
-            url: mcTranslations.admin_ajax_url,
+            url: meliconnect_translations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'meliconnect_load_meli_categories',
                 category_id: category_id,
                 seller_id: seller_id,
-                nonce: mcTranslations.meliconnect_load_meli_categories_nonce
+                nonce: meliconnect_translations.meliconnect_load_meli_categories_nonce
             },
             success: function (response) {
                 if (response.success) {
@@ -179,11 +179,11 @@ jQuery(document).ready(function ($) {
                     if (category_id) {
 
                         $.ajax({
-                            url: mcTranslations.admin_ajax_url,
+                            url: meliconnect_translations.admin_ajax_url,
                             type: 'POST',
                             data: {
                                 action: 'meliconnect_update_meli_category',
-                                nonce: mcTranslations.meliconnect_update_meli_category_nonce,
+                                nonce: meliconnect_translations.meliconnect_update_meli_category_nonce,
                                 category_id: category_id,
                                 woo_product_id: woo_product_id,
                                 product_title: product_title,
@@ -251,11 +251,11 @@ jQuery(document).ready(function ($) {
 
         // Define the correct action for AJAX
         var ajaxAction = actionType === 'import' ? 'meliconnect_import_single_listing' : 'meliconnect_export_single_listing';
-        var ajaxNonce = actionType === 'import' ? mcTranslations.meliconnect_import_single_listing_nonce : mcTranslations.meliconnect_export_single_listing_nonce;
+        var ajaxNonce = actionType === 'import' ? meliconnect_translations.meliconnect_import_single_listing_nonce : meliconnect_translations.meliconnect_export_single_listing_nonce;
 
         // Perform the AJAX request
         $.ajax({
-            url: mcTranslations.admin_ajax_url,
+            url: meliconnect_translations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: ajaxAction,
@@ -334,11 +334,11 @@ jQuery(document).ready(function ($) {
         var seller_id = $(this).data('seller-id');
 
         $.ajax({
-            url: mcTranslations.admin_ajax_url,
+            url: meliconnect_translations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'meliconnect_import_single_listing',
-                nonce: mcTranslations.meliconnect_import_single_listing_nonce,
+                nonce: meliconnect_translations.meliconnect_import_single_listing_nonce,
                 woo_product_id: woo_product_id,
                 meli_listing_id: meli_listing_id,
                 template_id: template_id,
@@ -369,11 +369,11 @@ jQuery(document).ready(function ($) {
         $exportButton.prop('disabled', true);
 
         $.ajax({
-            url: mcTranslations.admin_ajax_url,
+            url: meliconnect_translations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'meliconnect_export_single_listing',
-                nonce: mcTranslations.meliconnect_export_single_listing_nonce,
+                nonce: meliconnect_translations.meliconnect_export_single_listing_nonce,
                 woo_product_id: woo_product_id,
                 meli_listing_id: meli_listing_id,
                 template_id: template_id,
@@ -462,11 +462,11 @@ jQuery(document).ready(function ($) {
         console.log(templateData); */
 
         $.ajax({
-            url: mcTranslations.admin_ajax_url,
+            url: meliconnect_translations.admin_ajax_url,
             type: 'POST',
             data: {
                 action: 'meliconnect_save_template_data',
-                nonce: mcTranslations.meliconnect_save_template_data_nonce,
+                nonce: meliconnect_translations.meliconnect_save_template_data_nonce,
                 templateData: JSON.stringify(templateData),
                 woo_product_id: woo_product_id,
                 woo_product_title: $('#title').val(),
@@ -522,11 +522,11 @@ jQuery(document).ready(function ($) {
                 var unlink_type = $('#meliconnect-desviculate-type-select').val();
 
                 $.ajax({
-                    url: mcTranslations.admin_ajax_url,
+                    url: meliconnect_translations.admin_ajax_url,
                     type: 'POST',
                     data: {
                         action: 'meliconnect_unlink_single_listing',
-                        nonce: mcTranslations.meliconnect_unlink_single_listing_nonce,
+                        nonce: meliconnect_translations.meliconnect_unlink_single_listing_nonce,
                         woo_product_id: woo_product_id,
                         unlink_type: unlink_type
                     },
