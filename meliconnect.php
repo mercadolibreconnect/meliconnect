@@ -3,7 +3,7 @@
 Plugin Name: Meliconnect
 Plugin URI: https://mercadolibre.meliconnect.com/
 Description: WooCommerce & Mercado Libre integration to import, export, and synchronize products between your WooCommerce store and Mercado Libre accounts.
-Version: 1.2.1
+Version: 1.2.2
 Author: meliconnect
 Text Domain: meliconnect
 Domain Path: /languages
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Define constantes del plugin
  */
-define( 'MELICONNECT_VERSION', '1.2.1' );
+define( 'MELICONNECT_VERSION', '1.2.2' );
 define( 'MELICONNECT_DATABASE_VERSION', '1.0.0' );
 define( 'MELICONNECT_TEXTDOMAIN', 'meliconnect' );
 define( 'MELICONNECT_PLUGIN_ROOT', plugin_dir_path( __FILE__ ) );
