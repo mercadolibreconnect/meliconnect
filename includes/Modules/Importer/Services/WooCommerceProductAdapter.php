@@ -43,12 +43,12 @@ class WooCommerceProductAdapter {
 
 		);
 
-		// Helper::logData('Raw data sent to hub: ' . wp_json_encode($rawData), 'custom-import');
+		//Helper::logData('Raw data sent to hub: ' . wp_json_encode($rawData), 'custom-import');
 
 		// Enviar datos sin procesar al servidor y recibir datos transformados
 		$server_response = $this->sendDataToServer( $rawData );
 
-		// Helper::logData('Server response:' . $server_response, 'custom-import');
+		Helper::logData('Server response:' . $server_response, 'custom-import');
 
 		return json_decode( $server_response, true );
 	}
