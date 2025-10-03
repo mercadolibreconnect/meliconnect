@@ -7,6 +7,10 @@ use Meliconnect\Meliconnect\Core\Models\UserConnection;
 // Obtén la lista de vendedores
 $sellers = UserConnection::getUser();
 
+if (!is_array($sellers)) {
+    $sellers = [$sellers];
+}
+
 // Definir las variables necesarias para la vista
 $selectName         = isset( $selectName ) ? $selectName : 'seller_filter'; // Puedes personalizarlo si es necesario
 $selected_seller    = isset( $selected_seller ) ? $selected_seller : null;

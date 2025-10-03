@@ -26,6 +26,7 @@ class ImportController implements ControllerInterface {
 		$process_finished = Process::getCurrentProcessData( 'custom-import', array( 'finished' ) );
 
 		$data = array(
+            'sellers_exceeding_limit'                   => UserConnection::getSellersExceedingLimit(),
 			'import_process_finished'                   => $process_finished,
 			'import_process_data'                       => $process,
 			'execution_time'                            => Process::calculateExecutionTime( $process ),
@@ -231,6 +232,7 @@ class ImportController implements ControllerInterface {
 		}
 
 		$meli_user_listings_ids = self::getMeliUserLisntingIds( $meli_user );
+
 		if ( $meli_user_listings_ids === false ) {
 			wp_send_json_error( esc_html__( 'There was an error getting the user listings. Check connections page.', 'meliconnect' ) );
 			return;
@@ -642,7 +644,9 @@ class ImportController implements ControllerInterface {
 
 		$base_url = 'users/' . $seller_data->user_id . '/items/search?search_type=scan';
 		$items    = MeliconMeli::getWithHeader( $base_url, $seller_data->access_token );
-
+        echo PHP_EOL . '-------------------- $items --------------------' . PHP_EOL;
+        echo '<pre>' . var_export( $items, true) . '</pre>';
+        echo PHP_EOL . '-------------------  FINISHED  ---------------------' . PHP_EOL;
 		if ( ! isset( $items['body']->results ) || ! is_iterable( $items['body']->results ) ) {
 			Helper::logData( 'Error getting products from seller: ' . $seller_data->user_id, 'importer' );
 			return false;

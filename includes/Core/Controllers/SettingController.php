@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Meliconnect\Meliconnect\Core\Helpers\FormHelper;
 use Meliconnect\Meliconnect\Core\Helpers\Helper;
 use Meliconnect\Meliconnect\Core\Interfaces\ControllerInterface;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
 
 class SettingController implements ControllerInterface {
 
@@ -33,7 +34,9 @@ class SettingController implements ControllerInterface {
 		}
 
 		$general_data = Helper::getMeliconnectOptions( 'general' );
+        $sellers_with_free_plan = UserConnection::getSellersByPlanComparison( 'free' );
 
+        
 		header( 'Content-Type:  text/html' );
 
 		include MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/Settings/general.php';
@@ -78,6 +81,7 @@ class SettingController implements ControllerInterface {
 		}
 
 		$sync_data = Helper::getMeliconnectOptions( 'sync' );
+        $sellers_with_free_plan = UserConnection::getSellersByPlanComparison( 'free' );
 
 		header( 'Content-Type:  text/html' );
 

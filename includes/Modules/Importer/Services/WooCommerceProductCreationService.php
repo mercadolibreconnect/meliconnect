@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Meliconnect\Meliconnect\Core\Helpers\Helper;
 use Meliconnect\Meliconnect\Core\Helpers\MeliconMeli;
 use Meliconnect\Meliconnect\Core\Models\Template;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
 
 /**
  * Provides functionality to create or update products in WooCommerce
@@ -583,8 +584,16 @@ class WooCommerceProductCreationService {
 		// Extraer el ID de la imagen
 		$image_id = $main_image_data['id'];
 
+        $seller_id = get_post_meta( $post_id, 'meliconnect_meli_seller_id', true );
+        $access_token = UserConnection::get_meli_access_token_by_seller( $seller_id );
+
+        if ( empty( $access_token ) ) {
+            Helper::logData( 'No access token found for seller ID: ' . $seller_id, 'custom-import' );
+            return;
+        }
+
 		// Obtener la URL de la imagen más grande
-		$image_url = $this->get_meli_largest_image_url( $image_id );
+		$image_url = $this->get_meli_largest_image_url( $image_id, $access_token );
 
 		if ( empty( $image_url ) ) {
 			Helper::logData( 'No valid image URL found for image ID: ' . $image_id, 'custom-import' );
@@ -629,9 +638,9 @@ class WooCommerceProductCreationService {
 		}
 	}
 
-	private function get_meli_largest_image_url( $image_id ) {
+	private function get_meli_largest_image_url( $image_id, $access_token) {
 		// Obtener los datos de la imagen desde la API de Meli
-		$meli_image_data = MeliconMeli::getMeliImageData( $image_id );
+		$meli_image_data = MeliconMeli::getMeliImageData( $image_id, $access_token );
 
 		// Obtener el tamaño máximo de la imagen
 		$meli_image_max_size = isset( $meli_image_data['max_size'] ) ? $meli_image_data['max_size'] : 0;
@@ -743,8 +752,10 @@ class WooCommerceProductCreationService {
 			// Extraer el ID de la imagen
 			$image_id = $image_data['id'];
 
+            $access_token = UserConnection::get_meli_access_token_by_seller( $meli_seller_id );
+
 			// Obtener la URL de la imagen más grande
-			$image_url = $this->get_meli_largest_image_url( $image_id );
+			$image_url = $this->get_meli_largest_image_url( $image_id, $access_token );
 
 			if ( empty( $image_url ) ) {
 				Helper::logData( 'No valid image URL found for image ID: ' . $image_id, 'custom-import' );

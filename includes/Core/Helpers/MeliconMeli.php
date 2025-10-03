@@ -363,19 +363,22 @@ class MeliconMeli {
 	}
 
 
-	public static function getMeliImageData( $ml_image_id ) {
-		$image_data = self::simpleGet( 'https://api.mercadolibre.com/pictures/' . $ml_image_id );
+	public static function getMeliImageData( $ml_image_id, $access_token ) {
+		$image_data = self::getWithHeader( 'pictures/' . $ml_image_id, $access_token );
+
+        $image_data = json_decode(json_encode($image_data), true);
+
 
 		// Verificar si se devolvió un error
 		if ( is_wp_error( $image_data ) ) {
-			// Manejar el error (puedes registrar el error, devolver null, etc.)
 			Helper::logData( 'Error al obtener datos de la imagen de MercadoLibre: ' . $image_data->get_error_message() );
 			return null;
 		}
 
-		// Verificar si los datos son válidos
-		if ( isset( $image_data['id'] ) && ! empty( $image_data['id'] ) ) {
-			return $image_data;
+		//Helper::logData( 'image_data:' . json_encode( $image_data ) );
+
+		if ( isset( $image_data['body'] ) && isset( $image_data['body']['id'] ) && ! empty( $image_data['body']['id'] ) ) {
+			return $image_data['body'];
 		}
 
 		return null;

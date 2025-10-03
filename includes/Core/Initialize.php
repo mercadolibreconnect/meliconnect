@@ -86,6 +86,8 @@ class Initialize {
 		update_option( 'meliconnect_db_version', MELICONNECT_DATABASE_VERSION );
 	}
 
+    
+
 	public static function createDefaultOptions() {
 		// Options with default values
 		$options = array(
@@ -401,6 +403,18 @@ class Initialize {
 			array( $this, 'renderSettingsPage' ),
 			10
 		);
+		add_submenu_page(
+			'meliconnect',                     // Slug del menú padre
+			__( 'Logs', 'meliconnect' ),    // Título de la página
+			__( 'Logs', 'meliconnect' ),    // Texto en el menú
+			'meliconnect_manage_plugin',      // Capacidad requerida
+			'meliconnect-logs',               // Slug del submenu
+			function () {
+				// Redirección automática al abrir el submenú
+				wp_redirect( admin_url( 'admin.php?page=wc-status&tab=logs&source=meliconnect-' ) );
+				exit;
+			}
+		);
 
 		// Add a page not in submenu
 		/*
@@ -426,7 +440,4 @@ class Initialize {
 	public function renderConnectionPage() {
 		include plugin_dir_path( __FILE__ ) . '/Views/connection.php';
 	}
-
-
-
 }

@@ -40,12 +40,27 @@ require MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 					<?php if ( ! empty( $data['users'] ) ) : ?>
 						<div class="meliconnect-columns meliconnect-is-multiline">
 							<?php foreach ( $data['users'] as $key => $user ) : ?>
-								<?php $meli_user_data = maybe_unserialize( $user->meli_user_data ); ?>
+
+
+								<?php
+								$meli_user_data      = maybe_unserialize( $user->meli_user_data );
+								$plan_type           = $user->plan_type ?? 'free';
+								$active_connections  = intval( $user->active_connections );
+								$pending_connections = intval( $user->pending_connections );
+								$max_connections     = $active_connections + $pending_connections;
+								?>
 
 								<!-- Tarjeta de usuario -->
 								<div class="meliconnect-card meliconnect-column meliconnect-is-4">
 									<div class="meliconnect-card-content">
 										<div class="meliconnect-content">
+											<?php if ( $active_connections >= $max_connections ) : ?>
+												<div class="meliconnect-message meliconnect-is-warning meliconnect-p-2">
+                                                     <div class="meliconnect-message-body">
+                                                        <?php esc_html_e( 'Maximum connections reached for this plan.', 'meliconnect' ); ?>
+                                                     </div>
+                                                </div>
+											<?php endif; ?>
 											<p><strong><?php esc_html_e( 'User:', 'meliconnect' ); ?></strong>
 												<a href="<?php echo esc_url( $user->permalink ); ?>" target="_blank">
 													<?php echo esc_html( $user->nickname ); ?>
@@ -56,8 +71,7 @@ require MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 
 											<?php if ( isset( $meli_user_data['body'] ) && ! isset( $meli_user_data['body']->message ) ) : ?>
 												<?php $body = $meli_user_data['body']; ?>
-												<p><strong><?php esc_html_e( 'Email:', 'meliconnect' ); ?></strong> <?php echo esc_html( $body->email ?? '' ); ?></p>
-												<p><strong><?php esc_html_e( 'Site ID:', 'meliconnect' ); ?></strong> <?php echo esc_html( strtoupper( $user->site_id ?? '' ) ); ?></p>
+												
 												<p>
 													<strong><?php esc_html_e( 'Connection Token:', 'meliconnect' ); ?></strong>
 													<?php
@@ -65,6 +79,30 @@ require MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 													echo esc_html( $truncated_token );
 													?>
 												</p>
+												<p><strong><?php esc_html_e( 'Email:', 'meliconnect' ); ?></strong> <?php echo esc_html( $body->email ?? '' ); ?></p>
+												<p><strong><?php esc_html_e( 'Site ID:', 'meliconnect' ); ?></strong> <?php echo esc_html( strtoupper( $user->site_id ?? '' ) ); ?></p>
+												<p><strong><?php esc_html_e( 'Plan Type:', 'meliconnect' ); ?></strong><span class="meliconnect-tag meliconnect-is-info"> <?php echo esc_html( ucfirst( $user->plan_type ) ); ?> </span></p>
+
+                                                <p>
+                                                    <strong><?php esc_html_e( 'Connections:', 'meliconnect' ); ?></strong>
+                                                    <?php echo esc_html( $active_connections ); ?> / <?php echo esc_html( $max_connections ); ?>
+
+                                                    <?php if ( ! empty( $user->connected_listing_ids )  && $active_connections > 0) : ?>
+                                                        <?php 
+                                                            $listing_ids = maybe_unserialize( $user->connected_listing_ids ); 
+                                                            if ( is_string($listing_ids) ) {
+                                                                $listing_ids = json_decode($listing_ids, true) ?: array();
+                                                            }
+                                                        ?>
+                                                        <a href="#"
+                                                        class="meliconnect-show-listings"
+                                                        data-site-id="<?php echo esc_attr($user->site_id); ?>"
+                                                        data-listings="<?php echo esc_attr( wp_json_encode( $listing_ids ) ); ?>">
+                                                            <i class="dashicons dashicons-visibility"></i>
+                                                        </a>
+                                                    <?php endif; ?>
+                                                </p>
+												
 												<p><strong><?php esc_html_e( 'Country:', 'meliconnect' ); ?></strong> <?php echo esc_html( $user->country ?? '' ); ?></p>
 												<p><strong><?php esc_html_e( 'Seller Experience:', 'meliconnect' ); ?></strong> <?php echo esc_html( $body->seller_experience ?? '' ); ?></p>
 												<p><strong><?php esc_html_e( 'Registration Level:', 'meliconnect' ); ?></strong> <?php echo esc_html( $body->context->registration_level ?? '' ); ?></p>
@@ -109,7 +147,7 @@ require MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 
 				</div>
 			</div>
-
+            
 		</div>
 	</div>
 

@@ -11,6 +11,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="meliconnect-container">
 			<div class="meliconnect-columns">
 				<div class="meliconnect-column">
+                    <?php if ( !empty($sellers_with_free_plan) ) : ?>
+                        <div class="meliconnect-notification meliconnect-is-warning">
+                            <?php
+                            printf(
+                                'The following free plan users will not be able to perform automatic synchronizations: <strong>%s</strong>.',
+                                implode( ', ', $sellers_with_free_plan )
+                            );
+                            ?>
+                        </div>
+                    <?php endif; ?>
 					<h2 class="meliconnect-title meliconnect-is-5"><?php esc_html_e( 'Automatic Synchronization', 'meliconnect' ); ?></h2>
 
 					<div class="meliconnect-content">

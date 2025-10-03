@@ -43,6 +43,8 @@ class Helper {
 
 
 
+
+
 	/**
 	 * Method printMessageBox
 	 * Generates HTML for a message box to display information based on the parameters provided.
@@ -76,6 +78,7 @@ class Helper {
 
 
 	public static function getDomainName() {
+		/*
 		// Verificar si HTTPS está habilitado
 		$https  = isset( $_SERVER['HTTPS'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTPS'] ) ) : '';
 		$scheme = ( ! empty( $https ) && strtolower( $https ) === 'on' ) ? 'https' : 'http';
@@ -84,7 +87,9 @@ class Helper {
 		$host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
 
 		// Construir y devolver la URL base
-		return "$scheme://$host";
+		return "$scheme://$host"; */
+
+		return get_site_url();
 	}
 
 	public static function getMeliconnectOptions( $type = 'all' ) {

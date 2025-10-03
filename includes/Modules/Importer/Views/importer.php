@@ -18,6 +18,20 @@ require MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 <div id="meliconnect-page-importer-main" class="meliconnect-app">
 	<div class="meliconnect-main">
 		<div class="meliconnect-container">
+			<?php if ( ! empty( $data['sellers_exceeding_limit'] ) ) : ?>
+				<div class="meliconnect-notification meliconnect-is-warning meliconnect-is-light">
+				    <button class="meliconnect-delete"></button>	
+                    <p>
+                        <i class="fas fa-exclamation-triangle"></i>
+						<?php
+							printf(
+								'Sellers <strong>%s</strong> have exceeded their sync limit. <a href="https://www.meliconnect.com/" target="_blank"><strong>  Upgrade your plan to enable new imports. </strong></a>',
+								implode( ', ', $data['sellers_exceeding_limit'] )
+							);
+						?>
+					</p>
+				</div>
+			<?php endif; ?>
 			<!-- START FIND MATCH MODAL -->
 
 			<div id="meliconnect-find-match-modal" class="meliconnect-modal">

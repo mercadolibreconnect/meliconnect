@@ -20,18 +20,40 @@ class UserConnection {
 		self::$table_name = $wpdb->prefix . 'meliconnect_user_connection';
 	}
 
-	public static function getAllUsers() {
+	public static function getSellersExceedingLimit() {
 		global $wpdb;
 
 		self::init();
 
 		$table_name = self::$table_name;
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$results = $wpdb->get_results( "SELECT * FROM {$table_name}" );
+		// Solo seleccionamos el nickname
+	    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = $wpdb->get_col( "SELECT nickname FROM {$table_name} WHERE pending_connections <= 0" );
 
-		return $results;
+		// Si no hay resultados, devolvemos null
+		return ! empty( $results ) ? $results : null;
 	}
+
+	public static function getSellersByPlanComparison( $plan, $operator = '=' ) {
+		global $wpdb;
+		self::init();
+
+		$table_name = self::$table_name;
+
+		if ( ! in_array( $operator, array( '=', '!=' ), true ) ) {
+			$operator = '='; // valor por defecto seguro
+		}
+
+	    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$query = "SELECT nickname FROM {$table_name} WHERE plan_type {$operator} %s";
+
+		$results = $wpdb->get_col( $wpdb->prepare( $query, $plan ) );
+
+		return ! empty( $results ) ? $results : array();
+	}
+
+
 
 	public static function getConnectedUsers() {
 		global $wpdb;
@@ -71,6 +93,36 @@ class UserConnection {
 
 		return $result;
 	}
+
+    /**
+     * Obtiene el access_token de un seller_id en wp_meliconnect_user_connection
+     *
+     * @param int|string $seller_id
+     * @return string|null
+     */
+    public static function get_meli_access_token_by_seller( $seller_id ) {
+        global $wpdb;
+
+        self::init();
+
+		$table_name = self::$table_name;
+
+        // Nombre real de la tabla (con prefijo de WP)
+        $table_name = $wpdb->prefix . 'meliconnect_user_connection';
+
+        // Query segura
+        $access_token = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT access_token 
+                FROM $table_name 
+                WHERE user_id = %s 
+                LIMIT 1",
+                $seller_id
+            )
+        );
+
+        return $access_token ?: null;
+    }
 
 
 	/**
@@ -119,6 +171,10 @@ class UserConnection {
 				'has_mercadoshops' => ( isset( $meli_user_data['body']->tags ) && is_array( $meli_user_data['body']->tags ) && in_array( 'mshops', $meli_user_data['body']->tags ) ) ? 1 : 0,
 				'meli_user_data'   => maybe_serialize( $meli_user_data ),
 				'api_token'        => $user['api_token'],
+                'plan_type'            => $user['plan'] ?? 'free', // nuevo campo
+	            'active_connections'   => isset($user['active_connections']) ? (int) $user['active_connections'] : 0,
+	            'pending_connections'  => isset($user['pending_connections']) ? (int) $user['pending_connections'] : 0,
+	            'connected_listing_ids'=> !empty($user['connected_listing_ids']) ? maybe_serialize($user['connected_listing_ids']) : null,
 				'created_at'       => current_time( 'mysql' ),
 				'updated_at'       => current_time( 'mysql' ),
 			);
@@ -126,10 +182,29 @@ class UserConnection {
 			// Helper::logData('Insert data: ' . wp_json_encode($insert_data)  , 'users_in_domain');
 
 			$wpdb->insert(
-				$table_name,
-				array_map( 'strval', $insert_data ), // Convierte todo a string
-				array( '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s' )
-			);
+                $table_name,
+                array_map( 'strval', $insert_data ), 
+                array(
+                    '%s', // access_token
+                    '%s', // app_id
+                    '%s', // secret_key
+                    '%d', // user_id
+                    '%s', // nickname
+                    '%s', // permalink
+                    '%s', // site_id
+                    '%s', // status
+                    '%s', // country
+                    '%d', // has_mercadoshops
+                    '%s', // meli_user_data
+                    '%s', // api_token
+                    '%s', // plan_type
+                    '%d', // active_connections
+                    '%d', // pending_connections
+                    '%s', // connected_listing_ids
+                    '%s', // created_at
+                    '%s', // updated_at
+                )
+            );
 
 			// Helper::logData('SQL Query: ' . $wpdb->last_query, 'users_in_domain');
 

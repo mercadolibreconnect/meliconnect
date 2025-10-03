@@ -10,6 +10,7 @@ use Meliconnect\Meliconnect\Core\Helpers\Helper;
 use Meliconnect\Meliconnect\Core\Interfaces\ControllerInterface;
 use Meliconnect\Meliconnect\Core\Models\Process;
 use Meliconnect\Meliconnect\Core\Models\ProcessItems;
+use Meliconnect\Meliconnect\Core\Models\UserConnection;
 use Meliconnect\Meliconnect\Modules\Exporter\Models\ProductToExport;
 
 class ExportController implements ControllerInterface {
@@ -23,6 +24,7 @@ class ExportController implements ControllerInterface {
 		$process_finished = Process::getCurrentProcessData( 'custom-export', 'finished' );
 
 		$data = array(
+            'sellers_exceeding_limit'       => UserConnection::getSellersExceedingLimit(),
 			'export_process_finished'       => $process_finished,
 			'export_process_data'           => $process,
 			'execution_time'                => Process::calculateExecutionTime( $process ),

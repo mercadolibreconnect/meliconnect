@@ -25,6 +25,21 @@ require MELICONNECT_PLUGIN_ROOT . 'includes/Core/Views/Partials/header.php';
 		<div class="meliconnect-container">
 
 			<div id="meliconnect-exporter-container" class="meliconnect-container meliconnect-exporter-container meliconnect-overflow-x">
+
+				<?php if ( ! empty( $data['sellers_exceeding_limit'] ) ) : ?>
+					<div class="meliconnect-notification meliconnect-is-warning meliconnect-is-light">
+                        <button class="meliconnect-delete"></button>	
+                        <p>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <?php
+                                printf(
+                                    'Sellers <strong>%s</strong> have exceeded their sync limit. <a href="https://www.meliconnect.com/" target="_blank"><strong>  Upgrade your plan to enable new exports. </strong></a>',
+                                    implode( ', ', $data['sellers_exceeding_limit'] )
+                                );
+                            ?>
+                        </p>
+                    </div>
+				<?php endif; ?>
 				<?php if ( isset( $data['export_process_data']->status ) && $data['export_process_data']->status == 'processing' ) { ?>
 					<div id="meliconnect-process-in-progress" class="meliconnect-box">
 						<div class="meliconnect-columns meliconnect-is-align-items-center">

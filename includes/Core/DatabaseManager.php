@@ -86,6 +86,10 @@ class DatabaseManager {
             `status` varchar(50) NOT NULL,
             `meli_user_data` text DEFAULT NULL,
             `api_token` text DEFAULT NULL,
+            `plan_type` enum('free','pro','power') NOT NULL DEFAULT 'free',
+            `active_connections` int(11) NOT NULL DEFAULT 0,
+            `pending_connections` int(11) NOT NULL DEFAULT 0,
+            `connected_listing_ids` LONGTEXT DEFAULT NULL,
             `created_at` timestamp NULL DEFAULT current_timestamp(),
 			`updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
             PRIMARY KEY  (id),
@@ -295,5 +299,92 @@ class DatabaseManager {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+	}
+
+
+	public static function meliconnect_update_tables() {
+		$current_version = get_option( 'meliconnect_db_version', '1.0' );
+
+		// Solo ejecutar si la versión del plugin es mayor que la versión guardada
+		if ( version_compare( MELICONNECT_DATABASE_VERSION, $current_version, '>' ) ) {
+
+			$db = new self();
+
+			$tables = array(
+				'user_connection' => array(
+					'add' => array(
+						'plan_type'           => "enum('free','pro','power') NOT NULL DEFAULT 'free'",
+						'active_connections'  => 'int(11) NOT NULL DEFAULT 0',
+						'pending_connections' => 'int(11) NOT NULL DEFAULT 0',
+                        'connected_listing_ids' => 'LONGTEXT DEFAULT NULL',
+					),
+				),
+
+			);
+
+			foreach ( $tables as $table_key => $changes ) {
+				$table_name = $db->prefix . $table_key;
+
+				if ( ! empty( $changes['add'] ) ) {
+					self::add_columns( $table_name, $changes['add'] );
+				}
+
+				if ( ! empty( $changes['remove'] ) ) {
+					self::remove_columns( $table_name, $changes['remove'] );
+				}
+
+				if ( ! empty( $changes['update'] ) ) {
+					self::update_columns( $table_name, $changes['update'] );
+				}
+			}
+
+			// Actualizamos la versión guardada
+			update_option( 'meliconnect_db_version', MELICONNECT_DATABASE_VERSION );
+		}
+	}
+
+	/**
+	 * Agrega columnas a la tabla si no existen
+	 */
+	protected static function add_columns( $table_name, $columns ) {
+		global $wpdb;
+		$existing_columns = $wpdb->get_results( "SHOW COLUMNS FROM {$table_name}", ARRAY_A );
+		$existing_columns = wp_list_pluck( $existing_columns, 'Field' );
+
+		foreach ( $columns as $column => $definition ) {
+			if ( ! in_array( $column, $existing_columns ) ) {
+				$wpdb->query( "ALTER TABLE {$table_name} ADD COLUMN {$column} {$definition}" );
+			}
+		}
+	}
+
+	/**
+	 * Elimina columnas de la tabla si existen
+	 */
+	protected static function remove_columns( $table_name, $columns ) {
+		global $wpdb;
+		$existing_columns = $wpdb->get_results( "SHOW COLUMNS FROM {$table_name}", ARRAY_A );
+		$existing_columns = wp_list_pluck( $existing_columns, 'Field' );
+
+		foreach ( $columns as $column ) {
+			if ( in_array( $column, $existing_columns ) ) {
+				$wpdb->query( "ALTER TABLE {$table_name} DROP COLUMN {$column}" );
+			}
+		}
+	}
+
+	/**
+	 * Actualiza columnas existentes (tipo, default, etc)
+	 */
+	protected static function update_columns( $table_name, $columns ) {
+		global $wpdb;
+		$existing_columns = $wpdb->get_results( "SHOW COLUMNS FROM {$table_name}", ARRAY_A );
+		$existing_columns = wp_list_pluck( $existing_columns, 'Field' );
+
+		foreach ( $columns as $column => $definition ) {
+			if ( in_array( $column, $existing_columns ) ) {
+				$wpdb->query( "ALTER TABLE {$table_name} MODIFY COLUMN {$column} {$definition}" );
+			}
+		}
 	}
 }

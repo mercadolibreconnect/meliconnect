@@ -207,9 +207,11 @@ class MercadoLibreListingAdapter {
 		$ml_image_seller_id = get_post_meta( $woo_image_id, 'meliconnect_meli_image_seller_id', true );
 		$ml_image_url       = get_post_meta( $woo_image_id, 'meliconnect_meli_image_url', true );
 
+        $access_token = UserConnection::get_meli_access_token_by_seller( $ml_image_seller_id );
+
 		// Si existe un ID de MercadoLibre, verifica que la imagen exista en MercadoLibre
 		if ( ! empty( $ml_image_id ) ) {
-			$ml_image_data = MeliconMeli::getMeliImageData( $ml_image_id );
+			$ml_image_data = MeliconMeli::getMeliImageData( $ml_image_id, $access_token );
 
 			if ( isset( $ml_image_data['id'] ) && ! empty( $ml_image_data['id'] ) ) {
 				$ml_image_id = $ml_image_data['id'];

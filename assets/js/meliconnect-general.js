@@ -76,6 +76,10 @@ jQuery(document).ready(function () {
         e.preventDefault();
         toggleSidebar();
     });
+
+    jQuery('.meliconnect-delete').on('click', function(){
+        jQuery(this).closest('.meliconnect-notification').fadeOut();
+    });
 });
 
 function toggleSidebar() {

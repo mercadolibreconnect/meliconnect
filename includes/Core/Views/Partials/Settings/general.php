@@ -15,7 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div id="meliconnect-image-uploaders" class="meliconnect-columns">
 
 				<?php
-				$extra_images = $general_data['meliconnect_general_image_attachment_ids'];
+				$extra_images = $general_data['meliconnect_general_image_attachment_ids'] ?? [];
+
+                $extra_images = array_filter($extra_images, function($value) {
+                    return !empty($value);
+                });
+
+                $extra_images = array_values($extra_images);
+
 				for ( $i = 0; $i <= 4; $i++ ) :
 					?>
 					<div class="meliconnect-column meliconnect-is-one-fifth">
@@ -69,8 +76,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</section>
 
 	<hr>
+	
 	<section class="meliconnect-section">
 		<div class="meliconnect-container">
+			<?php if ( !empty($sellers_with_free_plan) ) : ?>
+                <div class="meliconnect-notification meliconnect-is-warning">
+                    <?php
+                    printf(
+                        'The following free plan users will not be able to perform automatic synchronizations: <strong>%s</strong>.',
+                        implode( ', ', $sellers_with_free_plan )
+                    );
+                    ?>
+                </div>
+            <?php endif; ?>
 			<div class="meliconnect-columns meliconnect-is-mobile meliconnect-is-multiline">
 				<div class="meliconnect-column">
 					<h2 class="meliconnect-title meliconnect-is-6"><?php esc_html_e( 'Automatic Import or Export', 'meliconnect' ); ?></h2>

@@ -26,16 +26,41 @@ class ApiManager {
 			'/update_domain',
 			array(
 				'methods'             => 'POST',
-				'callback'            => array( $this, 'update_domains' ),
+				'callback'            => array( $this, 'meliconnect_update_domains' ),
 				'permission_callback' => '__return_true',
 			)
+		);
+
+		register_rest_route(
+			'meliconnect/v1',
+			'/status',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'meliconnect_plugin_status' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+	}
+
+	// Callback del endpoint
+	public function meliconnect_plugin_status( $request ) {
+		$plugin_slug = 'meliconnect/meliconnect.php';
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		return array(
+			'plugin'             => 'meliconnect',
+			'active'             => is_plugin_active( $plugin_slug ),
+			'version'            => defined( 'MELICONNECT_VERSION' ) ? MELICONNECT_VERSION : 'unknown',
+			'wp_version'         => get_bloginfo( 'version' ),
+			'site_url'           => get_site_url(),
+			'woocommerce_active' => class_exists( 'WooCommerce' ),
 		);
 	}
 
 	/**
 	 * Callback para procesar el dominio
 	 */
-	public function update_domains( $request ) {
+	public function meliconnect_update_domains( $request ) {
 		$users_in_domain = $request->get_param( 'users_in_domain' );
 
 		if ( ! is_array( $users_in_domain ) ) {
